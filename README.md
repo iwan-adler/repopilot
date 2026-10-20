@@ -2,6 +2,8 @@
 
 **Understand your repository's health in minutes, and know exactly what to fix next.**
 
+**Live demo:** https://repopilot-rho.vercel.app — no sign-up; paste any public GitHub repository URL.
+
 RepoPilot analyzes any public GitHub repository with deterministic, documented rules — testing, security signals, documentation, dependency hygiene and maintainability — and produces a transparent 0–100 health score, evidence-backed findings, and Markdown/JSON reports.
 
 It is **not** an AI chatbot: every finding comes from a rule with a stable ID, a rationale and unit tests. The same commit always produces the same report.
