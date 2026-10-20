@@ -17,14 +17,7 @@ const ALLOWED_ORIGINS = new Set([API_ORIGIN, RAW_ORIGIN]);
 const MAX_REDIRECTS = 3;
 
 export type GitHubErrorCode =
-  | "not_found"
-  | "rate_limited"
-  | "forbidden"
-  | "empty_repository"
-  | "timeout"
-  | "too_large"
-  | "invalid_response"
-  | "upstream_error";
+  "not_found" | "rate_limited" | "forbidden" | "empty_repository" | "timeout" | "too_large" | "invalid_response" | "upstream_error";
 
 export class GitHubError extends Error {
   constructor(
@@ -281,14 +274,7 @@ export class GitHubClient {
    * Fetches a file's raw contents at an exact commit, capped at maxBytes.
    * Returns null for binary content (NUL byte in the first 8 KB).
    */
-  async getRawFile(
-    owner: string,
-    repo: string,
-    sha: string,
-    path: string,
-    maxBytes: number,
-    signal?: AbortSignal,
-  ): Promise<string | null> {
+  async getRawFile(owner: string, repo: string, sha: string, path: string, maxBytes: number, signal?: AbortSignal): Promise<string | null> {
     if (!/^[0-9a-f]{40}$/.test(sha)) throw new GitHubError("invalid_response", "Invalid commit SHA.");
     const url = `${RAW_ORIGIN}/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/${sha}/${encodeRepoPath(path)}`;
     const response = await this.request(url, { accept: "text/plain, */*", useToken: false, signal });

@@ -63,11 +63,26 @@ export function mapError(err: unknown): { error: ApiError; status: number } {
   if (err instanceof GitHubError) {
     switch (err.code) {
       case "not_found":
-        return { status: 404, error: { code: "not_found", message: "Repository not found. Check the URL, and note that RepoPilot can only analyze public repositories." } };
+        return {
+          status: 404,
+          error: {
+            code: "not_found",
+            message: "Repository not found. Check the URL, and note that RepoPilot can only analyze public repositories.",
+          },
+        };
       case "forbidden":
-        return { status: 403, error: { code: "private_repository", message: "GitHub denied access to this repository. It may be private, disabled, or blocked." } };
+        return {
+          status: 403,
+          error: {
+            code: "private_repository",
+            message: "GitHub denied access to this repository. It may be private, disabled, or blocked.",
+          },
+        };
       case "empty_repository":
-        return { status: 422, error: { code: "empty_repository", message: "This repository is empty, so there is nothing to analyze yet." } };
+        return {
+          status: 422,
+          error: { code: "empty_repository", message: "This repository is empty, so there is nothing to analyze yet." },
+        };
       case "rate_limited": {
         const retry = err.resetAt ? Math.max(1, err.resetAt - Math.floor(Date.now() / 1000)) : 60;
         return {
@@ -80,7 +95,10 @@ export function mapError(err: unknown): { error: ApiError; status: number } {
         };
       }
       case "timeout":
-        return { status: 504, error: { code: "timeout", message: "The analysis took too long. GitHub may be slow right now — please try again." } };
+        return {
+          status: 504,
+          error: { code: "timeout", message: "The analysis took too long. GitHub may be slow right now — please try again." },
+        };
       case "too_large":
         return { status: 413, error: { code: "too_large", message: err.message || "This repository is too large to analyze." } };
       default:
@@ -114,7 +132,7 @@ export async function handleAnalyzeRequest(request: Request, deps: HandlerDeps):
   const started = Date.now();
   const contentType = request.headers.get("content-type") ?? "";
   if (!contentType.toLowerCase().startsWith("application/json")) {
-    return jsonError({ code: "invalid_request", message: "Send a JSON body: {\"url\": \"https://github.com/owner/repo\"}." }, 415);
+    return jsonError({ code: "invalid_request", message: 'Send a JSON body: {"url": "https://github.com/owner/repo"}.' }, 415);
   }
   const raw = await readBodyCapped(request, MAX_REQUEST_BODY_BYTES);
   if (raw === null) return jsonError({ code: "invalid_request", message: "Request body is too large." }, 413);
@@ -137,7 +155,11 @@ export async function handleAnalyzeRequest(request: Request, deps: HandlerDeps):
   const limit = deps.limiter.check(clientKey(request.headers));
   if (!limit.allowed) {
     return jsonError(
-      { code: "rate_limited", message: `Too many analyses from your network. Try again in ${limit.retryAfterSeconds} seconds.`, retryAfterSeconds: limit.retryAfterSeconds },
+      {
+        code: "rate_limited",
+        message: `Too many analyses from your network. Try again in ${limit.retryAfterSeconds} seconds.`,
+        retryAfterSeconds: limit.retryAfterSeconds,
+      },
       429,
     );
   }
@@ -147,7 +169,10 @@ export async function handleAnalyzeRequest(request: Request, deps: HandlerDeps):
 
   const release = cached ? () => {} : deps.gate.tryAcquire();
   if (!release) {
-    return jsonError({ code: "busy", message: "RepoPilot is handling several analyses right now. Please retry in a few seconds.", retryAfterSeconds: 5 }, 503);
+    return jsonError(
+      { code: "busy", message: "RepoPilot is handling several analyses right now. Please retry in a few seconds.", retryAfterSeconds: 5 },
+      503,
+    );
   }
 
   const analyze = deps.analyze ?? analyzeRepository;

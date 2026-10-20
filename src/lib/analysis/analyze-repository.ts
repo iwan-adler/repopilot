@@ -22,10 +22,10 @@ import { detectStack } from "./detect-stack";
 import { manifestEcosystem } from "./manifests";
 import { basename, depth, extname, isNonAuthoredPath, isRootFile, isScannableTextFile, isSourceFile, isTestFile } from "./paths";
 import { RULES, type Rule } from "./rules";
-import { computeScore } from "./scoring";
+import { computePlan, computeScore } from "./scoring";
 import { ciSystemFor } from "./workflows";
 
-export const ENGINE_VERSION = "0.1.0";
+export const ENGINE_VERSION = "0.2.0";
 
 export type ScanLimits = {
   maxTreeEntries: number;
@@ -79,7 +79,22 @@ export class AnalysisError extends Error {
 const KEY_ROOT_FILE_RE =
   /^(readme(\.(md|markdown|rst|txt|adoc|org))?|package\.json|pyproject\.toml|requirements(-dev|-test|_dev|_test)?\.txt|setup\.py|setup\.cfg|tox\.ini|pipfile|cargo\.toml|go\.mod|gemfile|composer\.json|pom\.xml|build\.gradle(\.kts)?|pubspec\.yaml|deno\.jsonc?)$/i;
 
-const CONFIG_EXT = new Set(["env", "json", "yml", "yaml", "toml", "ini", "cfg", "conf", "properties", "tf", "tfvars", "sh", "xml", "npmrc"]);
+const CONFIG_EXT = new Set([
+  "env",
+  "json",
+  "yml",
+  "yaml",
+  "toml",
+  "ini",
+  "cfg",
+  "conf",
+  "properties",
+  "tf",
+  "tfvars",
+  "sh",
+  "xml",
+  "npmrc",
+]);
 
 export function selectFiles(files: RepoFile[], limits: ScanLimits): { key: string[]; sample: string[] } {
   const key: string[] = [];
@@ -108,9 +123,7 @@ export function selectFiles(files: RepoFile[], limits: ScanLimits): { key: strin
 
   // Sample of text files for credential-pattern scanning: config-like files first, then shallow source files.
   const keySet = new Set(key);
-  const scannable = candidates.filter(
-    (f) => !keySet.has(f.path) && f.size <= limits.maxSampleFileBytes && isScannableTextFile(f.path),
-  );
+  const scannable = candidates.filter((f) => !keySet.has(f.path) && f.size <= limits.maxSampleFileBytes && isScannableTextFile(f.path));
   const priority = (f: RepoFile) => {
     const base = basename(f.path).toLowerCase();
     if (base.startsWith(".env")) return 0;
@@ -239,7 +252,8 @@ export function analyzeContext(input: AnalyzeContextInput): Report {
   const limitations: Limitation[] = [
     {
       code: "static_only",
-      message: "Static analysis only: RepoPilot never runs repository code, installs dependencies, or executes tests. Detected tests were not run.",
+      message:
+        "Static analysis only: RepoPilot never runs repository code, installs dependencies, or executes tests. Detected tests were not run.",
     },
     ...(input.limitations ?? []),
   ];
@@ -258,6 +272,7 @@ export function analyzeContext(input: AnalyzeContextInput): Report {
     checks,
     findings,
     score,
+    plan: computePlan(checks),
     limitations,
     budget: input.budget ?? { apiRequests: 0, filesFetched: input.contents.size, filesSkipped: 0, bytesFetched: 0, durationMs: 0 },
   };
@@ -321,7 +336,10 @@ export async function analyzeRepository(owner: string, repo: string, options: An
     } else {
       const err = languagesResult.reason;
       if (err instanceof GitHubError && err.code === "rate_limited") throw err;
-      limitations.push({ code: "languages_unavailable", message: "GitHub language statistics were unavailable; languages were estimated from file extensions." });
+      limitations.push({
+        code: "languages_unavailable",
+        message: "GitHub language statistics were unavailable; languages were estimated from file extensions.",
+      });
     }
 
     onProgress?.({ stage: "tree", message: "Reading the file tree" });
@@ -397,9 +415,18 @@ export async function analyzeRepository(owner: string, repo: string, options: An
 
     const scannableTotal = files.filter((f) => isScannableTextFile(f.path) && !isNonAuthoredPath(f.path)).length;
     if (deadlineHit) limitations.push({ code: "deadline", message: "The scan time budget was reached; some files were not inspected." });
-    if (rawRateLimited) limitations.push({ code: "raw_rate_limited", message: "GitHub limited file downloads during this scan; some files were not inspected." });
-    if (bytesFetched >= limits.maxTotalBytes) limitations.push({ code: "byte_budget", message: "The per-scan byte budget was reached; remaining files were not inspected." });
-    if (skipped > 0) limitations.push({ code: "files_skipped", message: `${skipped} selected file(s) were skipped (binary, too large, unavailable, or over budget).` });
+    if (rawRateLimited)
+      limitations.push({
+        code: "raw_rate_limited",
+        message: "GitHub limited file downloads during this scan; some files were not inspected.",
+      });
+    if (bytesFetched >= limits.maxTotalBytes)
+      limitations.push({ code: "byte_budget", message: "The per-scan byte budget was reached; remaining files were not inspected." });
+    if (skipped > 0)
+      limitations.push({
+        code: "files_skipped",
+        message: `${skipped} selected file(s) were skipped (binary, too large, unavailable, or over budget).`,
+      });
     limitations.push({
       code: "sampled_content",
       message: `File contents were inspected for ${contents.size} of ${files.length} files (manifests, CI configuration, README and a sample of up to ${limits.maxSampleFiles} text files for credential patterns, ${scannableTotal} candidate text files in total). Other checks use file names and sizes only.`,

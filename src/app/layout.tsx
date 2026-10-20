@@ -15,6 +15,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://repopilot-rho.vercel.app"),
+  openGraph: {
+    type: "website",
+    siteName: "RepoPilot",
+    title: "RepoPilot — GitHub repository health analysis",
+    description: "Understand your repository's health in minutes, and know exactly what to fix next.",
+  },
   title: {
     default: "RepoPilot — GitHub repository health analysis",
     template: "%s · RepoPilot",

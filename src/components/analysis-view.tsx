@@ -10,6 +10,7 @@ import { ReportSchema, type Report } from "@/lib/reports/schema";
 import { AnalysisProgress } from "./analysis-progress";
 import { ChecksTable } from "./checks-table";
 import { FindingsList } from "./findings-list";
+import { FixNext } from "./fix-next";
 import { HealthOverview } from "./health-overview";
 import { LimitationsPanel } from "./limitations-panel";
 import { ReportExport } from "./report-export";
@@ -23,7 +24,10 @@ type State =
   | { status: "done"; key: string; report: Report; cached: boolean }
   | { status: "error"; key: string; error: ApiError };
 
-const NETWORK_ERROR: ApiError = { code: "upstream_error", message: "Could not reach RepoPilot's server. Check your connection and try again." };
+const NETWORK_ERROR: ApiError = {
+  code: "upstream_error",
+  message: "Could not reach RepoPilot's server. Check your connection and try again.",
+};
 
 async function runAnalysis(url: string, signal: AbortSignal, onEvent: (e: StreamEvent) => void): Promise<void> {
   const res = await fetch("/api/analyze", {
@@ -67,6 +71,12 @@ export function AnalysisView() {
   // Routes stay mounted but hidden after navigation (React Activity), and effects re-run when the
   // route becomes visible again. This ref prevents silently re-scanning a finished analysis.
   const finished = useRef<string | null>(null);
+  // Finding selected from the "Fix next" plan; the nonce remounts the list so filters reset and it opens.
+  const [focus, setFocus] = useState<{ id: string; nonce: number } | null>(null);
+
+  useEffect(() => {
+    if (focus) document.getElementById(`finding-${focus.id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [focus]);
 
   useEffect(() => {
     if (!key) return;
@@ -129,10 +139,16 @@ export function AnalysisView() {
       <div className="space-y-5">
         <HealthOverview report={report} />
         <div className="grid gap-5 lg:grid-cols-2">
+          <FixNext
+            plan={report.plan}
+            findings={report.findings}
+            overall={report.score.overall}
+            onSelect={(id) => setFocus((f) => ({ id, nonce: (f?.nonce ?? 0) + 1 }))}
+          />
           <ScoreBreakdown report={report} />
-          <StackSummary report={report} />
         </div>
-        <FindingsList findings={report.findings} />
+        <FindingsList key={focus?.nonce ?? 0} findings={report.findings} focusId={focus?.id} />
+        <StackSummary report={report} />
         <ChecksTable report={report} />
         <LimitationsPanel report={report} />
       </div>
@@ -155,7 +171,11 @@ function ErrorPanel({ title, error, onRetry }: { title: string; error: ApiError;
         </div>
         <div className="mt-5 flex flex-wrap gap-3">
           {retryable && onRetry && (
-            <button type="button" onClick={onRetry} className="rounded-lg bg-accent px-4 py-2 font-medium text-white hover:bg-accent-strong">
+            <button
+              type="button"
+              onClick={onRetry}
+              className="rounded-lg bg-accent px-4 py-2 font-medium text-white hover:bg-accent-strong"
+            >
               Try again
             </button>
           )}

@@ -29,17 +29,17 @@ Dashboard renders the validated Report; exports are generated client-side.
 
 ## Layers
 
-| Layer | Path | Responsibility |
-| --- | --- | --- |
-| URL parsing | `src/lib/github/parse-url.ts` | Accepts `https://github.com/o/r`, `github.com/o/r`, `git@github.com:o/r.git`, `o/r`. Rejects other hosts, credentials, ports, reserved routes, malformed names. Pure. |
-| GitHub client | `src/lib/github/client.ts` | Only contacts two fixed origins. Manual redirect handling (same origins only), per-request timeout, streaming byte caps, Zod validation of responses, typed `GitHubError` codes, rate-limit detection. Token sent to the API origin only. |
-| Orchestration | `src/lib/analysis/analyze-repository.ts` | Fetches data, selects files, enforces budgets (files, bytes, deadline, concurrency), records limitations, and calls the pure `analyzeContext`. |
-| Detection | `detect-stack.ts`, `manifests.ts`, `paths.ts` | Languages, frameworks, test frameworks, manifests, package managers, path classification. Pure. |
-| Rules | `rules.ts`, `secrets.ts`, `workflows.ts` | 30 rules; each is a pure function `AnalysisContext → RuleOutcome`. A throwing rule becomes `unavailable` instead of breaking the report. |
-| Scoring | `scoring.ts` | Transparent weighted scoring ([SCORING.md](SCORING.md)). Pure. |
-| Report | `src/lib/reports/` | Zod schema (single source of truth for the report shape), Markdown and JSON exporters. |
-| API | `src/lib/api/`, `src/app/api/analyze/route.ts` | Validation, abuse controls, cache, error mapping, JSON/NDJSON responses. The route file is a thin adapter so the handler can be tested directly. |
-| UI | `src/components/`, `src/app/` | Server-rendered landing and methodology pages (static); a client analysis view that consumes the stream. |
+| Layer         | Path                                           | Responsibility                                                                                                                                                                                                                            |
+| ------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| URL parsing   | `src/lib/github/parse-url.ts`                  | Accepts `https://github.com/o/r`, `github.com/o/r`, `git@github.com:o/r.git`, `o/r`. Rejects other hosts, credentials, ports, reserved routes, malformed names. Pure.                                                                     |
+| GitHub client | `src/lib/github/client.ts`                     | Only contacts two fixed origins. Manual redirect handling (same origins only), per-request timeout, streaming byte caps, Zod validation of responses, typed `GitHubError` codes, rate-limit detection. Token sent to the API origin only. |
+| Orchestration | `src/lib/analysis/analyze-repository.ts`       | Fetches data, selects files, enforces budgets (files, bytes, deadline, concurrency), records limitations, and calls the pure `analyzeContext`.                                                                                            |
+| Detection     | `detect-stack.ts`, `manifests.ts`, `paths.ts`  | Languages, frameworks, test frameworks, manifests, package managers, path classification. Pure.                                                                                                                                           |
+| Rules         | `rules.ts`, `secrets.ts`, `workflows.ts`       | 30 rules; each is a pure function `AnalysisContext → RuleOutcome`. A throwing rule becomes `unavailable` instead of breaking the report.                                                                                                  |
+| Scoring       | `scoring.ts`                                   | Transparent weighted scoring ([SCORING.md](SCORING.md)). Pure.                                                                                                                                                                            |
+| Report        | `src/lib/reports/`                             | Zod schema (single source of truth for the report shape), Markdown and JSON exporters.                                                                                                                                                    |
+| API           | `src/lib/api/`, `src/app/api/analyze/route.ts` | Validation, abuse controls, cache, error mapping, JSON/NDJSON responses. The route file is a thin adapter so the handler can be tested directly.                                                                                          |
+| UI            | `src/components/`, `src/app/`                  | Server-rendered landing and methodology pages (static); a client analysis view that consumes the stream.                                                                                                                                  |
 
 ## Key decisions
 
@@ -53,16 +53,16 @@ Dashboard renders the validated Report; exports are generated client-side.
 
 ## Budgets (defaults)
 
-| Budget | Value |
-| --- | --- |
-| Tree entries | 100,000 |
-| Key files (manifests, README, CI, nested package.json) | 40 × ≤ 256 KB |
-| Sampled text files for credential scanning | 80 × ≤ 100 KB |
-| Total content per scan | 3 MB |
-| Scan deadline | 25 s (route `maxDuration` 60 s) |
-| Per-request timeout | 10 s |
-| Fetch concurrency | 8 |
-| Concurrent scans per instance | 4 |
+| Budget                                                 | Value                           |
+| ------------------------------------------------------ | ------------------------------- |
+| Tree entries                                           | 100,000                         |
+| Key files (manifests, README, CI, nested package.json) | 40 × ≤ 256 KB                   |
+| Sampled text files for credential scanning             | 80 × ≤ 100 KB                   |
+| Total content per scan                                 | 3 MB                            |
+| Scan deadline                                          | 25 s (route `maxDuration` 60 s) |
+| Per-request timeout                                    | 10 s                            |
+| Fetch concurrency                                      | 8                               |
+| Concurrent scans per instance                          | 4                               |
 
 ## Testing strategy
 

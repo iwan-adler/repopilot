@@ -20,8 +20,12 @@ export function ScoreBreakdown({ report }: { report: Report }) {
               <span className="font-medium">{c.label}</span>
               <span className="text-sm text-fg-subtle">
                 weight {Math.round(c.weight * 100)}%
-                {c.score !== null && Math.abs(c.effectiveWeight - c.weight) > 0.001 && <> → {Math.round(c.effectiveWeight * 100)}% effective</>}
-                <span className={`ml-3 text-base font-semibold tabular-nums ${scoreColor(c.score)}`}>{c.score === null ? "n/a" : Math.round(c.score)}</span>
+                {c.score !== null && Math.abs(c.effectiveWeight - c.weight) > 0.001 && (
+                  <> → {Math.round(c.effectiveWeight * 100)}% effective</>
+                )}
+                <span className={`ml-3 text-base font-semibold tabular-nums ${scoreColor(c.score)}`}>
+                  {c.score === null ? "n/a" : Math.round(c.score)}
+                </span>
               </span>
             </div>
             <div

@@ -71,7 +71,14 @@ describe("detectLanguages", () => {
   });
 
   it("falls back to file extensions", () => {
-    const r = detectLanguages({ files: [{ path: "a.py", size: 300 }, { path: "b.go", size: 100 }, { path: "node_modules/x.js", size: 9999 }], languages: null });
+    const r = detectLanguages({
+      files: [
+        { path: "a.py", size: 300 },
+        { path: "b.go", size: 100 },
+        { path: "node_modules/x.js", size: 9999 },
+      ],
+      languages: null,
+    });
     expect(r.languageSource).toBe("file-extensions");
     expect(r.languages.map((l) => l.name)).toEqual(["Python", "Go"]);
   });

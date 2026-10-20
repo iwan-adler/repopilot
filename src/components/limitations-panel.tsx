@@ -17,8 +17,8 @@ export function LimitationsPanel({ report }: { report: Report }) {
         <li>Git history, issues, pull requests and branches other than the default branch are not analyzed.</li>
       </ul>
       <p className="mt-4 text-xs text-fg-subtle">
-        This scan: {b.apiRequests} GitHub API requests · {b.filesFetched} files inspected ({formatBytes(b.bytesFetched)}) · {b.filesSkipped} skipped ·{" "}
-        {(b.durationMs / 1000).toFixed(1)} s · engine {report.engineVersion}
+        This scan: {b.apiRequests} GitHub API requests · {b.filesFetched} files inspected ({formatBytes(b.bytesFetched)}) · {b.filesSkipped}{" "}
+        skipped · {(b.durationMs / 1000).toFixed(1)} s · engine {report.engineVersion}
       </p>
     </Card>
   );

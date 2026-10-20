@@ -65,7 +65,10 @@ export function HealthOverview({ report }: { report: Report }) {
         </div>
         <dl className="grid shrink-0 grid-cols-5 gap-2 md:w-72 md:grid-cols-1 md:gap-1.5">
           {counts.map(({ severity, n }) => (
-            <div key={severity} className="flex flex-col items-center rounded-lg border border-line bg-ink-850 px-2 py-2 md:flex-row md:justify-between md:px-3 md:py-1.5">
+            <div
+              key={severity}
+              className="flex flex-col items-center rounded-lg border border-line bg-ink-850 px-2 py-2 md:flex-row md:justify-between md:px-3 md:py-1.5"
+            >
               <dt className={`flex items-center gap-1.5 text-xs ${SEVERITY_STYLES[severity].text}`}>
                 <span className={`h-1.5 w-1.5 rounded-full ${SEVERITY_STYLES[severity].dot}`} aria-hidden="true" />
                 {SEVERITY_STYLES[severity].label}

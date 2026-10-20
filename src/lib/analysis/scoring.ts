@@ -1,4 +1,4 @@
-import type { CategoryScore, CheckResult, CheckStatus, Score, ScoreCategoryId } from "@/lib/reports/schema";
+import type { CategoryScore, CheckResult, CheckStatus, PlanItem, Score, ScoreCategoryId } from "@/lib/reports/schema";
 
 /**
  * Transparent scoring (documented in docs/SCORING.md).
@@ -109,4 +109,34 @@ export function computeScore(checks: CheckResult[], config: CategoryConfig[] = D
     categories,
     method: SCORING_METHOD,
   };
+}
+
+/**
+ * Ranks failing/warning checks by how much fixing each one alone would raise the overall score.
+ * Computed by re-running computeScore with that check set to "pass", so it uses exactly the
+ * same arithmetic as the displayed score. Gains are not additive (category weights interact).
+ */
+export function computePlan(checks: CheckResult[], config: CategoryConfig[] = DEFAULT_CATEGORY_WEIGHTS): PlanItem[] {
+  const base = computeScore(checks, config).overall;
+  if (base === null) return [];
+  const items: PlanItem[] = [];
+  for (const check of checks) {
+    if (check.weight <= 0 || (check.status !== "warn" && check.status !== "fail")) continue;
+    const projected = computeScore(
+      checks.map((c) => (c === check ? { ...c, status: "pass" as const } : c)),
+      config,
+    ).overall;
+    if (projected === null) continue;
+    const gain = round1(projected - base);
+    if (gain <= 0) continue;
+    items.push({
+      ruleId: check.ruleId,
+      title: check.title,
+      status: check.status,
+      scoreCategory: check.scoreCategory,
+      projectedScore: projected,
+      gain,
+    });
+  }
+  return items.sort((a, b) => b.gain - a.gain || a.ruleId.localeCompare(b.ruleId));
 }

@@ -59,7 +59,8 @@ describe("documentation rules", () => {
   });
 
   it("readmeSignals recognizes reStructuredText headings and code", () => {
-    const rst = "Project\n=======\n\nInstallation\n------------\n\n.. code-block:: bash\n\n   pip install x\n\nUsage\n-----\n" + "y".repeat(300);
+    const rst =
+      "Project\n=======\n\nInstallation\n------------\n\n.. code-block:: bash\n\n   pip install x\n\nUsage\n-----\n" + "y".repeat(300);
     expect(readmeSignals(rst).every((s) => s.present)).toBe(true);
   });
 
@@ -80,7 +81,14 @@ describe("documentation rules", () => {
 describe("testing rules", () => {
   it("TST001 test detection across ecosystems", () => {
     expect(evaluate("TST001", { "README.md": "x" }).status).toBe("not_applicable");
-    for (const p of ["src/a.test.ts", "tests/test_api.py", "pkg/api_test.go", "spec/user_spec.rb", "src/test/java/FooTest.java", "__tests__/x.js"]) {
+    for (const p of [
+      "src/a.test.ts",
+      "tests/test_api.py",
+      "pkg/api_test.go",
+      "spec/user_spec.rb",
+      "src/test/java/FooTest.java",
+      "__tests__/x.js",
+    ]) {
       expect([p, evaluate("TST001", { "src/a.ts": "x", [p]: "x" }).status]).toEqual([p, "pass"]);
     }
     expect(evaluate("TST001", { "src/lib.rs": "fn a(){}\n#[cfg(test)]\nmod tests {}" }).status).toBe("pass");
@@ -179,7 +187,7 @@ describe("dependency rules", () => {
   it("DEP003 package.json validity", () => {
     expect(evaluate("DEP003", SRC).status).toBe("not_applicable");
     expect(evaluate("DEP003", { "package.json": 10 }).status).toBe("unavailable");
-    expect(evaluate("DEP003", { "package.json": "﻿{\"name\":\"a\"}" }).status).toBe("pass");
+    expect(evaluate("DEP003", { "package.json": '﻿{"name":"a"}' }).status).toBe("pass");
     const r = evaluate("DEP003", { "package.json": '{"name": "a",}', "packages/b/package.json": "[]" });
     expect(r.status).toBe("fail");
     expect(r.findings?.[0].evidence).toHaveLength(2);
@@ -299,7 +307,9 @@ describe("maintainability rules", () => {
     expect(evaluate("MNT001", { "src/a.ts": 150_000 }).status).toBe("warn");
     expect(evaluate("MNT001", { "src/a.ts": 400_000 }).status).toBe("fail");
     // Generated, vendored and minified files are excluded.
-    expect(evaluate("MNT001", { "src/a.ts": 10, "dist/bundle.js": 900_000, "public/x.min.js": 900_000, "vendor/lib.c": 900_000 }).status).toBe("pass");
+    expect(
+      evaluate("MNT001", { "src/a.ts": 10, "dist/bundle.js": 900_000, "public/x.min.js": 900_000, "vendor/lib.c": 900_000 }).status,
+    ).toBe("pass");
     const custom = { oversizedFileBytes: 1000, largeFileBytes: 5_000_000 };
     expect(evaluate("MNT001", { "src/a.ts": 2000 }, { options: custom }).status).toBe("warn");
   });

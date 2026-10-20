@@ -1,25 +1,8 @@
-import type {
-  CheckStatus,
-  Confidence,
-  Evidence,
-  FindingCategory,
-  FindingKind,
-  ScoreCategoryId,
-  Severity,
-} from "@/lib/reports/schema";
+import type { CheckStatus, Confidence, Evidence, FindingCategory, FindingKind, ScoreCategoryId, Severity } from "@/lib/reports/schema";
 import { findPath, type AnalysisContext, type RepoFile } from "./context";
 import { fetchedPackageJsons } from "./detect-stack";
 import { allDependencies, parsePackageJson, type PackageJson } from "./manifests";
-import {
-  basename,
-  extname,
-  formatBytes,
-  isBinaryExtension,
-  isNonAuthoredPath,
-  isRootFile,
-  isSourceFile,
-  isTestFile,
-} from "./paths";
+import { basename, extname, formatBytes, isBinaryExtension, isNonAuthoredPath, isRootFile, isSourceFile, isTestFile } from "./paths";
 import { scanTextForSecrets, type SecretMatch } from "./secrets";
 import {
   checksOutPullRequestHead,
@@ -107,7 +90,8 @@ function anyFile(ctx: AnalysisContext, pattern: RegExp): RepoFile | undefined {
   return ctx.files.find((f) => !isNonAuthoredPath(f.path) && pattern.test(f.path));
 }
 
-const LOW_RISK_PATH_RE = /(^|\/)(tests?|__tests__|spec|specs|fixtures?|testdata|test-data|examples?|samples?|docs?|mocks?|__mocks__)(\/|$)/i;
+const LOW_RISK_PATH_RE =
+  /(^|\/)(tests?|__tests__|spec|specs|fixtures?|testdata|test-data|examples?|samples?|docs?|mocks?|__mocks__)(\/|$)/i;
 
 function isLowRiskPath(path: string): boolean {
   return LOW_RISK_PATH_RE.test(path);
@@ -128,8 +112,7 @@ export const RULES: Rule[] = [
     scoreCategory: "hygiene",
     weight: 1,
     kind: "observation",
-    rationale:
-      "A .gitignore keeps build output, dependencies, editor files, and local secrets out of version control.",
+    rationale: "A .gitignore keeps build output, dependencies, editor files, and local secrets out of version control.",
     evaluate(ctx) {
       const path = findPath(ctx, [".gitignore"]);
       if (path) return { status: "pass", summary: "Root .gitignore found." };
@@ -208,8 +191,7 @@ export const RULES: Rule[] = [
             title: "No README found",
             description: "No README file was found at the repository root, in .github/, or in docs/.",
             evidence: [{ detail: "Searched for README, README.md, README.rst, README.txt (case-insensitive)." }],
-            recommendation:
-              "Add a README.md describing what the project does, how to install and run it, and how to contribute.",
+            recommendation: "Add a README.md describing what the project does, how to install and run it, and how to contribute.",
             confidence: "high",
           },
         ],
@@ -223,8 +205,7 @@ export const RULES: Rule[] = [
     scoreCategory: "hygiene",
     weight: 2,
     kind: "heuristic",
-    rationale:
-      "READMEs that explain installation and usage with examples reduce onboarding time and support requests.",
+    rationale: "READMEs that explain installation and usage with examples reduce onboarding time and support requests.",
     evaluate(ctx) {
       const readme = findReadme(ctx);
       if (!readme) return { status: "not_applicable", summary: "No README (covered by DOC001)." };
@@ -294,8 +275,13 @@ export const RULES: Rule[] = [
     rationale: "A contribution guide tells potential contributors how to set up, test, and submit changes.",
     evaluate(ctx) {
       const path = findPath(ctx, [
-        "CONTRIBUTING.md", "CONTRIBUTING", "CONTRIBUTING.rst", "CONTRIBUTING.txt",
-        ".github/CONTRIBUTING.md", "docs/CONTRIBUTING.md", "docs/contributing.md",
+        "CONTRIBUTING.md",
+        "CONTRIBUTING",
+        "CONTRIBUTING.rst",
+        "CONTRIBUTING.txt",
+        ".github/CONTRIBUTING.md",
+        "docs/CONTRIBUTING.md",
+        "docs/contributing.md",
       ]);
       if (path) return { status: "pass", summary: `Contribution guide at ${path}.` };
       return {
@@ -382,7 +368,12 @@ export const RULES: Rule[] = [
             description: hasTests
               ? "Test files exist, but RepoPilot could not identify the framework that runs them from manifests or config files."
               : "No test framework dependency or configuration file was found.",
-            evidence: [{ detail: "Checked manifests and config files for Jest, Vitest, Mocha, Playwright, Cypress, pytest, JUnit, RSpec, PHPUnit and others." }],
+            evidence: [
+              {
+                detail:
+                  "Checked manifests and config files for Jest, Vitest, Mocha, Playwright, Cypress, pytest, JUnit, RSpec, PHPUnit and others.",
+              },
+            ],
             recommendation: hasTests
               ? "Declare the test runner explicitly (as a dev dependency or config file) so contributors know how to run the tests."
               : "Add a test runner for your stack (e.g. Vitest or Jest for JS/TS, pytest for Python) and document the test command.",
@@ -452,7 +443,9 @@ export const RULES: Rule[] = [
             severity: "medium",
             title: "CI does not appear to run tests",
             description: `${pluralize(fetched.length, "CI configuration file")} inspected; none contains a recognizable test command.`,
-            evidence: fetched.slice(0, MAX_EVIDENCE).map((f) => ({ path: f.path, detail: "No test command matched (e.g. npm test, pytest, go test, cargo test)." })),
+            evidence: fetched
+              .slice(0, MAX_EVIDENCE)
+              .map((f) => ({ path: f.path, detail: "No test command matched (e.g. npm test, pytest, go test, cargo test)." })),
             recommendation:
               "Add a step that runs your test suite on every push and pull request. If tests run via a custom script or make target, this may be a false positive.",
             confidence: "medium",
@@ -475,12 +468,19 @@ export const RULES: Rule[] = [
       const checks: { applies: boolean; found: string | null; ecosystem: string }[] = [];
       const pkgs = fetchedPackageJsons(ctx);
       if (isJsProject(ctx)) {
-        const file = anyFile(ctx, /(^|\/)(eslint\.config\.[cm]?[jt]s|\.eslintrc(\.(js|cjs|json|ya?ml))?|biome\.jsonc?|\.oxlintrc\.json|deno\.jsonc?|\.jshintrc|tslint\.json)$/);
+        const file = anyFile(
+          ctx,
+          /(^|\/)(eslint\.config\.[cm]?[jt]s|\.eslintrc(\.(js|cjs|json|ya?ml))?|biome\.jsonc?|\.oxlintrc\.json|deno\.jsonc?|\.jshintrc|tslint\.json)$/,
+        );
         const dep = pkgs.find(({ pkg }) => {
           const d = allDependencies(pkg);
           return d.eslint || d["@biomejs/biome"] || d.oxlint || d.xo || d.standard || pkg.eslintConfig;
         });
-        checks.push({ applies: true, ecosystem: "JavaScript/TypeScript", found: file?.path ?? (dep ? `lint dependency in ${dep.path}` : null) });
+        checks.push({
+          applies: true,
+          ecosystem: "JavaScript/TypeScript",
+          found: file?.path ?? (dep ? `lint dependency in ${dep.path}` : null),
+        });
       }
       if (isPythonProject(ctx)) {
         const file = anyFile(ctx, /(^|\/)(ruff\.toml|\.ruff\.toml|\.flake8|\.pylintrc|pylintrc)$/);
@@ -498,7 +498,11 @@ export const RULES: Rule[] = [
         checks.push({ applies: true, ecosystem: "Ruby", found: anyFile(ctx, /(^|\/)\.(rubocop|standard)\.ya?ml$/)?.path ?? null });
       }
       if (usesLanguage(ctx, ["PHP"])) {
-        checks.push({ applies: true, ecosystem: "PHP", found: anyFile(ctx, /(^|\/)(phpcs\.xml(\.dist)?|phpstan\.neon(\.dist)?|psalm\.xml)$/)?.path ?? null });
+        checks.push({
+          applies: true,
+          ecosystem: "PHP",
+          found: anyFile(ctx, /(^|\/)(phpcs\.xml(\.dist)?|phpstan\.neon(\.dist)?|psalm\.xml)$/)?.path ?? null,
+        });
       }
       if (checks.length === 0) return { status: "not_applicable", summary: "No ecosystem with a linter check (JS/TS, Python, Ruby, PHP)." };
       const missing = checks.filter((c) => !c.found);
@@ -535,7 +539,10 @@ export const RULES: Rule[] = [
       let applicable = false;
       if (isJsProject(ctx)) {
         applicable = true;
-        const file = anyFile(ctx, /(^|\/)(\.prettierrc(\.(json|ya?ml|js|cjs|mjs|toml|json5))?|prettier\.config\.[cm]?[jt]s|biome\.jsonc?|dprint\.jsonc?|deno\.jsonc?|tsfmt\.json)$/);
+        const file = anyFile(
+          ctx,
+          /(^|\/)(\.prettierrc(\.(json|ya?ml|js|cjs|mjs|toml|json5))?|prettier\.config\.[cm]?[jt]s|biome\.jsonc?|dprint\.jsonc?|deno\.jsonc?|tsfmt\.json)$/,
+        );
         const dep = pkgs.find(({ pkg }) => {
           const d = allDependencies(pkg);
           return d.prettier || d["@biomejs/biome"] || d.dprint || pkg.prettier;
@@ -561,7 +568,8 @@ export const RULES: Rule[] = [
             title: `No formatter configured for ${missing.join(", ")}`,
             description: "No formatter configuration (e.g. Prettier, Biome, Black, Ruff) was detected.",
             evidence: missing.map((m) => ({ detail: `${m}: no formatter configuration detected.` })),
-            recommendation: "Adopt an automatic formatter (Prettier or Biome for JS/TS; Ruff or Black for Python) and enforce it in CI or a pre-commit hook.",
+            recommendation:
+              "Adopt an automatic formatter (Prettier or Biome for JS/TS; Ruff or Black for Python) and enforce it in CI or a pre-commit hook.",
             confidence: "medium",
           },
         ],
@@ -590,7 +598,8 @@ export const RULES: Rule[] = [
           {
             severity: "medium",
             title: "No continuous integration configured",
-            description: "No configuration for GitHub Actions, GitLab CI, CircleCI, Travis, Azure Pipelines, Jenkins, or similar systems was found.",
+            description:
+              "No configuration for GitHub Actions, GitLab CI, CircleCI, Travis, Azure Pipelines, Jenkins, or similar systems was found.",
             evidence: [{ detail: "No .github/workflows/*.yml or other recognized CI configuration file." }],
             recommendation:
               "Add a GitHub Actions workflow (.github/workflows/ci.yml) that installs dependencies, lints, and runs tests on push and pull_request. It's free for public repositories.",
@@ -625,7 +634,12 @@ export const RULES: Rule[] = [
             severity: "low",
             title: "Conventional npm scripts missing",
             description: `The root package.json defines no ${missing.join(" or ")} script.`,
-            evidence: [{ path: "package.json", detail: `Defined scripts: ${keys.slice(0, 20).join(", ") || "(none)"}${keys.length > 20 ? ` (+${keys.length - 20} more)` : ""}` }],
+            evidence: [
+              {
+                path: "package.json",
+                detail: `Defined scripts: ${keys.slice(0, 20).join(", ") || "(none)"}${keys.length > 20 ? ` (+${keys.length - 20} more)` : ""}`,
+              },
+            ],
             recommendation: 'Add scripts such as "dev", "build" and "lint" so contributors can run common tasks with npm run <name>.',
             confidence: "high",
           },
@@ -654,7 +668,11 @@ export const RULES: Rule[] = [
           applicable = true;
           appLike = root.pkg.private === true;
           const lock = findPath(ctx, ["package-lock.json", "npm-shrinkwrap.json", "yarn.lock", "pnpm-lock.yaml", "bun.lock", "bun.lockb"]);
-          if (!lock) issues.push({ path: "package.json", detail: `${Object.keys(deps).length} dependencies declared but no npm/Yarn/pnpm/Bun lockfile at the root.` });
+          if (!lock)
+            issues.push({
+              path: "package.json",
+              detail: `${Object.keys(deps).length} dependencies declared but no npm/Yarn/pnpm/Bun lockfile at the root.`,
+            });
         }
       }
       if (findPath(ctx, ["Pipfile"])) {
@@ -680,7 +698,8 @@ export const RULES: Rule[] = [
               "Dependencies are declared but no corresponding lockfile is committed." +
               (appLike ? "" : " Some published libraries intentionally omit lockfiles; applications should commit them."),
             evidence: issues,
-            recommendation: "Commit the lockfile your package manager generates (e.g. package-lock.json, pnpm-lock.yaml, poetry.lock) and use frozen installs in CI (npm ci).",
+            recommendation:
+              "Commit the lockfile your package manager generates (e.g. package-lock.json, pnpm-lock.yaml, poetry.lock) and use frozen installs in CI (npm ci).",
             confidence: appLike ? "high" : "medium",
           },
         ],
@@ -735,7 +754,8 @@ export const RULES: Rule[] = [
       const invalid = fetched
         .map((f) => ({ path: f.path, result: parsePackageJson(ctx.contents.get(f.path)!) }))
         .filter((x) => !x.result.ok);
-      if (invalid.length === 0) return { status: "pass", summary: `${pluralize(fetched.length, "package.json file")} parsed successfully.` };
+      if (invalid.length === 0)
+        return { status: "pass", summary: `${pluralize(fetched.length, "package.json file")} parsed successfully.` };
       return {
         status: "fail",
         summary: `${pluralize(invalid.length, "package.json file")} failed to parse.`,
@@ -763,12 +783,20 @@ export const RULES: Rule[] = [
     evaluate(ctx) {
       if (ctx.stack.manifests.length === 0) return { status: "not_applicable", summary: "No dependency manifests." };
       const path = findPath(ctx, [
-        ".github/dependabot.yml", ".github/dependabot.yaml", "renovate.json", "renovate.json5",
-        ".renovaterc", ".renovaterc.json", ".github/renovate.json", ".github/renovate.json5", ".gitlab/renovate.json",
+        ".github/dependabot.yml",
+        ".github/dependabot.yaml",
+        "renovate.json",
+        "renovate.json5",
+        ".renovaterc",
+        ".renovaterc.json",
+        ".github/renovate.json",
+        ".github/renovate.json5",
+        ".gitlab/renovate.json",
       ]);
       const root = rootPackage(ctx);
       if (path) return { status: "pass", summary: `Configured via ${path}.` };
-      if (root.state === "ok" && root.pkg.renovate !== undefined) return { status: "pass", summary: 'Renovate configured in package.json "renovate" key.' };
+      if (root.state === "ok" && root.pkg.renovate !== undefined)
+        return { status: "pass", summary: 'Renovate configured in package.json "renovate" key.' };
       return {
         status: "warn",
         summary: "No Dependabot or Renovate configuration.",
@@ -778,7 +806,8 @@ export const RULES: Rule[] = [
             title: "No automated dependency updates",
             description: "No Dependabot or Renovate configuration was found.",
             evidence: [{ detail: "Checked .github/dependabot.yml and common Renovate config locations." }],
-            recommendation: "Add .github/dependabot.yml (free on GitHub) to receive update and security pull requests for your dependencies.",
+            recommendation:
+              "Add .github/dependabot.yml (free on GitHub) to receive update and security pull requests for your dependencies.",
             confidence: "high",
           },
         ],
@@ -820,7 +849,8 @@ export const RULES: Rule[] = [
             title: "Unbounded dependency versions",
             description: `${pluralize(evidence.length, "dependency", "dependencies")} accept any version.`,
             evidence: evidence.slice(0, MAX_EVIDENCE),
-            recommendation: 'Replace "*" / "latest" with a semver range (e.g. "^4.2.0") and rely on the lockfile plus Dependabot for updates.',
+            recommendation:
+              'Replace "*" / "latest" with a semver range (e.g. "^4.2.0") and rely on the lockfile plus Dependabot for updates.',
             confidence: "high",
           },
         ],
@@ -937,8 +967,12 @@ export const RULES: Rule[] = [
             description:
               `${pluralize(keyFiles.length, "file")} with key/keystore names or extensions ${keyFiles.length === 1 ? "is" : "are"} tracked. ` +
               "Some may be public certificates or test fixtures; RepoPilot identifies them by name only.",
-            evidence: keyFiles.slice(0, MAX_EVIDENCE).map((f) => ({ path: f.path, detail: isLowRiskPath(f.path) ? "In a test/fixture/example path." : "Key-like file name or extension." })),
-            recommendation: "Confirm these files contain no private key material. Remove real keys from the repository, rotate them, and load them from a secret store at runtime.",
+            evidence: keyFiles.slice(0, MAX_EVIDENCE).map((f) => ({
+              path: f.path,
+              detail: isLowRiskPath(f.path) ? "In a test/fixture/example path." : "Key-like file name or extension.",
+            })),
+            recommendation:
+              "Confirm these files contain no private key material. Remove real keys from the repository, rotate them, and load them from a secret store at runtime.",
             confidence: real.length > 0 ? "medium" : "low",
           },
         ],
@@ -966,7 +1000,8 @@ export const RULES: Rule[] = [
             title: "No security policy",
             description: "No SECURITY.md was found in the root, .github/ or docs/.",
             evidence: [{ detail: "Searched SECURITY.md in root, .github/ and docs/." }],
-            recommendation: "Add SECURITY.md describing supported versions and how to report vulnerabilities (GitHub private vulnerability reporting is free). Organization-wide defaults from a separate .github repository are not checked, so this may not apply if your organization provides one.",
+            recommendation:
+              "Add SECURITY.md describing supported versions and how to report vulnerabilities (GitHub private vulnerability reporting is free). Organization-wide defaults from a separate .github repository are not checked, so this may not apply if your organization provides one.",
             confidence: "high",
           },
         ],
@@ -996,7 +1031,8 @@ export const RULES: Rule[] = [
         if (line) risky.push({ path: f.path, line, detail: "pull_request_target workflow checks out the pull request head ref." });
         else prt.push({ path: f.path, detail: "Workflow is triggered by pull_request_target." });
       }
-      if (risky.length === 0 && prt.length === 0) return { status: "pass", summary: `${pluralize(fetched.length, "workflow")} checked; no pull_request_target usage.` };
+      if (risky.length === 0 && prt.length === 0)
+        return { status: "pass", summary: `${pluralize(fetched.length, "workflow")} checked; no pull_request_target usage.` };
       if (risky.length > 0) {
         return {
           status: "fail",
@@ -1050,7 +1086,8 @@ export const RULES: Rule[] = [
           evidence.push({ path: f.path, line, detail: "Untrusted github.event expression interpolated into a script." });
         }
       }
-      if (evidence.length === 0) return { status: "pass", summary: `${pluralize(fetched.length, "workflow")} checked; no untrusted interpolation in scripts.` };
+      if (evidence.length === 0)
+        return { status: "pass", summary: `${pluralize(fetched.length, "workflow")} checked; no untrusted interpolation in scripts.` };
       return {
         status: "fail",
         summary: `${pluralize(evidence.length, "possible script injection")}.`,
@@ -1061,7 +1098,7 @@ export const RULES: Rule[] = [
             description: "Attacker-controllable event fields are interpolated with ${{ }} inside run: or script: blocks.",
             evidence: evidence.slice(0, MAX_EVIDENCE),
             recommendation:
-              "Pass the value through an environment variable (env: TITLE: ${{ github.event.issue.title }}) and reference it as \"$TITLE\" in the script instead of interpolating it directly.",
+              'Pass the value through an environment variable (env: TITLE: ${{ github.event.issue.title }}) and reference it as "$TITLE" in the script instead of interpolating it directly.',
             confidence: "medium",
           },
         ],
@@ -1088,7 +1125,8 @@ export const RULES: Rule[] = [
           evidence.push({ path: f.path, line: u.line, detail: `uses: ${u.ref}` });
         }
       }
-      if (evidence.length === 0) return { status: "pass", summary: "All third-party actions are pinned to commit SHAs (or none are used)." };
+      if (evidence.length === 0)
+        return { status: "pass", summary: "All third-party actions are pinned to commit SHAs (or none are used)." };
       return {
         status: "warn",
         summary: `${pluralize(evidence.length, "third-party action reference")} not pinned to a SHA.`,
@@ -1098,7 +1136,8 @@ export const RULES: Rule[] = [
             title: "Third-party actions referenced by mutable tags",
             description: `${pluralize(evidence.length, "third-party action reference")} use a tag or branch instead of a full commit SHA.`,
             evidence: evidence.slice(0, MAX_EVIDENCE),
-            recommendation: "Pin third-party actions to a full-length commit SHA (with the version in a comment) and let Dependabot update them.",
+            recommendation:
+              "Pin third-party actions to a full-length commit SHA (with the version in a comment) and let Dependabot update them.",
             confidence: "high",
           },
         ],
@@ -1171,9 +1210,13 @@ export const RULES: Rule[] = [
           light.set(p, 1);
         }
       }
-      if (heavy.size === 0 && light.size === 0) return { status: "pass", summary: "No dependency, virtualenv or cache directories committed." };
+      if (heavy.size === 0 && light.size === 0)
+        return { status: "pass", summary: "No dependency, virtualenv or cache directories committed." };
       const isHeavy = heavy.size > 0;
-      const evidence = [...heavy.keys(), ...light.keys()].slice(0, MAX_EVIDENCE).map((p) => ({ path: p, detail: heavy.has(p) ? "Dependency/virtualenv directory tracked in Git." : "Cache or OS metadata file tracked in Git." }));
+      const evidence = [...heavy.keys(), ...light.keys()].slice(0, MAX_EVIDENCE).map((p) => ({
+        path: p,
+        detail: heavy.has(p) ? "Dependency/virtualenv directory tracked in Git." : "Cache or OS metadata file tracked in Git.",
+      }));
       return {
         status: isHeavy ? "fail" : "warn",
         summary: `${pluralize(heavy.size + light.size, "unwanted path")} committed.`,
@@ -1185,7 +1228,8 @@ export const RULES: Rule[] = [
               ? "Installed dependencies or a virtual environment are tracked in Git."
               : "Generated caches or OS metadata files are tracked in Git.",
             evidence,
-            recommendation: "Remove them with git rm -r --cached <path>, add the patterns to .gitignore, and reinstall dependencies from the manifest.",
+            recommendation:
+              "Remove them with git rm -r --cached <path>, add the patterns to .gitignore, and reinstall dependencies from the manifest.",
             confidence: "high",
           },
         ],
@@ -1214,7 +1258,9 @@ export const RULES: Rule[] = [
             severity: severe ? "medium" : "low",
             title: "Large files committed directly to Git",
             description: `${pluralize(large.length, "file")} exceed ${formatBytes(limit)}. Files stored with Git LFS appear as small pointers, so these are stored in Git directly.`,
-            evidence: large.slice(0, 10).map((f) => ({ path: f.path, detail: `${formatBytes(f.size)}${isBinaryExtension(f.path) ? " (binary)" : ""}` })),
+            evidence: large
+              .slice(0, 10)
+              .map((f) => ({ path: f.path, detail: `${formatBytes(f.size)}${isBinaryExtension(f.path) ? " (binary)" : ""}` })),
             recommendation: "Move large binaries and datasets to Git LFS, a release asset, or external storage.",
             confidence: "high",
           },
@@ -1270,7 +1316,10 @@ export function readmeSignals(text: string): { label: string; present: boolean }
   return [
     { label: "substantive content (at least 300 characters)", present: plain.trim().length >= 300 },
     { label: "section headings", present: headings.length + rstHeadings.length >= 2 },
-    { label: "installation / getting-started instructions", present: /install|getting started|get started|quick ?start|setup|set up/i.test(searchable) },
+    {
+      label: "installation / getting-started instructions",
+      present: /install|getting started|get started|quick ?start|setup|set up/i.test(searchable),
+    },
     { label: "usage or examples", present: /usage|example|how to use|running|run the|demo|tutorial/i.test(searchable) },
     { label: "code block", present: /```|~~~|^\s*\.\. code(-block)?::|^ {4}\S/m.test(plain) || /<pre[\s>]/i.test(plain) },
   ];

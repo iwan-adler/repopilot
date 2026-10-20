@@ -16,7 +16,13 @@ export function StackSummary({ report }: { report: Report }) {
         <h3 className="text-sm font-medium text-fg-muted">
           Languages{" "}
           <span className="font-normal text-fg-subtle">
-            ({stack.languageSource === "github-linguist" ? "GitHub linguist" : stack.languageSource === "file-extensions" ? "estimated from file extensions" : "none detected"})
+            (
+            {stack.languageSource === "github-linguist"
+              ? "GitHub linguist"
+              : stack.languageSource === "file-extensions"
+                ? "estimated from file extensions"
+                : "none detected"}
+            )
           </span>
         </h3>
         {langs.length > 0 ? (

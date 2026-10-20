@@ -45,7 +45,9 @@ describe("analyzeRepository (end to end with a fake GitHub)", () => {
 
   it("rejects private repositories even if visible to the token", async () => {
     const gh = fakeGitHub({ private: true, files: { a: "x" } });
-    await expect(analyzeRepository("acme", "widget", { client: new GitHubClient({ fetch: gh.fetch }) })).rejects.toMatchObject({ code: "private_repository" });
+    await expect(analyzeRepository("acme", "widget", { client: new GitHubClient({ fetch: gh.fetch }) })).rejects.toMatchObject({
+      code: "private_repository",
+    });
   });
 
   it("reports empty repositories", async () => {
@@ -57,11 +59,15 @@ describe("analyzeRepository (end to end with a fake GitHub)", () => {
 
   it("propagates not-found and rate-limit errors", async () => {
     const missing = fakeGitHub({ owner: "other" });
-    await expect(analyzeRepository("acme", "widget", { client: new GitHubClient({ fetch: missing.fetch }) })).rejects.toMatchObject({ code: "not_found" });
+    await expect(analyzeRepository("acme", "widget", { client: new GitHubClient({ fetch: missing.fetch }) })).rejects.toMatchObject({
+      code: "not_found",
+    });
     const limited = fakeGitHub({
       overrides: { "api.github.com": () => json({ message: "API rate limit exceeded" }, 403, { "x-ratelimit-remaining": "0" }) },
     });
-    await expect(analyzeRepository("acme", "widget", { client: new GitHubClient({ fetch: limited.fetch }) })).rejects.toBeInstanceOf(GitHubError);
+    await expect(analyzeRepository("acme", "widget", { client: new GitHubClient({ fetch: limited.fetch }) })).rejects.toBeInstanceOf(
+      GitHubError,
+    );
   });
 
   it("degrades gracefully when language stats fail and the tree is truncated", async () => {
@@ -146,7 +152,7 @@ describe("selectFiles", () => {
 
 describe("analyzeContext", () => {
   it("handles a documentation-only repository without inventing scores", () => {
-    const r = report({ "README.md": "# Awesome list\n\n- item", "LICENSE": "CC0" });
+    const r = report({ "README.md": "# Awesome list\n\n- item", LICENSE: "CC0" });
     expect(r.score.categories.find((c) => c.id === "testing")?.score).toBeNull();
     expect(r.limitations.some((l) => l.code === "category_unavailable_testing")).toBe(true);
     expect(r.score.overall).not.toBeNull();

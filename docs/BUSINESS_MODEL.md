@@ -23,20 +23,20 @@ Small teams, students and indie maintainers need a **60-second, no-setup check**
 
 ## Target customers
 
-| Segment | Job to be done |
-| --- | --- |
-| Independent developers & indie hackers | "Is my project presentable before launch or before I ask for contributors?" |
-| Student teams | "Does our project meet good-practice expectations before submission?" |
-| Open-source maintainers | "What community and hygiene gaps should I close?" |
-| Small engineering teams / early startups | "Which of our repos need attention? Is this dependency's repo healthy?" |
+| Segment                                  | Job to be done                                                              |
+| ---------------------------------------- | --------------------------------------------------------------------------- |
+| Independent developers & indie hackers   | "Is my project presentable before launch or before I ask for contributors?" |
+| Student teams                            | "Does our project meet good-practice expectations before submission?"       |
+| Open-source maintainers                  | "What community and hygiene gaps should I close?"                           |
+| Small engineering teams / early startups | "Which of our repos need attention? Is this dependency's repo healthy?"     |
 
 ## Pricing (proposed, unvalidated)
 
-| Tier | Proposed price | Contents | Status |
-| --- | --- | --- | --- |
-| Free | $0 | Public-repo scans, all checks, Markdown/JSON export | **Available** |
-| Pro | $9/month | Scan history, trend charts, commit/branch comparison, larger content budgets, branded reports | Planned |
-| Team | $29/month | Shared workspace, private repos via a GitHub App, scheduled scans and alerts, custom weights | Planned |
+| Tier | Proposed price | Contents                                                                                      | Status        |
+| ---- | -------------- | --------------------------------------------------------------------------------------------- | ------------- |
+| Free | $0             | Public-repo scans, all checks, Markdown/JSON export                                           | **Available** |
+| Pro  | $9/month       | Scan history, trend charts, commit/branch comparison, larger content budgets, branded reports | Planned       |
+| Team | $29/month      | Shared workspace, private repos via a GitHub App, scheduled scans and alerts, custom weights  | Planned       |
 
 Revenue model: recurring subscriptions, with the free tier as the acquisition funnel. Pro and Team features all require persistence (history, workspaces), which is why they are paid: they create real infrastructure cost.
 
@@ -57,19 +57,22 @@ Revenue model: recurring subscriptions, with the free tier as the acquisition fu
 ## Costs (honest)
 
 ### Today (hackathon MVP): ₹0
-| Item | Provider | Cost |
-| --- | --- | --- |
-| Hosting + functions | Vercel Hobby | Free |
-| GitHub API | Fine-grained personal token, 5,000 req/h | Free |
-| CI | GitHub Actions (public repo) | Free |
-| AI inference | None used | — |
+
+| Item                | Provider                                 | Cost |
+| ------------------- | ---------------------------------------- | ---- |
+| Hosting + functions | Vercel Hobby                             | Free |
+| GitHub API          | Fine-grained personal token, 5,000 req/h | Free |
+| CI                  | GitHub Actions (public repo)             | Free |
+| AI inference        | None used                                | —    |
 
 ### Constraints to know
+
 - **Vercel Hobby is restricted to non-commercial, personal use** (Vercel Fair Use Guidelines, checked 2026-10-20). Accepting payments, or arguably even advertising paid plans, requires Vercel Pro or another host. The MVP collects no payments and labels paid tiers as proposals, but **before launching any paid tier RepoPilot must move to a commercial plan** (Vercel Pro is billed per member; check vercel.com/pricing for the current price) or a host whose free tier permits commercial use.
 - Hobby includes about 1M function invocations, 4 hours of Active CPU and 100 GB of Fast Data Transfer per month (Vercel docs, as of 2026-09). A scan is mostly network wait, which doesn't count as Active CPU; real per-scan CPU has not been measured in production yet.
 - GitHub's API limit (5,000 requests/hour per token, 4 per scan, before caching) caps throughput at about 1,250 uncached scans/hour per token. Scaling beyond that needs a GitHub App (higher limits per installation).
 
 ### Paid tiers would add
+
 - A database for history and workspaces (a free tier may suffice initially; to be verified when built).
 - A shared rate-limit/cache store (e.g. Redis).
 - Payment processing fees (a provider such as Stripe or Razorpay; fees are a percentage per transaction).

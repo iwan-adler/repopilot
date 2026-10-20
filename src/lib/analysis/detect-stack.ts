@@ -4,16 +4,55 @@ import { allDependencies, findManifests, parsePackageJson, type PackageJson } fr
 import { basename, extname, isNonAuthoredPath, isRootFile, isSourceFile } from "./paths";
 
 const EXTENSION_LANGUAGES: Record<string, string> = {
-  ts: "TypeScript", tsx: "TypeScript", mts: "TypeScript", cts: "TypeScript",
-  js: "JavaScript", jsx: "JavaScript", mjs: "JavaScript", cjs: "JavaScript",
-  py: "Python", rb: "Ruby", go: "Go", rs: "Rust", java: "Java", kt: "Kotlin", kts: "Kotlin", scala: "Scala",
-  cs: "C#", fs: "F#", php: "PHP", swift: "Swift", m: "Objective-C", mm: "Objective-C++", c: "C", h: "C",
-  cc: "C++", cpp: "C++", cxx: "C++", hpp: "C++", dart: "Dart", ex: "Elixir", exs: "Elixir", erl: "Erlang",
-  hs: "Haskell", lua: "Lua", r: "R", jl: "Julia", vue: "Vue", svelte: "Svelte", astro: "Astro",
-  clj: "Clojure", cljs: "Clojure", groovy: "Groovy", zig: "Zig", sol: "Solidity",
+  ts: "TypeScript",
+  tsx: "TypeScript",
+  mts: "TypeScript",
+  cts: "TypeScript",
+  js: "JavaScript",
+  jsx: "JavaScript",
+  mjs: "JavaScript",
+  cjs: "JavaScript",
+  py: "Python",
+  rb: "Ruby",
+  go: "Go",
+  rs: "Rust",
+  java: "Java",
+  kt: "Kotlin",
+  kts: "Kotlin",
+  scala: "Scala",
+  cs: "C#",
+  fs: "F#",
+  php: "PHP",
+  swift: "Swift",
+  m: "Objective-C",
+  mm: "Objective-C++",
+  c: "C",
+  h: "C",
+  cc: "C++",
+  cpp: "C++",
+  cxx: "C++",
+  hpp: "C++",
+  dart: "Dart",
+  ex: "Elixir",
+  exs: "Elixir",
+  erl: "Erlang",
+  hs: "Haskell",
+  lua: "Lua",
+  r: "R",
+  jl: "Julia",
+  vue: "Vue",
+  svelte: "Svelte",
+  astro: "Astro",
+  clj: "Clojure",
+  cljs: "Clojure",
+  groovy: "Groovy",
+  zig: "Zig",
+  sol: "Solidity",
 };
 
-export function detectLanguages(ctx: Pick<BaseContext, "files" | "languages">): Pick<Stack, "languages" | "languageSource" | "primaryLanguage"> {
+export function detectLanguages(
+  ctx: Pick<BaseContext, "files" | "languages">,
+): Pick<Stack, "languages" | "languageSource" | "primaryLanguage"> {
   let totals: Record<string, number>;
   let source: Stack["languageSource"];
   if (ctx.languages && Object.keys(ctx.languages).length > 0) {
@@ -49,12 +88,30 @@ export function fetchedPackageJsons(ctx: Pick<BaseContext, "contents">): { path:
 
 // npm dependency -> framework name (first match per framework wins)
 const NPM_FRAMEWORKS: [string, string][] = [
-  ["next", "Next.js"], ["nuxt", "Nuxt"], ["@sveltejs/kit", "SvelteKit"], ["astro", "Astro"],
-  ["@remix-run/react", "Remix"], ["@react-router/dev", "React Router"], ["gatsby", "Gatsby"],
-  ["@angular/core", "Angular"], ["react-native", "React Native"], ["expo", "Expo"], ["react", "React"],
-  ["vue", "Vue"], ["svelte", "Svelte"], ["solid-js", "Solid"], ["preact", "Preact"], ["@nestjs/core", "NestJS"],
-  ["express", "Express"], ["fastify", "Fastify"], ["koa", "Koa"], ["hono", "Hono"], ["electron", "Electron"],
-  ["vite", "Vite"], ["tailwindcss", "Tailwind CSS"], ["@tauri-apps/api", "Tauri"],
+  ["next", "Next.js"],
+  ["nuxt", "Nuxt"],
+  ["@sveltejs/kit", "SvelteKit"],
+  ["astro", "Astro"],
+  ["@remix-run/react", "Remix"],
+  ["@react-router/dev", "React Router"],
+  ["gatsby", "Gatsby"],
+  ["@angular/core", "Angular"],
+  ["react-native", "React Native"],
+  ["expo", "Expo"],
+  ["react", "React"],
+  ["vue", "Vue"],
+  ["svelte", "Svelte"],
+  ["solid-js", "Solid"],
+  ["preact", "Preact"],
+  ["@nestjs/core", "NestJS"],
+  ["express", "Express"],
+  ["fastify", "Fastify"],
+  ["koa", "Koa"],
+  ["hono", "Hono"],
+  ["electron", "Electron"],
+  ["vite", "Vite"],
+  ["tailwindcss", "Tailwind CSS"],
+  ["@tauri-apps/api", "Tauri"],
 ];
 
 // Regexes over manifest text: [manifest basename, regex, framework]
@@ -110,7 +167,17 @@ function manifestTexts(ctx: Pick<BaseContext, "contents">): { path: string; base
 }
 
 // Build-time frameworks that are legitimately declared as devDependencies.
-const DEV_OK_FRAMEWORKS = new Set(["vite", "tailwindcss", "@sveltejs/kit", "svelte", "astro", "electron", "nuxt", "gatsby", "@react-router/dev"]);
+const DEV_OK_FRAMEWORKS = new Set([
+  "vite",
+  "tailwindcss",
+  "@sveltejs/kit",
+  "svelte",
+  "astro",
+  "electron",
+  "nuxt",
+  "gatsby",
+  "@react-router/dev",
+]);
 
 export function detectFrameworks(ctx: Pick<BaseContext, "files" | "contents">): DetectedItem[] {
   const found: DetectedItem[] = [];
@@ -140,9 +207,18 @@ export function detectFrameworks(ctx: Pick<BaseContext, "files" | "contents">): 
 
 // npm dependency -> test framework
 const NPM_TEST_FRAMEWORKS: [string, string][] = [
-  ["vitest", "Vitest"], ["jest", "Jest"], ["mocha", "Mocha"], ["ava", "AVA"], ["jasmine", "Jasmine"],
-  ["@playwright/test", "Playwright"], ["cypress", "Cypress"], ["karma", "Karma"], ["uvu", "uvu"],
-  ["tap", "node-tap"], ["@testing-library/react", "Testing Library"], ["@web/test-runner", "Web Test Runner"],
+  ["vitest", "Vitest"],
+  ["jest", "Jest"],
+  ["mocha", "Mocha"],
+  ["ava", "AVA"],
+  ["jasmine", "Jasmine"],
+  ["@playwright/test", "Playwright"],
+  ["cypress", "Cypress"],
+  ["karma", "Karma"],
+  ["uvu", "uvu"],
+  ["tap", "node-tap"],
+  ["@testing-library/react", "Testing Library"],
+  ["@web/test-runner", "Web Test Runner"],
 ];
 
 const TEST_CONFIG_FILES: [RegExp, string][] = [
@@ -204,10 +280,21 @@ export function detectTestFrameworks(ctx: Pick<BaseContext, "files" | "contents"
 }
 
 const LOCKFILE_MANAGERS: [string, string][] = [
-  ["package-lock.json", "npm"], ["npm-shrinkwrap.json", "npm"], ["yarn.lock", "Yarn"], ["pnpm-lock.yaml", "pnpm"],
-  ["bun.lock", "Bun"], ["bun.lockb", "Bun"], ["poetry.lock", "Poetry"], ["pipfile.lock", "Pipenv"], ["uv.lock", "uv"],
-  ["cargo.lock", "Cargo"], ["gemfile.lock", "Bundler"], ["composer.lock", "Composer"], ["go.sum", "Go modules"],
-  ["pubspec.lock", "pub"], ["mix.lock", "Mix"],
+  ["package-lock.json", "npm"],
+  ["npm-shrinkwrap.json", "npm"],
+  ["yarn.lock", "Yarn"],
+  ["pnpm-lock.yaml", "pnpm"],
+  ["bun.lock", "Bun"],
+  ["bun.lockb", "Bun"],
+  ["poetry.lock", "Poetry"],
+  ["pipfile.lock", "Pipenv"],
+  ["uv.lock", "uv"],
+  ["cargo.lock", "Cargo"],
+  ["gemfile.lock", "Bundler"],
+  ["composer.lock", "Composer"],
+  ["go.sum", "Go modules"],
+  ["pubspec.lock", "pub"],
+  ["mix.lock", "Mix"],
 ];
 
 export function detectPackageManagers(ctx: Pick<BaseContext, "files" | "contents">): DetectedItem[] {

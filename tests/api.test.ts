@@ -88,7 +88,10 @@ describe("POST /api/analyze handler", () => {
   it("streams NDJSON progress and the final report", async () => {
     const res = await handleAnalyzeRequest(post({ url: "acme/widget" }, { accept: "application/x-ndjson" }), deps());
     expect(res.headers.get("content-type")).toContain("application/x-ndjson");
-    const lines = (await res.text()).trim().split("\n").map((l) => JSON.parse(l));
+    const lines = (await res.text())
+      .trim()
+      .split("\n")
+      .map((l) => JSON.parse(l));
     expect(lines.some((l) => l.type === "progress")).toBe(true);
     expect(lines.at(-1).type).toBe("result");
     expect(lines.at(-1).report.id).toBe("acme/widget@0123456789ab");
@@ -184,4 +187,3 @@ describe("rate-limit primitives", () => {
     expect(clientKey(new Headers())).toBe("unknown");
   });
 });
-

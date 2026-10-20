@@ -8,7 +8,7 @@ export function FindingDetail({ finding, defaultOpen = false }: { finding: Findi
   const [open, setOpen] = useState(defaultOpen);
   const panelId = useId();
   return (
-    <article className="rounded-lg border border-line bg-ink-850/60">
+    <article id={`finding-${finding.id}`} className="scroll-mt-20 rounded-lg border border-line bg-ink-850/60">
       <h3>
         <button
           type="button"
@@ -23,8 +23,8 @@ export function FindingDetail({ finding, defaultOpen = false }: { finding: Findi
           <span className="min-w-0 flex-1">
             <span className="block font-medium text-fg">{finding.title}</span>
             <span className="mt-0.5 block text-xs text-fg-subtle">
-              <span className="font-mono">{finding.ruleId}</span> · {CATEGORY_LABELS[finding.category]} · {finding.kind === "heuristic" ? "Heuristic" : "Verified observation"} ·{" "}
-              {finding.confidence} confidence
+              <span className="font-mono">{finding.ruleId}</span> · {CATEGORY_LABELS[finding.category]} ·{" "}
+              {finding.kind === "heuristic" ? "Heuristic" : "Verified observation"} · {finding.confidence} confidence
             </span>
           </span>
           <span aria-hidden="true" className={`mt-1 shrink-0 text-fg-subtle transition-transform ${open ? "rotate-90" : ""}`}>

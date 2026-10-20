@@ -4,7 +4,15 @@ import { Card, CATEGORY_LABELS } from "@/components/ui";
 import { RULES } from "@/lib/analysis/rules";
 import { DEFAULT_CATEGORY_WEIGHTS } from "@/lib/analysis/scoring";
 
-const CATEGORY_ORDER = ["testing", "security", "documentation", "developer-experience", "dependencies", "maintainability", "structure"] as const;
+const CATEGORY_ORDER = [
+  "testing",
+  "security",
+  "documentation",
+  "developer-experience",
+  "dependencies",
+  "maintainability",
+  "structure",
+] as const;
 
 const STEPS = [
   {
@@ -46,7 +54,12 @@ const TIERS = [
     price: "$29/mo",
     status: "Planned — not yet available",
     available: false,
-    features: ["Shared team workspace and reports", "Private repositories via GitHub App", "Scheduled scans and alerts", "Custom rule weights"],
+    features: [
+      "Shared team workspace and reports",
+      "Private repositories via GitHub App",
+      "Scheduled scans and alerts",
+      "Custom rule weights",
+    ],
   },
 ];
 
@@ -180,7 +193,9 @@ export default function Home() {
                   Analyze a repository
                 </Link>
               ) : (
-                <p className="mt-6 rounded-lg border border-dashed border-line px-4 py-2 text-center text-sm text-fg-subtle">Not available yet</p>
+                <p className="mt-6 rounded-lg border border-dashed border-line px-4 py-2 text-center text-sm text-fg-subtle">
+                  Not available yet
+                </p>
               )}
             </Card>
           ))}
@@ -198,7 +213,9 @@ export default function Home() {
               <li>Only public repositories are analyzed. No sign-in, no cookies, no analytics.</li>
               <li>Repository files are fetched read-only from GitHub, processed in memory, and never stored in a database.</li>
               <li>Reports are kept in a short-lived in-memory cache (up to 10 minutes) to reduce GitHub API usage.</li>
-              <li>Potential credentials are redacted before they leave the analyzer; full values are never displayed, logged or exported.</li>
+              <li>
+                Potential credentials are redacted before they leave the analyzer; full values are never displayed, logged or exported.
+              </li>
               <li>Server logs record only the repository name, outcome and duration.</li>
             </ul>
           </div>

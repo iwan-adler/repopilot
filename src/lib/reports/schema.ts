@@ -5,7 +5,7 @@ import { z } from "zod";
  * Every report returned by the API is validated against this schema.
  */
 
-export const SCHEMA_VERSION = "1.0" as const;
+export const SCHEMA_VERSION = "1.1" as const;
 
 export const SeveritySchema = z.enum(["critical", "high", "medium", "low", "info"]);
 export type Severity = z.infer<typeof SeveritySchema>;
@@ -175,6 +175,16 @@ export const BudgetSchema = z.object({
   durationMs: z.number().min(0),
 });
 
+export const PlanItemSchema = z.object({
+  ruleId: z.string(),
+  title: z.string(),
+  status: z.enum(["warn", "fail"]),
+  scoreCategory: ScoreCategoryIdSchema,
+  projectedScore: z.number().min(0).max(100),
+  gain: z.number().positive().max(100),
+});
+export type PlanItem = z.infer<typeof PlanItemSchema>;
+
 export const ReportSchema = z.object({
   schemaVersion: z.literal(SCHEMA_VERSION),
   engineVersion: z.string(),
@@ -186,6 +196,8 @@ export const ReportSchema = z.object({
   checks: z.array(CheckResultSchema),
   findings: z.array(FindingSchema),
   score: ScoreSchema,
+  /** Failing/warning checks ranked by the overall-score gain from fixing each one alone. */
+  plan: z.array(PlanItemSchema).max(50),
   limitations: z.array(LimitationSchema),
   budget: BudgetSchema,
 });

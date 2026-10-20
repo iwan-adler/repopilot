@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bandFor, computeScore, DEFAULT_CATEGORY_WEIGHTS } from "@/lib/analysis/scoring";
+import { bandFor, computePlan, computeScore, DEFAULT_CATEGORY_WEIGHTS } from "@/lib/analysis/scoring";
 import type { CheckResult, CheckStatus, ScoreCategoryId } from "@/lib/reports/schema";
 
 function check(scoreCategory: ScoreCategoryId, status: CheckStatus, weight = 1, id = "TST001"): CheckResult {
@@ -43,7 +43,12 @@ describe("computeScore", () => {
   });
 
   it("redistributes weight from unavailable categories", () => {
-    const s = computeScore([check("testing", "not_applicable"), check("security", "pass"), check("hygiene", "fail"), check("maintainability", "pass")]);
+    const s = computeScore([
+      check("testing", "not_applicable"),
+      check("security", "pass"),
+      check("hygiene", "fail"),
+      check("maintainability", "pass"),
+    ]);
     const testing = s.categories.find((c) => c.id === "testing")!;
     expect(testing.score).toBeNull();
     expect(testing.effectiveWeight).toBe(0);
@@ -56,16 +61,25 @@ describe("computeScore", () => {
   });
 
   it("is traceable: overall equals the effective-weighted sum of category scores", () => {
-    const s = computeScore([check("testing", "pass"), check("security", "warn"), check("hygiene", "fail"), check("maintainability", "pass", 2), check("maintainability", "fail", 1)]);
+    const s = computeScore([
+      check("testing", "pass"),
+      check("security", "warn"),
+      check("hygiene", "fail"),
+      check("maintainability", "pass", 2),
+      check("maintainability", "fail", 1),
+    ]);
     const recomputed = s.categories.reduce((a, c) => a + (c.score ?? 0) * c.effectiveWeight, 0);
     expect(s.overall).toBeCloseTo(recomputed, 0);
   });
 
   it("supports custom weights and rejects non-positive totals", () => {
-    const s = computeScore([check("testing", "pass"), check("security", "fail")], [
-      { id: "testing", label: "T", weight: 1 },
-      { id: "security", label: "S", weight: 3 },
-    ]);
+    const s = computeScore(
+      [check("testing", "pass"), check("security", "fail")],
+      [
+        { id: "testing", label: "T", weight: 1 },
+        { id: "security", label: "S", weight: 3 },
+      ],
+    );
     expect(s.overall).toBe(25);
     expect(() => computeScore([], [{ id: "testing", label: "T", weight: 0 }])).toThrow();
   });
@@ -89,5 +103,43 @@ describe("docs/SCORING.md worked example", () => {
     expect(s.categories.map((c) => c.score)).toEqual([80, 75, 100, 90]);
     expect(s.overall).toBe(85.8);
     expect(s.band).toBe("B");
+  });
+});
+
+describe("computePlan", () => {
+  it("ranks failing/warning checks by the exact overall-score gain", () => {
+    const checks = [
+      check("testing", "fail", 3, "TST001"),
+      check("testing", "pass", 1, "TST003"),
+      check("security", "warn", 1, "SEC004"),
+      check("security", "pass", 3, "SEC001"),
+      check("hygiene", "fail", 1, "DOC004"),
+      check("hygiene", "pass", 9, "DOC001"),
+      check("maintainability", "pass", 1, "DX003"),
+    ];
+    const base = computeScore(checks).overall!;
+    const plan = computePlan(checks);
+    expect(plan.map((p) => p.ruleId)).toEqual(["TST001", "SEC004", "DOC004"]);
+    for (const p of plan) {
+      const fixed = checks.map((c) => (c.ruleId === p.ruleId ? { ...c, status: "pass" as const } : c));
+      expect(p.projectedScore).toBe(computeScore(fixed).overall);
+      expect(p.gain).toBeCloseTo(p.projectedScore - base, 5);
+      expect(p.gain).toBeGreaterThan(0);
+    }
+  });
+
+  it("excludes passing, not-applicable, unavailable and informational checks", () => {
+    const plan = computePlan([
+      check("testing", "pass"),
+      check("testing", "not_applicable", 2, "TST002"),
+      check("testing", "unavailable", 2, "TST003"),
+      check("maintainability", "fail", 0, "REPO001"),
+    ]);
+    expect(plan).toEqual([]);
+  });
+
+  it("is empty when no score can be computed", () => {
+    expect(computePlan([])).toEqual([]);
+    expect(computePlan([check("testing", "not_applicable")])).toEqual([]);
   });
 });

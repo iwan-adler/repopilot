@@ -15,12 +15,24 @@ export function ChecksTable({ report }: { report: Report }) {
           <caption className="sr-only">Results of every RepoPilot check</caption>
           <thead className="text-xs uppercase tracking-wide text-fg-subtle">
             <tr className="border-b border-line">
-              <th scope="col" className="py-2 pr-3 font-medium">Rule</th>
-              <th scope="col" className="py-2 pr-3 font-medium">Check</th>
-              <th scope="col" className="py-2 pr-3 font-medium">Category</th>
-              <th scope="col" className="py-2 pr-3 text-right font-medium">Weight</th>
-              <th scope="col" className="py-2 pr-3 font-medium">Result</th>
-              <th scope="col" className="py-2 font-medium">Detail</th>
+              <th scope="col" className="py-2 pr-3 font-medium">
+                Rule
+              </th>
+              <th scope="col" className="py-2 pr-3 font-medium">
+                Check
+              </th>
+              <th scope="col" className="py-2 pr-3 font-medium">
+                Category
+              </th>
+              <th scope="col" className="py-2 pr-3 text-right font-medium">
+                Weight
+              </th>
+              <th scope="col" className="py-2 pr-3 font-medium">
+                Result
+              </th>
+              <th scope="col" className="py-2 font-medium">
+                Detail
+              </th>
             </tr>
           </thead>
           <tbody>

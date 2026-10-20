@@ -32,7 +32,8 @@ export default function MethodologyPage() {
               <strong className="text-fg">unavailable</strong>. The last two are removed from the calculation instead of being penalized.
             </li>
             <li>
-              Each check has a weight within one score category. Category score = 100 × Σ(weight × credit) ÷ Σ(weight) over the scored checks.
+              Each check has a weight within one score category. Category score = 100 × Σ(weight × credit) ÷ Σ(weight) over the scored
+              checks.
             </li>
             <li>
               The overall score is the weighted average of available category scores. If a category has no applicable checks (for example,
@@ -46,9 +47,15 @@ export default function MethodologyPage() {
               <caption className="sr-only">Category weights</caption>
               <thead className="text-xs uppercase tracking-wide text-fg-subtle">
                 <tr className="border-b border-line">
-                  <th scope="col" className="py-2">Category</th>
-                  <th scope="col" className="py-2 text-right">Weight</th>
-                  <th scope="col" className="py-2 text-right">Rules</th>
+                  <th scope="col" className="py-2">
+                    Category
+                  </th>
+                  <th scope="col" className="py-2 text-right">
+                    Weight
+                  </th>
+                  <th scope="col" className="py-2 text-right">
+                    Rules
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -74,8 +81,8 @@ export default function MethodologyPage() {
           Rule catalog ({RULES.length})
         </h2>
         <p className="mt-1 text-sm text-fg-subtle">
-          &ldquo;Observation&rdquo; rules verify facts directly from repository data. &ldquo;Heuristic&rdquo; rules infer from naming or text
-          patterns and can be wrong.
+          &ldquo;Observation&rdquo; rules verify facts directly from repository data. &ldquo;Heuristic&rdquo; rules infer from naming or
+          text patterns and can be wrong.
         </p>
         <div className="mt-4 space-y-3">
           {RULES.map((r) => (
@@ -84,8 +91,8 @@ export default function MethodologyPage() {
                 <span className="font-mono text-sm text-accent">{r.id}</span>
                 <h3 className="font-medium">{r.title}</h3>
                 <span className="text-xs text-fg-subtle">
-                  {CATEGORY_LABELS[r.category]} · scored under {r.scoreCategory} · weight {r.weight === 0 ? "0 (informational)" : r.weight} ·{" "}
-                  {r.kind}
+                  {CATEGORY_LABELS[r.category]} · scored under {r.scoreCategory} · weight {r.weight === 0 ? "0 (informational)" : r.weight}{" "}
+                  · {r.kind}
                 </span>
               </div>
               <p className="mt-1.5 text-sm text-fg-muted">{r.rationale}</p>
@@ -100,15 +107,20 @@ export default function MethodologyPage() {
         </h2>
         <Card as="div" className="mt-4 p-5 text-sm text-fg-muted">
           <ul className="list-disc space-y-1.5 pl-5">
-            <li>Up to {DEFAULT_LIMITS.maxTreeEntries.toLocaleString("en-US")} tree entries (GitHub may truncate very large trees itself).</li>
             <li>
-              Up to {DEFAULT_LIMITS.maxKeyFiles} key files (manifests, README, CI) of at most {formatBytes(DEFAULT_LIMITS.maxKeyFileBytes)} each.
+              Up to {DEFAULT_LIMITS.maxTreeEntries.toLocaleString("en-US")} tree entries (GitHub may truncate very large trees itself).
+            </li>
+            <li>
+              Up to {DEFAULT_LIMITS.maxKeyFiles} key files (manifests, README, CI) of at most {formatBytes(DEFAULT_LIMITS.maxKeyFileBytes)}{" "}
+              each.
             </li>
             <li>
               Up to {DEFAULT_LIMITS.maxSampleFiles} sampled text files of at most {formatBytes(DEFAULT_LIMITS.maxSampleFileBytes)} each for
               credential patterns.
             </li>
-            <li>At most {formatBytes(DEFAULT_LIMITS.maxTotalBytes)} of file content and {DEFAULT_LIMITS.deadlineMs / 1000} seconds per scan.</li>
+            <li>
+              At most {formatBytes(DEFAULT_LIMITS.maxTotalBytes)} of file content and {DEFAULT_LIMITS.deadlineMs / 1000} seconds per scan.
+            </li>
             <li>
               Oversized source threshold: {formatBytes(DEFAULT_ANALYSIS_OPTIONS.oversizedFileBytes)}; large committed file threshold:{" "}
               {formatBytes(DEFAULT_ANALYSIS_OPTIONS.largeFileBytes)}.

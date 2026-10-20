@@ -13,7 +13,7 @@ describe("exports", () => {
   });
 
   it("JSON export rejects an invalid report", () => {
-    expect(() => reportToJson({ ...r, schemaVersion: "9" as "1.0" })).toThrow();
+    expect(() => reportToJson({ ...r, schemaVersion: "9" as "1.1" })).toThrow();
   });
 
   it("Markdown export contains score, findings, checks and limitations", () => {
@@ -37,5 +37,21 @@ describe("exports", () => {
 
   it("produces safe file names", () => {
     expect(reportFileName(r, "md")).toBe("repopilot-acme_widget-0123456.md");
+  });
+});
+
+describe("fix-next plan in reports", () => {
+  it("is included in the report and the Markdown export", () => {
+    const r = report({ "src/a.py": "x" });
+    expect(r.plan.length).toBeGreaterThan(0);
+    expect(r.plan[0].gain).toBeGreaterThanOrEqual(r.plan.at(-1)!.gain);
+    const md = reportToMarkdown(r);
+    expect(md).toContain("## Fix next");
+    expect(md).toContain(`| 1 | ${r.plan[0].ruleId} |`);
+  });
+
+  it("is empty for a fully passing project", () => {
+    expect(report(HEALTHY_PROJECT).plan).toEqual([]);
+    expect(reportToMarkdown(report(HEALTHY_PROJECT))).not.toContain("## Fix next");
   });
 });

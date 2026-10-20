@@ -51,7 +51,10 @@ describe("GitHubClient", () => {
   });
 
   it("detects secondary rate limiting (403 with message) and 429", async () => {
-    await expectCode(clientWith(async () => json({ message: "You have exceeded a secondary rate limit" }, 403)).getRepository("a", "b"), "rate_limited");
+    await expectCode(
+      clientWith(async () => json({ message: "You have exceeded a secondary rate limit" }, 403)).getRepository("a", "b"),
+      "rate_limited",
+    );
     await expectCode(clientWith(async () => json({ message: "slow down" }, 429)).getRepository("a", "b"), "rate_limited");
   });
 
@@ -67,7 +70,10 @@ describe("GitHubClient", () => {
   it("rejects malformed JSON and unexpected shapes", async () => {
     await expectCode(clientWith(async () => new Response("{not json", { status: 200 })).getRepository("a", "b"), "invalid_response");
     await expectCode(clientWith(async () => json({ name: 5 })).getRepository("a", "b"), "invalid_response");
-    await expectCode(clientWith(async () => json({ sha: "x", tree: [{ path: "a", type: "weird" }], truncated: false })).getTree("a", "b", SHA), "invalid_response");
+    await expectCode(
+      clientWith(async () => json({ sha: "x", tree: [{ path: "a", type: "weird" }], truncated: false })).getTree("a", "b", SHA),
+      "invalid_response",
+    );
   });
 
   it("rejects an invalid SHA before making a request", async () => {
@@ -93,24 +99,33 @@ describe("GitHubClient", () => {
   });
 
   it("maps timeouts", async () => {
-    const c = clientWith(async (_url, init) => {
-      await new Promise((resolve, reject) => {
-        init?.signal?.addEventListener("abort", () => reject(Object.assign(new Error("aborted"), { name: "TimeoutError" })));
-      });
-      return json({});
-    }, { timeoutMs: 20 });
+    const c = clientWith(
+      async (_url, init) => {
+        await new Promise((resolve, reject) => {
+          init?.signal?.addEventListener("abort", () => reject(Object.assign(new Error("aborted"), { name: "TimeoutError" })));
+        });
+        return json({});
+      },
+      { timeoutMs: 20 },
+    );
     await expectCode(c.getRepository("a", "b"), "timeout");
   });
 
   it("maps network failures to upstream_error", async () => {
-    await expectCode(clientWith(async () => { throw new TypeError("fetch failed"); }).getRepository("a", "b"), "upstream_error");
+    await expectCode(
+      clientWith(async () => {
+        throw new TypeError("fetch failed");
+      }).getRepository("a", "b"),
+      "upstream_error",
+    );
   });
 
   it("follows redirects only within allowed GitHub origins", async () => {
     const urls: string[] = [];
     const ok = clientWith(async (url) => {
       urls.push(url);
-      if (url.endsWith("/repos/old/name")) return new Response(null, { status: 301, headers: { location: "https://api.github.com/repositories/1" } });
+      if (url.endsWith("/repos/old/name"))
+        return new Response(null, { status: 301, headers: { location: "https://api.github.com/repositories/1" } });
       return json(validRepo);
     });
     await ok.getRepository("old", "name");
@@ -127,11 +142,14 @@ describe("GitHubClient", () => {
 
   it("sends the token only to the API origin", async () => {
     const seen: { url: string; auth?: string }[] = [];
-    const c = clientWith(async (url, init) => {
-      const h = init?.headers as Record<string, string>;
-      seen.push({ url, auth: h.Authorization });
-      return url.startsWith("https://api.github.com") ? json(validRepo) : new Response("hello");
-    }, { token: "test-token-value" });
+    const c = clientWith(
+      async (url, init) => {
+        const h = init?.headers as Record<string, string>;
+        seen.push({ url, auth: h.Authorization });
+        return url.startsWith("https://api.github.com") ? json(validRepo) : new Response("hello");
+      },
+      { token: "test-token-value" },
+    );
     await c.getRepository("acme", "widget");
     await c.getRawFile("acme", "widget", SHA, "README.md", 1000);
     expect(seen[0].auth).toBe("Bearer test-token-value");

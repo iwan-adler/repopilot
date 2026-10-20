@@ -18,9 +18,7 @@ export type ParsedRepository = {
   url: string;
 };
 
-export type ParseResult =
-  | { ok: true; value: ParsedRepository }
-  | { ok: false; error: string };
+export type ParseResult = { ok: true; value: ParsedRepository } | { ok: false; error: string };
 
 export const MAX_INPUT_LENGTH = 300;
 
@@ -32,10 +30,38 @@ const REPO_RE = /^[A-Za-z0-9._-]{1,100}$/;
 
 // First path segments on github.com that are product routes, not user accounts.
 const RESERVED_OWNERS = new Set([
-  "about", "account", "apps", "blog", "codespaces", "collections", "contact", "customer-stories",
-  "dashboard", "enterprise", "events", "explore", "features", "issues", "join", "login", "logout",
-  "marketplace", "new", "notifications", "orgs", "organizations", "pricing", "pulls", "search",
-  "security", "settings", "site", "sponsors", "topics", "trending", "users",
+  "about",
+  "account",
+  "apps",
+  "blog",
+  "codespaces",
+  "collections",
+  "contact",
+  "customer-stories",
+  "dashboard",
+  "enterprise",
+  "events",
+  "explore",
+  "features",
+  "issues",
+  "join",
+  "login",
+  "logout",
+  "marketplace",
+  "new",
+  "notifications",
+  "orgs",
+  "organizations",
+  "pricing",
+  "pulls",
+  "search",
+  "security",
+  "settings",
+  "site",
+  "sponsors",
+  "topics",
+  "trending",
+  "users",
 ]);
 
 const ALLOWED_HOSTS = new Set(["github.com", "www.github.com"]);

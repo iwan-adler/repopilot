@@ -3,6 +3,7 @@
 Tick items only after verifying them yourself.
 
 ## Repository
+
 - [ ] Public GitHub repository created and pushed
 - [ ] `git log` and `git grep` show no secrets; `.env*` files (except `.env.example`) are not tracked
 - [ ] GitHub Actions **CI** run on `main` is green (lint, typecheck, test, build)
@@ -11,6 +12,7 @@ Tick items only after verifying them yourself.
 - [ ] (Optional) Scan RepoPilot's own repository with RepoPilot and check the result is sensible
 
 ## Deployment
+
 - [ ] Vercel project imported from GitHub (Hobby plan)
 - [ ] `GITHUB_TOKEN` set in Vercel → Settings → Environment Variables (fine-grained token, public repositories read-only)
 - [ ] Production URL loads the landing page over HTTPS
@@ -22,6 +24,7 @@ Tick items only after verifying them yourself.
 - [ ] Vercel function logs show only repo name, outcome and duration
 
 ## Materials
+
 - [ ] Demo video recorded (2–5 min) from the live deployment, following docs/DEMO_SCRIPT.md
 - [ ] Video uploaded and link tested in a private/incognito window
 - [ ] Submission form: project name, description, repo URL, live URL, video URL
@@ -29,6 +32,7 @@ Tick items only after verifying them yourself.
 - [ ] Be ready to explain: scoring (docs/SCORING.md), security (docs/SECURITY.md), limitations
 
 ## Honesty check
+
 - [ ] No claims of customers, revenue, certifications or benchmarks
 - [ ] Paid tiers described as proposed/planned everywhere
 - [ ] Claims about test results match the latest CI run

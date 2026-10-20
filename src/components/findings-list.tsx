@@ -7,7 +7,7 @@ import { Card, CATEGORY_LABELS, SEVERITY_STYLES } from "./ui";
 
 const SEVERITIES: Severity[] = ["critical", "high", "medium", "low", "info"];
 
-export function FindingsList({ findings }: { findings: Finding[] }) {
+export function FindingsList({ findings, focusId }: { findings: Finding[]; focusId?: string }) {
   const [severities, setSeverities] = useState<Set<Severity>>(new Set());
   const [category, setCategory] = useState<FindingCategory | "all">("all");
 
@@ -48,7 +48,9 @@ export function FindingsList({ findings }: { findings: Finding[] }) {
                   disabled={n === 0}
                   onClick={() => toggle(s)}
                   className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs transition-colors disabled:opacity-40 ${
-                    active ? `${SEVERITY_STYLES[s].ring} ${SEVERITY_STYLES[s].text}` : "border-line bg-ink-850 text-fg-muted hover:border-line-strong"
+                    active
+                      ? `${SEVERITY_STYLES[s].ring} ${SEVERITY_STYLES[s].text}`
+                      : "border-line bg-ink-850 text-fg-muted hover:border-line-strong"
                   }`}
                 >
                   <span className={`h-1.5 w-1.5 rounded-full ${SEVERITY_STYLES[s].dot}`} aria-hidden="true" />
@@ -86,7 +88,11 @@ export function FindingsList({ findings }: { findings: Finding[] }) {
           <p className="rounded-lg border border-line bg-ink-850 px-4 py-6 text-center text-fg-muted">No findings match these filters.</p>
         )}
         {filtered.map((f, i) => (
-          <FindingDetail key={f.id} finding={f} defaultOpen={i === 0 && (f.severity === "critical" || f.severity === "high")} />
+          <FindingDetail
+            key={f.id}
+            finding={f}
+            defaultOpen={focusId ? f.id === focusId : i === 0 && (f.severity === "critical" || f.severity === "high")}
+          />
         ))}
       </div>
     </Card>

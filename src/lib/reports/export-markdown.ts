@@ -58,6 +58,19 @@ export function reportToMarkdown(report: Report): string {
   lines.push(`_${report.score.method}_`);
   lines.push("");
 
+  if (report.plan.length > 0) {
+    lines.push("## Fix next");
+    lines.push("");
+    lines.push("Checks ranked by how much fixing each one alone would raise the overall score (gains are not additive).");
+    lines.push("");
+    lines.push("| # | Rule | Check | Status | Score gain | Score after |");
+    lines.push("| ---: | --- | --- | --- | ---: | ---: |");
+    report.plan.forEach((p, i) => {
+      lines.push(`| ${i + 1} | ${p.ruleId} | ${escapeMarkdown(p.title)} | ${p.status} | +${p.gain} | ${p.projectedScore} |`);
+    });
+    lines.push("");
+  }
+
   lines.push("## Stack");
   lines.push("");
   const s = report.stack;
@@ -101,7 +114,9 @@ export function reportToMarkdown(report: Report): string {
   lines.push("| Rule | Check | Category | Weight | Result | Summary |");
   lines.push("| --- | --- | --- | ---: | --- | --- |");
   for (const c of report.checks) {
-    lines.push(`| ${c.ruleId} | ${escapeMarkdown(c.title)} | ${c.scoreCategory} | ${c.weight} | ${STATUS_LABEL[c.status]} | ${escapeMarkdown(c.summary)} |`);
+    lines.push(
+      `| ${c.ruleId} | ${escapeMarkdown(c.title)} | ${c.scoreCategory} | ${c.weight} | ${STATUS_LABEL[c.status]} | ${escapeMarkdown(c.summary)} |`,
+    );
   }
   lines.push("");
 

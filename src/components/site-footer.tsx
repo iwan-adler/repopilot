@@ -5,8 +5,8 @@ export function SiteFooter() {
     <footer className="border-t border-line bg-ink-950">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-8 text-sm text-fg-subtle sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p>
-          RepoPilot is static, heuristic analysis of public repositories. It is not a security audit and does not certify
-          production readiness.
+          RepoPilot is static, heuristic analysis of public repositories. It is not a security audit and does not certify production
+          readiness.
         </p>
         <nav aria-label="Footer" className="flex shrink-0 gap-4">
           <Link href="/methodology" className="hover:text-fg">

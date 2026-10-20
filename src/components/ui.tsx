@@ -31,7 +31,10 @@ export function StatusLabel({ status }: { status: CheckStatus }) {
   const s = STATUS_STYLES[status];
   return (
     <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${s.className}`}>
-      <span aria-hidden="true" className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-current text-[10px] leading-none">
+      <span
+        aria-hidden="true"
+        className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-current text-[10px] leading-none"
+      >
         {s.symbol}
       </span>
       {s.label}
@@ -39,7 +42,17 @@ export function StatusLabel({ status }: { status: CheckStatus }) {
   );
 }
 
-export function Card({ children, className = "", as: Tag = "section", ...rest }: { children: ReactNode; className?: string; as?: "section" | "div" | "article"; "aria-labelledby"?: string }) {
+export function Card({
+  children,
+  className = "",
+  as: Tag = "section",
+  ...rest
+}: {
+  children: ReactNode;
+  className?: string;
+  as?: "section" | "div" | "article";
+  "aria-labelledby"?: string;
+}) {
   return (
     <Tag className={`rounded-xl border border-line bg-ink-900/70 ${className}`} {...rest}>
       {children}

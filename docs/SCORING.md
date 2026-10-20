@@ -6,13 +6,13 @@ Implementation: [`src/lib/analysis/scoring.ts`](../src/lib/analysis/scoring.ts).
 
 Every rule produces exactly one check result:
 
-| Status | Credit | Meaning |
-| --- | --- | --- |
-| `pass` | 1.0 | Good signal detected |
-| `warn` | 0.5 | Partial or lower-confidence issue |
-| `fail` | 0.0 | Issue detected |
+| Status           | Credit   | Meaning                                                |
+| ---------------- | -------- | ------------------------------------------------------ |
+| `pass`           | 1.0      | Good signal detected                                   |
+| `warn`           | 0.5      | Partial or lower-confidence issue                      |
+| `fail`           | 0.0      | Issue detected                                         |
 | `not_applicable` | excluded | The check doesn't apply (e.g. npm checks in a Go repo) |
-| `unavailable` | excluded | Data needed for the check couldn't be retrieved |
+| `unavailable`    | excluded | Data needed for the check couldn't be retrieved        |
 
 Each rule has a **weight** (0–4) inside exactly one **score category**. Weight 0 marks informational rules (e.g. `REPO001` archived), which never affect the score.
 
@@ -28,25 +28,25 @@ If a category has no scored checks (all N/A or unavailable), its score is `null`
 
 Configured weights (product decisions, not empirical benchmarks):
 
-| Category | Weight | Rules |
-| --- | --- | --- |
-| Maintainability | 30% | DX001–DX004, MNT001–MNT003 |
-| Testing | 25% | TST001–TST004 |
-| Security signals | 25% | SEC001–SEC007 |
-| Project hygiene | 20% | STR001–STR002, DOC001–DOC004, DEP001–DEP005 |
+| Category         | Weight | Rules                                       |
+| ---------------- | ------ | ------------------------------------------- |
+| Maintainability  | 30%    | DX001–DX004, MNT001–MNT003                  |
+| Testing          | 25%    | TST001–TST004                               |
+| Security signals | 25%    | SEC001–SEC007                               |
+| Project hygiene  | 20%    | STR001–STR002, DOC001–DOC004, DEP001–DEP005 |
 
 ```
 overall = Σ(categoryWeight × categoryScore) / Σ(categoryWeight)     over available categories
 ```
 
-Weights of unavailable categories are therefore redistributed proportionally. Each category reports both its configured and its *effective* weight, so the overall number can be recomputed by hand from the report.
+Weights of unavailable categories are therefore redistributed proportionally. Each category reports both its configured and its _effective_ weight, so the overall number can be recomputed by hand from the report.
 
 Bands: **A** ≥ 90, **B** ≥ 75, **C** ≥ 60, **D** ≥ 40, **F** < 40. If no category is available, the overall score is `null`.
 
 ## 4. Avoiding double counting
 
 - Each rule is evaluated once and belongs to one category.
-- Rules that depend on each other are scoped so they don't penalize the same gap twice. For example `DOC002` (README completeness) is *not applicable* when there's no README, because `DOC001` already failed; `TST004` (CI runs tests) is *not applicable* when there's no CI, because `DX003` covers it.
+- Rules that depend on each other are scoped so they don't penalize the same gap twice. For example `DOC002` (README completeness) is _not applicable_ when there's no README, because `DOC001` already failed; `TST004` (CI runs tests) is _not applicable_ when there's no CI, because `DX003` covers it.
 - `SEC001` produces one check regardless of how many secrets are matched (the findings list every match, redacted).
 
 ## 5. Worked example
@@ -57,6 +57,14 @@ Testing: TST001 pass (w3), TST002 pass (w2), TST003 fail (w1), TST004 warn (w2)
 If Security = 100, Maintainability = 80, Hygiene = 90:
 → 0.30×80 + 0.25×75 + 0.25×100 + 0.20×90 = **85.75 → 85.8 (band B)**
 
-## 6. What the score is not
+## 6. "Fix next" plan
+
+For every scored check that is `warn` or `fail`, RepoPilot re-runs `computeScore` with only that check set to `pass` and records the projected overall score and the gain (`computePlan` in `scoring.ts`). The plan is sorted by gain, so the top item is the single change that improves the score most.
+
+Gains are computed one fix at a time and are **not additive**: fixing two checks in the same category doesn't simply add their gains, because the category score is a weighted ratio.
+
+Example (karpathy/nanoGPT, 20 Oct 2026): Testing scores 0 because TST001 (weight 3) and TST002 (weight 2) fail. Fixing TST001 alone makes Testing 3/5 = 60, adding 0.25 × 60 = **+15.0** to the overall score (57.3 → 72.3).
+
+## 7. What the score is not
 
 The score summarizes signals RepoPilot detected statically. It is not a security audit, a code-quality measurement, or a certification of production readiness. A repository can score highly and still contain serious bugs or vulnerabilities.
