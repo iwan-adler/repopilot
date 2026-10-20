@@ -1,26 +1,56 @@
 @import "tailwindcss";
 
+/* RepoPilot design tokens: dark navy foundation, electric-blue accent used sparingly. */
+@theme {
+  --color-ink-950: #050a17;
+  --color-ink-900: #081022;
+  --color-ink-850: #0b1530;
+  --color-ink-800: #0f1b3a;
+  --color-ink-700: #172650;
+  --color-line: #1b2a4d;
+  --color-line-strong: #2a3c66;
+  --color-fg: #e7edf8;
+  --color-fg-muted: #a3b1cc;
+  --color-fg-subtle: #7d8cab;
+  --color-accent: #3d8bff;
+  --color-accent-strong: #2f74e8;
+  --color-accent-soft: #3d8bff1f;
+
+  --color-sev-critical: #ff5c7a;
+  --color-sev-high: #ff9150;
+  --color-sev-medium: #f5c542;
+  --color-sev-low: #55b8ff;
+  --color-sev-info: #9aa8c4;
+  --color-ok: #3ddc97;
+  --color-warn: #f5c542;
+  --color-bad: #ff5c7a;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-ink-950);
+  color: var(--color-fg);
+}
+
+/* Visible, consistent keyboard focus everywhere. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
