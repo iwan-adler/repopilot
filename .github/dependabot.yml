@@ -1,11 +1,14 @@
 version: 2
+# Version-update PRs are paused until after the hackathon deadline (2026-10-31).
+# To resume, set open-pull-requests-limit back to 5 (npm) and 2 (github-actions).
 updates:
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
+    open-pull-requests-limit: 0
