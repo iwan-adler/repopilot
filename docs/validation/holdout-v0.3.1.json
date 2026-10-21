@@ -1,0 +1,4240 @@
+{
+  "collectedAt": "2026-10-21T16:10:46.926Z",
+  "base": "https://repopilot-rho.vercel.app",
+  "results": [
+    {
+      "repo": "date-fns/date-fns",
+      "repopilot": {
+        "id": "date-fns/date-fns@f34149bb1ba1",
+        "engineVersion": "0.3.1",
+        "commitSha": "f34149bb1ba10046453e688207507e0d2c727e00",
+        "score": 90.4,
+        "band": "A",
+        "primaryLanguage": "TypeScript",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "8 manifests found (JavaScript/TypeScript (npm))."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "pass",
+            "summary": "4/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "fail",
+            "summary": "No license file found."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at CONTRIBUTING.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "31 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: Vitest."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "fail",
+            "summary": "No test script defined."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/browser_tests.yaml:1."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "pass",
+            "summary": "Linter configuration: .oxlintrc.json."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "pass",
+            "summary": "Formatter configuration: formatter dependency in package.json."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (6 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "fail",
+            "summary": "Missing script types: build/dev/start, lint/check."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "pass",
+            "summary": "Lockfile present for declared dependencies."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "pass",
+            "summary": "Single lockfile: pnpm-lock.yaml."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "pass",
+            "summary": "22 package.json files parsed successfully."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "warn",
+            "summary": "No Dependabot or Renovate configuration."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "pass",
+            "summary": "All declared npm versions are bounded."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "93 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "pass",
+            "summary": "No private-key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "pass",
+            "summary": "Security policy at SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "6 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "6 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "warn",
+            "summary": "6 third-party action references not pinned to a SHA."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "pass",
+            "summary": "No source file exceeds 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "DOC003",
+            "severity": "medium",
+            "confidence": "high",
+            "title": "No license file",
+            "evidence": [
+              {
+                "detail": "GitHub license metadata: none."
+              }
+            ]
+          },
+          {
+            "ruleId": "DEP004",
+            "severity": "low",
+            "confidence": "high",
+            "title": "No automated dependency updates",
+            "evidence": [
+              {
+                "detail": "Checked .github/dependabot.yml and common Renovate config locations."
+              }
+            ]
+          },
+          {
+            "ruleId": "DX004",
+            "severity": "low",
+            "confidence": "high",
+            "title": "Conventional npm scripts missing",
+            "evidence": [
+              {
+                "path": "package.json",
+                "detail": "Defined scripts: (none)"
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC007",
+            "severity": "low",
+            "confidence": "high",
+            "title": "Third-party actions referenced by mutable tags",
+            "evidence": [
+              {
+                "path": ".github/workflows/browser_tests.yaml",
+                "line": 11,
+                "detail": "uses: jdx/mise-action@v4"
+              },
+              {
+                "path": ".github/workflows/code_quality.yaml",
+                "line": 11,
+                "detail": "uses: jdx/mise-action@v4"
+              },
+              {
+                "path": ".github/workflows/coverage.yaml",
+                "line": 14,
+                "detail": "uses: jdx/mise-action@v4"
+              },
+              {
+                "path": ".github/workflows/node_tests.yaml",
+                "line": 11,
+                "detail": "uses: jdx/mise-action@v4"
+              },
+              {
+                "path": ".github/workflows/smoke_tests.yaml",
+                "line": 11,
+                "detail": "uses: jdx/mise-action@v4"
+              },
+              {
+                "path": ".github/workflows/tz_tests.yaml",
+                "line": 11,
+                "detail": "uses: jdx/mise-action@v4"
+              }
+            ]
+          },
+          {
+            "ruleId": "TST003",
+            "severity": "low",
+            "confidence": "high",
+            "title": "No test script in package.json",
+            "evidence": [
+              {
+                "path": "package.json",
+                "detail": "scripts: (none)"
+              }
+            ]
+          },
+          {
+            "ruleId": "DOC002",
+            "severity": "info",
+            "confidence": "medium",
+            "title": "README is missing common sections",
+            "evidence": [
+              {
+                "path": "README.md",
+                "detail": "Missing: usage or examples"
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": false,
+        "contributing": "https://github.com/date-fns/date-fns/blob/main/CONTRIBUTING.md"
+      },
+      "scorecard": {
+        "date": "2026-10-19",
+        "commit": "717ce0a807ea4c6b540d015b5c408723175b2838",
+        "checks": {
+          "Code-Review": {
+            "score": 0,
+            "reason": "Found 1/26 approved changesets -- score normalized to 0"
+          },
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Packaging": {
+            "score": -1,
+            "reason": "packaging workflow not detected"
+          },
+          "Maintained": {
+            "score": 8,
+            "reason": "10 commit(s) and 0 issue activity found in the last 90 days -- score normalized to 8"
+          },
+          "Security-Policy": {
+            "score": 10,
+            "reason": "security policy file detected"
+          },
+          "Token-Permissions": {
+            "score": 0,
+            "reason": "detected GitHub workflow tokens with excessive permissions"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "Pinned-Dependencies": {
+            "score": 0,
+            "reason": "dependency not pinned by hash detected -- score normalized to 0"
+          },
+          "License": {
+            "score": 0,
+            "reason": "license file not detected"
+          },
+          "Branch-Protection": {
+            "score": -1,
+            "reason": "internal error: error during branchesHandler.setup: internal error: some github tokens can't read classic branch protection rules: https://github.com/ossf/scorecard-action/blob/main/docs/authentication/fine-grained-auth-token.md"
+          },
+          "Fuzzing": {
+            "score": 0,
+            "reason": "project is not fuzzed"
+          },
+          "Signed-Releases": {
+            "score": -1,
+            "reason": "no releases found"
+          },
+          "SAST": {
+            "score": 0,
+            "reason": "SAST tool is not run on all commits -- score normalized to 0"
+          }
+        }
+      }
+    },
+    {
+      "repo": "colinhacks/zod",
+      "repopilot": {
+        "id": "colinhacks/zod@afdac65e0f80",
+        "engineVersion": "0.3.1",
+        "commitSha": "afdac65e0f80c0ccf9e8909da97c411567908b57",
+        "score": 93.5,
+        "band": "A",
+        "primaryLanguage": "TypeScript",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "9 manifests found (JavaScript/TypeScript (npm))."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "fail",
+            "summary": "0/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE (MIT)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at CONTRIBUTING.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "204 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: Vitest."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "pass",
+            "summary": "\"test:watch\" script defined."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/iso-4217.yml:47."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "pass",
+            "summary": "Linter configuration: biome.jsonc."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "pass",
+            "summary": "Formatter configuration: biome.jsonc."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (8 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "pass",
+            "summary": "Scripts: fix, format, format:check, lint, lint:check, clean, build, test:watch…."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "pass",
+            "summary": "Lockfile present for declared dependencies."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "pass",
+            "summary": "Single lockfile: pnpm-lock.yaml."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "pass",
+            "summary": "9 package.json files parsed successfully."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "warn",
+            "summary": "No Dependabot or Renovate configuration."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "pass",
+            "summary": "All declared npm versions are bounded."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "98 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "pass",
+            "summary": "No private-key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "pass",
+            "summary": "Security policy at SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "8 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "8 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "warn",
+            "summary": "3 third-party action references not pinned to a SHA."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "warn",
+            "summary": "3 source files larger than 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "DOC002",
+            "severity": "medium",
+            "confidence": "medium",
+            "title": "README is missing common sections",
+            "evidence": [
+              {
+                "path": "README.md",
+                "detail": "Missing: substantive content (at least 300 characters)"
+              },
+              {
+                "path": "README.md",
+                "detail": "Missing: section headings"
+              },
+              {
+                "path": "README.md",
+                "detail": "Missing: installation / getting-started instructions"
+              },
+              {
+                "path": "README.md",
+                "detail": "Missing: usage or examples"
+              },
+              {
+                "path": "README.md",
+                "detail": "Missing: code block"
+              }
+            ]
+          },
+          {
+            "ruleId": "DEP004",
+            "severity": "low",
+            "confidence": "high",
+            "title": "No automated dependency updates",
+            "evidence": [
+              {
+                "detail": "Checked .github/dependabot.yml and common Renovate config locations."
+              }
+            ]
+          },
+          {
+            "ruleId": "MNT001",
+            "severity": "low",
+            "confidence": "medium",
+            "title": "Oversized source files",
+            "evidence": [
+              {
+                "path": "packages/zod/src/v4/core/schemas.ts",
+                "detail": "173.2 KB"
+              },
+              {
+                "path": "packages/zod/src/v3/types.ts",
+                "detail": "156.7 KB"
+              },
+              {
+                "path": "packages/zod/src/v4/classic/schemas.ts",
+                "detail": "100.3 KB"
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC007",
+            "severity": "low",
+            "confidence": "high",
+            "title": "Third-party actions referenced by mutable tags",
+            "evidence": [
+              {
+                "path": ".github/workflows/claude-code-review.yml",
+                "line": 36,
+                "detail": "uses: anthropics/claude-code-action@v1"
+              },
+              {
+                "path": ".github/workflows/claude.yml",
+                "line": 35,
+                "detail": "uses: anthropics/claude-code-action@v1"
+              },
+              {
+                "path": ".github/workflows/pullfrog.yml",
+                "line": 31,
+                "detail": "uses: pullfrog/pullfrog@v0"
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/colinhacks/zod/blob/main/CONTRIBUTING.md"
+      },
+      "scorecard": {
+        "date": "2026-10-19",
+        "commit": "afdac65e0f80c0ccf9e8909da97c411567908b57",
+        "checks": {
+          "Code-Review": {
+            "score": 0,
+            "reason": "Found 1/30 approved changesets -- score normalized to 0"
+          },
+          "Security-Policy": {
+            "score": 10,
+            "reason": "security policy file detected"
+          },
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Packaging": {
+            "score": -1,
+            "reason": "packaging workflow not detected"
+          },
+          "Maintained": {
+            "score": 10,
+            "reason": "30 commit(s) and 5 issue activity found in the last 90 days -- score normalized to 10"
+          },
+          "Token-Permissions": {
+            "score": 0,
+            "reason": "detected GitHub workflow tokens with excessive permissions"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Pinned-Dependencies": {
+            "score": 5,
+            "reason": "dependency not pinned by hash detected -- score normalized to 5"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Fuzzing": {
+            "score": 0,
+            "reason": "project is not fuzzed"
+          },
+          "Signed-Releases": {
+            "score": -1,
+            "reason": "no releases found"
+          },
+          "SAST": {
+            "score": 0,
+            "reason": "SAST tool is not run on all commits -- score normalized to 0"
+          },
+          "Branch-Protection": {
+            "score": 3,
+            "reason": "branch protection is not maximal on development and all release branches"
+          }
+        }
+      }
+    },
+    {
+      "repo": "pmndrs/zustand",
+      "repopilot": {
+        "id": "pmndrs/zustand@d7a5583cffd8",
+        "engineVersion": "0.3.1",
+        "commitSha": "d7a5583cffd80af515f7dfb69583c95cbdc9e2ce",
+        "score": 95.8,
+        "band": "A",
+        "primaryLanguage": "TypeScript",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "3 manifests found (JavaScript/TypeScript (npm))."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "pass",
+            "summary": "5/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE (MIT)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at CONTRIBUTING.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "15 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: Vitest, Testing Library."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "pass",
+            "summary": "\"test\" script defined."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/test-multiple-builds.yml:1."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "pass",
+            "summary": "Linter configuration: eslint.config.mjs."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "pass",
+            "summary": "Formatter configuration: formatter dependency in package.json."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (8 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "warn",
+            "summary": "Missing script types: lint/check."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "pass",
+            "summary": "Lockfile present for declared dependencies."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "fail",
+            "summary": "Conflicting lockfiles: package-lock.json, pnpm-lock.yaml."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "pass",
+            "summary": "3 package.json files parsed successfully."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "pass",
+            "summary": "Configured via .github/dependabot.yml."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "pass",
+            "summary": "All declared npm versions are bounded."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "92 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "pass",
+            "summary": "No private-key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "warn",
+            "summary": "No SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "8 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "8 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "warn",
+            "summary": "1 third-party action reference not pinned to a SHA."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "pass",
+            "summary": "No source file exceeds 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "DEP002",
+            "severity": "medium",
+            "confidence": "high",
+            "title": "Conflicting package-manager lockfiles",
+            "evidence": [
+              {
+                "path": "package-lock.json",
+                "detail": "Lockfile at repository root."
+              },
+              {
+                "path": "pnpm-lock.yaml",
+                "detail": "Lockfile at repository root."
+              }
+            ]
+          },
+          {
+            "ruleId": "DX004",
+            "severity": "low",
+            "confidence": "high",
+            "title": "Conventional npm scripts missing",
+            "evidence": [
+              {
+                "path": "package.json",
+                "detail": "Defined scripts: prebuild, build, build-watch, build:base, build:vanilla, build:react, build:middleware, build:middleware:immer, build:shallow, build:vanilla:shallow, build:react:shallow, build:traditional, postbuild, fix, fix:format, fix:lint, test, test:format, test:types, test:lint (+5 more)"
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC004",
+            "severity": "low",
+            "confidence": "high",
+            "title": "No security policy",
+            "evidence": [
+              {
+                "detail": "Searched SECURITY.md in root, .github/ and docs/."
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC007",
+            "severity": "low",
+            "confidence": "high",
+            "title": "Third-party actions referenced by mutable tags",
+            "evidence": [
+              {
+                "path": ".github/workflows/docs.yml",
+                "line": 18,
+                "detail": "uses: pmndrs/docs/.github/workflows/build.yml@v4"
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/pmndrs/zustand/blob/main/CONTRIBUTING.md"
+      },
+      "scorecard": {
+        "date": "2026-10-12",
+        "commit": "d7a5583cffd80af515f7dfb69583c95cbdc9e2ce",
+        "checks": {
+          "Code-Review": {
+            "score": 4,
+            "reason": "Found 9/22 approved changesets -- score normalized to 4"
+          },
+          "Maintained": {
+            "score": 8,
+            "reason": "10 commit(s) and 0 issue activity found in the last 90 days -- score normalized to 8"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Pinned-Dependencies": {
+            "score": 9,
+            "reason": "dependency not pinned by hash detected -- score normalized to 9"
+          },
+          "Token-Permissions": {
+            "score": 10,
+            "reason": "GitHub workflow tokens follow principle of least privilege"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Fuzzing": {
+            "score": 0,
+            "reason": "project is not fuzzed"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Signed-Releases": {
+            "score": -1,
+            "reason": "no releases found"
+          },
+          "Security-Policy": {
+            "score": 0,
+            "reason": "security policy file not detected"
+          },
+          "Branch-Protection": {
+            "score": -1,
+            "reason": "internal error: error during branchesHandler.setup: internal error: some github tokens can't read classic branch protection rules: https://github.com/ossf/scorecard-action/blob/main/docs/authentication/fine-grained-auth-token.md"
+          },
+          "Packaging": {
+            "score": 10,
+            "reason": "packaging workflow detected"
+          },
+          "SAST": {
+            "score": 0,
+            "reason": "SAST tool is not run on all commits -- score normalized to 0"
+          }
+        }
+      }
+    },
+    {
+      "repo": "pallets/click",
+      "repopilot": {
+        "id": "pallets/click@2247b35ea1c4",
+        "engineVersion": "0.3.1",
+        "commitSha": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "score": 96.1,
+        "band": "A",
+        "primaryLanguage": "Python",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "11 manifests found (Python)."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "pass",
+            "summary": "4/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE.txt (BSD-3-Clause)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at docs/contributing.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "59 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: pytest."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/nightly.yaml:1."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "pass",
+            "summary": "Linter configuration: pyproject.toml [tool.*] lint section."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "pass",
+            "summary": "Formatter configuration: pyproject.toml formatter section."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (6 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "not_applicable",
+            "summary": "No npm/Pipenv/Poetry dependencies declared at the root."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "not_applicable",
+            "summary": "No JavaScript lockfiles at the root."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "not_applicable",
+            "summary": "No package.json files."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "warn",
+            "summary": "No Dependabot or Renovate configuration."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "not_applicable",
+            "summary": "No parsed package.json files."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "93 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "pass",
+            "summary": "No private-key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "pass",
+            "summary": "Inherited from organization defaults: pallets/.github/SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "6 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "6 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "pass",
+            "summary": "All third-party actions are pinned to commit SHAs (or none are used)."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "warn",
+            "summary": "1 source file larger than 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "DEP004",
+            "severity": "low",
+            "confidence": "high",
+            "title": "No automated dependency updates",
+            "evidence": [
+              {
+                "detail": "Checked .github/dependabot.yml and common Renovate config locations."
+              }
+            ]
+          },
+          {
+            "ruleId": "MNT001",
+            "severity": "low",
+            "confidence": "medium",
+            "title": "Oversized source files",
+            "evidence": [
+              {
+                "path": "src/click/core.py",
+                "detail": "153.3 KB"
+              }
+            ]
+          },
+          {
+            "ruleId": "DOC002",
+            "severity": "info",
+            "confidence": "medium",
+            "title": "README is missing common sections",
+            "evidence": [
+              {
+                "path": "README.md",
+                "detail": "Missing: installation / getting-started instructions"
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/pallets/click/blob/main/docs/contributing.md"
+      },
+      "scorecard": {
+        "date": "2026-10-12",
+        "commit": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+        "checks": {
+          "Code-Review": {
+            "score": 7,
+            "reason": "Found 11/14 approved changesets -- score normalized to 7"
+          },
+          "Maintained": {
+            "score": 10,
+            "reason": "30 commit(s) and 22 issue activity found in the last 90 days -- score normalized to 10"
+          },
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "Token-Permissions": {
+            "score": 10,
+            "reason": "GitHub workflow tokens follow principle of least privilege"
+          },
+          "Pinned-Dependencies": {
+            "score": 8,
+            "reason": "dependency not pinned by hash detected -- score normalized to 8"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Fuzzing": {
+            "score": 10,
+            "reason": "project is fuzzed"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Branch-Protection": {
+            "score": 3,
+            "reason": "branch protection is not maximal on development and all release branches"
+          },
+          "Security-Policy": {
+            "score": 9,
+            "reason": "security policy file detected"
+          },
+          "Signed-Releases": {
+            "score": 0,
+            "reason": "Project has not signed or included provenance with any releases."
+          },
+          "Packaging": {
+            "score": 10,
+            "reason": "packaging workflow detected"
+          },
+          "SAST": {
+            "score": 0,
+            "reason": "SAST tool is not run on all commits -- score normalized to 0"
+          }
+        }
+      }
+    },
+    {
+      "repo": "encode/httpx",
+      "repopilot": {
+        "id": "encode/httpx@b5addb64f016",
+        "engineVersion": "0.3.1",
+        "commitSha": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+        "score": 99.2,
+        "band": "A",
+        "primaryLanguage": "Python",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "2 manifests found (Python)."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "pass",
+            "summary": "5/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE.md (BSD-3-Clause)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at .github/CONTRIBUTING.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "37 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: pytest."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/test-suite.yml:2."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "pass",
+            "summary": "Linter configuration: pyproject.toml [tool.*] lint section."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "pass",
+            "summary": "Formatter configuration: pyproject.toml formatter section."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (2 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "not_applicable",
+            "summary": "No npm/Pipenv/Poetry dependencies declared at the root."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "not_applicable",
+            "summary": "No JavaScript lockfiles at the root."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "not_applicable",
+            "summary": "No package.json files."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "pass",
+            "summary": "Configured via .github/dependabot.yml."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "not_applicable",
+            "summary": "No parsed package.json files."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "85 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "pass",
+            "summary": "No private-key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "warn",
+            "summary": "No SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "2 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "2 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "pass",
+            "summary": "All third-party actions are pinned to commit SHAs (or none are used)."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "pass",
+            "summary": "No source file exceeds 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "SEC004",
+            "severity": "low",
+            "confidence": "high",
+            "title": "No security policy",
+            "evidence": [
+              {
+                "detail": "Searched SECURITY.md in root, .github/ and docs/."
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/encode/httpx/blob/master/.github/CONTRIBUTING.md"
+      },
+      "scorecard": {
+        "date": "2026-10-19",
+        "commit": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+        "checks": {
+          "Packaging": {
+            "score": -1,
+            "reason": "packaging workflow not detected"
+          },
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Maintained": {
+            "score": 0,
+            "reason": "0 commit(s) and 0 issue activity found in the last 90 days -- score normalized to 0"
+          },
+          "Code-Review": {
+            "score": 9,
+            "reason": "Found 24/26 approved changesets -- score normalized to 9"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "Token-Permissions": {
+            "score": 0,
+            "reason": "detected GitHub workflow tokens with excessive permissions"
+          },
+          "Pinned-Dependencies": {
+            "score": 0,
+            "reason": "dependency not pinned by hash detected -- score normalized to 0"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Security-Policy": {
+            "score": 0,
+            "reason": "security policy file not detected"
+          },
+          "Fuzzing": {
+            "score": 10,
+            "reason": "project is fuzzed"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Signed-Releases": {
+            "score": -1,
+            "reason": "no releases found"
+          },
+          "Branch-Protection": {
+            "score": -1,
+            "reason": "internal error: error during branchesHandler.setup: internal error: some github tokens can't read classic branch protection rules: https://github.com/ossf/scorecard-action/blob/main/docs/authentication/fine-grained-auth-token.md"
+          },
+          "SAST": {
+            "score": 0,
+            "reason": "SAST tool is not run on all commits -- score normalized to 0"
+          }
+        }
+      }
+    },
+    {
+      "repo": "Textualize/rich",
+      "repopilot": {
+        "id": "Textualize/rich@9d8f9a372cc5",
+        "engineVersion": "0.3.1",
+        "commitSha": "9d8f9a372cc5916fd4781fec207ced7ddac2f08f",
+        "score": 90.2,
+        "band": "A",
+        "primaryLanguage": "Python",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "3 manifests found (Python)."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "pass",
+            "summary": "5/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE (MIT)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at CONTRIBUTING.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "67 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: pytest, tox."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/pythonpackage.yml:1."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "fail",
+            "summary": "No linter configuration for Python."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "pass",
+            "summary": "Formatter configuration: pyproject.toml formatter section."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (6 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "pass",
+            "summary": "Lockfile present for declared dependencies."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "not_applicable",
+            "summary": "No JavaScript lockfiles at the root."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "not_applicable",
+            "summary": "No package.json files."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "pass",
+            "summary": "Configured via .github/dependabot.yml."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "not_applicable",
+            "summary": "No parsed package.json files."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "91 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "pass",
+            "summary": "No private-key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "pass",
+            "summary": "Security policy at SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "6 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "6 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "warn",
+            "summary": "3 third-party action references not pinned to a SHA."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "warn",
+            "summary": "1 source file larger than 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "DX001",
+            "severity": "medium",
+            "confidence": "medium",
+            "title": "No linter configured for Python",
+            "evidence": [
+              {
+                "detail": "Python: no linter configuration detected."
+              }
+            ]
+          },
+          {
+            "ruleId": "MNT001",
+            "severity": "low",
+            "confidence": "medium",
+            "title": "Oversized source files",
+            "evidence": [
+              {
+                "path": "rich/_emoji_codes.py",
+                "detail": "136.9 KB"
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC007",
+            "severity": "low",
+            "confidence": "high",
+            "title": "Third-party actions referenced by mutable tags",
+            "evidence": [
+              {
+                "path": ".github/workflows/newissue.yml",
+                "line": 22,
+                "detail": "uses: juliangruber/read-file-action@v1"
+              },
+              {
+                "path": ".github/workflows/pythonpackage.yml",
+                "line": 27,
+                "detail": "uses: snok/install-poetry@v1.3.4"
+              },
+              {
+                "path": ".github/workflows/pythonpackage.yml",
+                "line": 47,
+                "detail": "uses: codecov/codecov-action@v4"
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/Textualize/rich/blob/main/CONTRIBUTING.md"
+      },
+      "scorecard": {
+        "date": "2026-10-19",
+        "commit": "9d8f9a372cc5916fd4781fec207ced7ddac2f08f",
+        "checks": {
+          "Code-Review": {
+            "score": 1,
+            "reason": "Found 1/10 approved changesets -- score normalized to 1"
+          },
+          "Maintained": {
+            "score": 0,
+            "reason": "0 commit(s) and 0 issue activity found in the last 90 days -- score normalized to 0"
+          },
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Packaging": {
+            "score": -1,
+            "reason": "packaging workflow not detected"
+          },
+          "Security-Policy": {
+            "score": 10,
+            "reason": "security policy file detected"
+          },
+          "Token-Permissions": {
+            "score": 0,
+            "reason": "detected GitHub workflow tokens with excessive permissions"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Pinned-Dependencies": {
+            "score": 2,
+            "reason": "dependency not pinned by hash detected -- score normalized to 2"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Fuzzing": {
+            "score": 10,
+            "reason": "project is fuzzed"
+          },
+          "Branch-Protection": {
+            "score": -1,
+            "reason": "internal error: error during branchesHandler.setup: internal error: some github tokens can't read classic branch protection rules: https://github.com/ossf/scorecard-action/blob/main/docs/authentication/fine-grained-auth-token.md"
+          },
+          "Signed-Releases": {
+            "score": -1,
+            "reason": "no releases found"
+          },
+          "SAST": {
+            "score": 9,
+            "reason": "SAST tool detected but not run on all commits"
+          }
+        }
+      }
+    },
+    {
+      "repo": "charmbracelet/bubbletea",
+      "repopilot": {
+        "id": "charmbracelet/bubbletea@f9df43c4f2c0",
+        "engineVersion": "0.3.1",
+        "commitSha": "f9df43c4f2c021d8740a2628d59cd810a862eb98",
+        "score": 99.2,
+        "band": "A",
+        "primaryLanguage": "Go",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "3 manifests found (Go)."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "pass",
+            "summary": "5/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE (MIT)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Inherited from organization defaults: charmbracelet/.github/CONTRIBUTING.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "11 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: go test (built-in)."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/coverage.yml:24."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "not_applicable",
+            "summary": "No ecosystem with a linter check (JS/TS, Python, Ruby, PHP)."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "not_applicable",
+            "summary": "Formatter check applies to JS/TS and Python."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (7 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "not_applicable",
+            "summary": "No npm/Pipenv/Poetry dependencies declared at the root."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "not_applicable",
+            "summary": "No JavaScript lockfiles at the root."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "not_applicable",
+            "summary": "No package.json files."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "pass",
+            "summary": "Configured via .github/dependabot.yml."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "not_applicable",
+            "summary": "No parsed package.json files."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "91 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "pass",
+            "summary": "No private-key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "pass",
+            "summary": "Inherited from organization defaults: charmbracelet/.github/SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "7 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "7 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "warn",
+            "summary": "9 third-party action references not pinned to a SHA."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "pass",
+            "summary": "No source file exceeds 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "SEC007",
+            "severity": "low",
+            "confidence": "high",
+            "title": "Third-party actions referenced by mutable tags",
+            "evidence": [
+              {
+                "path": ".github/workflows/build.yml",
+                "line": 6,
+                "detail": "uses: charmbracelet/meta/.github/workflows/build.yml@main"
+              },
+              {
+                "path": ".github/workflows/build.yml",
+                "line": 9,
+                "detail": "uses: charmbracelet/meta/.github/workflows/build.yml@main"
+              },
+              {
+                "path": ".github/workflows/build.yml",
+                "line": 16,
+                "detail": "uses: charmbracelet/meta/.github/workflows/build.yml@main"
+              },
+              {
+                "path": ".github/workflows/coverage.yml",
+                "line": 26,
+                "detail": "uses: codecov/codecov-action@v6"
+              },
+              {
+                "path": ".github/workflows/dependabot-sync.yml",
+                "line": 13,
+                "detail": "uses: charmbracelet/meta/.github/workflows/dependabot-sync.yml@main"
+              },
+              {
+                "path": ".github/workflows/examples.yml",
+                "line": 32,
+                "detail": "uses: stefanzweifel/git-auto-commit-action@v7"
+              },
+              {
+                "path": ".github/workflows/lint-sync.yml",
+                "line": 14,
+                "detail": "uses: charmbracelet/meta/.github/workflows/lint-sync.yml@main"
+              },
+              {
+                "path": ".github/workflows/lint.yml",
+                "line": 8,
+                "detail": "uses: charmbracelet/meta/.github/workflows/lint.yml@main"
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/charmbracelet/.github/blob/main/CONTRIBUTING.md"
+      },
+      "scorecard": {
+        "date": "2026-10-19",
+        "commit": "f9df43c4f2c021d8740a2628d59cd810a862eb98",
+        "checks": {
+          "Code-Review": {
+            "score": 5,
+            "reason": "Found 15/29 approved changesets -- score normalized to 5"
+          },
+          "Maintained": {
+            "score": 10,
+            "reason": "21 commit(s) and 2 issue activity found in the last 90 days -- score normalized to 10"
+          },
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Packaging": {
+            "score": -1,
+            "reason": "packaging workflow not detected"
+          },
+          "Token-Permissions": {
+            "score": 0,
+            "reason": "detected GitHub workflow tokens with excessive permissions"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "Pinned-Dependencies": {
+            "score": 0,
+            "reason": "dependency not pinned by hash detected -- score normalized to 0"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Fuzzing": {
+            "score": 0,
+            "reason": "project is not fuzzed"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Signed-Releases": {
+            "score": -1,
+            "reason": "no releases found"
+          },
+          "Branch-Protection": {
+            "score": 3,
+            "reason": "branch protection is not maximal on development and all release branches"
+          },
+          "Security-Policy": {
+            "score": 10,
+            "reason": "security policy file detected"
+          },
+          "SAST": {
+            "score": 0,
+            "reason": "SAST tool is not run on all commits -- score normalized to 0"
+          }
+        }
+      }
+    },
+    {
+      "repo": "urfave/cli",
+      "repopilot": {
+        "id": "urfave/cli@35469456db44",
+        "engineVersion": "0.3.1",
+        "commitSha": "35469456db4486070b9444e60916c68530385f01",
+        "score": 97.4,
+        "band": "A",
+        "primaryLanguage": "Go",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "2 manifests found (Go)."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "warn",
+            "summary": "3/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE (MIT)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at docs/CONTRIBUTING.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "33 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: go test (built-in)."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/publish-docs.yml:14."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "not_applicable",
+            "summary": "No ecosystem with a linter check (JS/TS, Python, Ruby, PHP)."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "not_applicable",
+            "summary": "Formatter check applies to JS/TS and Python."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (3 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "not_applicable",
+            "summary": "No npm/Pipenv/Poetry dependencies declared at the root."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "not_applicable",
+            "summary": "No JavaScript lockfiles at the root."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "not_applicable",
+            "summary": "No package.json files."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "pass",
+            "summary": "Configured via .github/dependabot.yml."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "not_applicable",
+            "summary": "No parsed package.json files."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "86 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "pass",
+            "summary": "No private-key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "pass",
+            "summary": "Security policy at docs/SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "3 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "3 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "warn",
+            "summary": "2 third-party action references not pinned to a SHA."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "pass",
+            "summary": "No source file exceeds 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "DOC002",
+            "severity": "low",
+            "confidence": "medium",
+            "title": "README is missing common sections",
+            "evidence": [
+              {
+                "path": "README.md",
+                "detail": "Missing: installation / getting-started instructions"
+              },
+              {
+                "path": "README.md",
+                "detail": "Missing: usage or examples"
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC007",
+            "severity": "low",
+            "confidence": "high",
+            "title": "Third-party actions referenced by mutable tags",
+            "evidence": [
+              {
+                "path": ".github/workflows/lint.yml",
+                "line": 30,
+                "detail": "uses: golangci/golangci-lint-action@v9"
+              },
+              {
+                "path": ".github/workflows/test.yml",
+                "line": 57,
+                "detail": "uses: codecov/codecov-action@v7"
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/urfave/cli/blob/main/docs/CONTRIBUTING.md"
+      },
+      "scorecard": {
+        "date": "2026-10-12",
+        "commit": "a789e2398a320d33e304922b95f68d879173c412",
+        "checks": {
+          "Code-Review": {
+            "score": 10,
+            "reason": "all changesets reviewed"
+          },
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Maintained": {
+            "score": 10,
+            "reason": "30 commit(s) and 28 issue activity found in the last 90 days -- score normalized to 10"
+          },
+          "Security-Policy": {
+            "score": 10,
+            "reason": "security policy file detected"
+          },
+          "Packaging": {
+            "score": -1,
+            "reason": "packaging workflow not detected"
+          },
+          "Token-Permissions": {
+            "score": 10,
+            "reason": "GitHub workflow tokens follow principle of least privilege"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "Pinned-Dependencies": {
+            "score": 0,
+            "reason": "dependency not pinned by hash detected -- score normalized to 0"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Fuzzing": {
+            "score": 0,
+            "reason": "project is not fuzzed"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Signed-Releases": {
+            "score": -1,
+            "reason": "no releases found"
+          },
+          "Branch-Protection": {
+            "score": 4,
+            "reason": "branch protection is not maximal on development and all release branches"
+          },
+          "SAST": {
+            "score": 0,
+            "reason": "SAST tool is not run on all commits -- score normalized to 0"
+          }
+        }
+      }
+    },
+    {
+      "repo": "clap-rs/clap",
+      "repopilot": {
+        "id": "clap-rs/clap@ccc89b838754",
+        "engineVersion": "0.3.1",
+        "commitSha": "ccc89b83875474399e9d9d70841163f6319d1a41",
+        "score": 94.9,
+        "band": "A",
+        "primaryLanguage": "Rust",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "8 manifests found (Rust)."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "pass",
+            "summary": "5/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE-APACHE (Apache-2.0)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at CONTRIBUTING.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "142 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: cargo test (built-in)."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/ci.yml:35."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "not_applicable",
+            "summary": "No ecosystem with a linter check (JS/TS, Python, Ruby, PHP)."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "not_applicable",
+            "summary": "Formatter check applies to JS/TS and Python."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (8 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "not_applicable",
+            "summary": "No npm/Pipenv/Poetry dependencies declared at the root."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "not_applicable",
+            "summary": "No JavaScript lockfiles at the root."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "not_applicable",
+            "summary": "No package.json files."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "pass",
+            "summary": "Configured via .github/renovate.json5."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "not_applicable",
+            "summary": "No parsed package.json files."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "95 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "pass",
+            "summary": "No private-key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "warn",
+            "summary": "No SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "8 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "8 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "pass",
+            "summary": "All third-party actions are pinned to commit SHAs (or none are used)."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "warn",
+            "summary": "2 source files larger than 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "MNT001",
+            "severity": "low",
+            "confidence": "medium",
+            "title": "Oversized source files",
+            "evidence": [
+              {
+                "path": "clap_builder/src/builder/command.rs",
+                "detail": "176.5 KB"
+              },
+              {
+                "path": "clap_builder/src/builder/arg.rs",
+                "detail": "168.8 KB"
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC004",
+            "severity": "low",
+            "confidence": "high",
+            "title": "No security policy",
+            "evidence": [
+              {
+                "detail": "Searched SECURITY.md in root, .github/ and docs/."
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/clap-rs/clap/blob/main/CONTRIBUTING.md"
+      },
+      "scorecard": {
+        "date": "2026-10-19",
+        "commit": "ccc89b83875474399e9d9d70841163f6319d1a41",
+        "checks": {
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Code-Review": {
+            "score": 1,
+            "reason": "Found 2/18 approved changesets -- score normalized to 1"
+          },
+          "Packaging": {
+            "score": -1,
+            "reason": "packaging workflow not detected"
+          },
+          "Maintained": {
+            "score": 10,
+            "reason": "30 commit(s) and 14 issue activity found in the last 90 days -- score normalized to 10"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "Token-Permissions": {
+            "score": 10,
+            "reason": "GitHub workflow tokens follow principle of least privilege"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Pinned-Dependencies": {
+            "score": 10,
+            "reason": "all dependencies are pinned"
+          },
+          "Security-Policy": {
+            "score": 0,
+            "reason": "security policy file not detected"
+          },
+          "Fuzzing": {
+            "score": 0,
+            "reason": "project is not fuzzed"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Branch-Protection": {
+            "score": -1,
+            "reason": "internal error: error during branchesHandler.setup: internal error: some github tokens can't read classic branch protection rules: https://github.com/ossf/scorecard-action/blob/main/docs/authentication/fine-grained-auth-token.md"
+          },
+          "Signed-Releases": {
+            "score": -1,
+            "reason": "no releases found"
+          },
+          "SAST": {
+            "score": 8,
+            "reason": "SAST tool is not run on all commits -- score normalized to 8"
+          }
+        }
+      }
+    },
+    {
+      "repo": "tokio-rs/axum",
+      "repopilot": {
+        "id": "tokio-rs/axum@86aa6153e47b",
+        "engineVersion": "0.3.1",
+        "commitSha": "86aa6153e47b7862737acdcfe3a0eb3a162b939a",
+        "score": 93,
+        "band": "A",
+        "primaryLanguage": "Rust",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "40 manifests found (Rust)."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "fail",
+            "summary": "0/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE (MIT)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at CONTRIBUTING.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "130 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: cargo test (built-in)."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/CI.yml:83."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "not_applicable",
+            "summary": "No ecosystem with a linter check (JS/TS, Python, Ruby, PHP)."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "not_applicable",
+            "summary": "Formatter check applies to JS/TS and Python."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (2 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "not_applicable",
+            "summary": "No npm/Pipenv/Poetry dependencies declared at the root."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "not_applicable",
+            "summary": "No JavaScript lockfiles at the root."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "not_applicable",
+            "summary": "No package.json files."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "pass",
+            "summary": "Configured via .github/dependabot.yml."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "not_applicable",
+            "summary": "No parsed package.json files."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "89 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "warn",
+            "summary": "12 key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "warn",
+            "summary": "No SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "2 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "2 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "warn",
+            "summary": "25 third-party action references not pinned to a SHA."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "pass",
+            "summary": "No source file exceeds 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "DOC002",
+            "severity": "medium",
+            "confidence": "medium",
+            "title": "README is missing common sections",
+            "evidence": [
+              {
+                "path": "README.md",
+                "detail": "Missing: substantive content (at least 300 characters)"
+              },
+              {
+                "path": "README.md",
+                "detail": "Missing: section headings"
+              },
+              {
+                "path": "README.md",
+                "detail": "Missing: installation / getting-started instructions"
+              },
+              {
+                "path": "README.md",
+                "detail": "Missing: usage or examples"
+              },
+              {
+                "path": "README.md",
+                "detail": "Missing: code block"
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC003",
+            "severity": "low",
+            "confidence": "low",
+            "title": "Key or certificate files committed",
+            "evidence": [
+              {
+                "path": "examples/low-level-native-tls/self_signed_certs/cert.pem",
+                "detail": "In a test/fixture/example path."
+              },
+              {
+                "path": "examples/low-level-native-tls/self_signed_certs/key.pem",
+                "detail": "In a test/fixture/example path."
+              },
+              {
+                "path": "examples/low-level-openssl/self_signed_certs/cert.pem",
+                "detail": "In a test/fixture/example path."
+              },
+              {
+                "path": "examples/low-level-openssl/self_signed_certs/key.pem",
+                "detail": "In a test/fixture/example path."
+              },
+              {
+                "path": "examples/low-level-rustls/self_signed_certs/cert.pem",
+                "detail": "In a test/fixture/example path."
+              },
+              {
+                "path": "examples/low-level-rustls/self_signed_certs/key.pem",
+                "detail": "In a test/fixture/example path."
+              },
+              {
+                "path": "examples/tls-graceful-shutdown/self_signed_certs/cert.pem",
+                "detail": "In a test/fixture/example path."
+              },
+              {
+                "path": "examples/tls-graceful-shutdown/self_signed_certs/key.pem",
+                "detail": "In a test/fixture/example path."
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC004",
+            "severity": "low",
+            "confidence": "high",
+            "title": "No security policy",
+            "evidence": [
+              {
+                "detail": "Searched SECURITY.md in root, .github/ and docs/."
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC007",
+            "severity": "low",
+            "confidence": "high",
+            "title": "Third-party actions referenced by mutable tags",
+            "evidence": [
+              {
+                "path": ".github/workflows/CI.yml",
+                "line": 22,
+                "detail": "uses: dtolnay/rust-toolchain@beta"
+              },
+              {
+                "path": ".github/workflows/CI.yml",
+                "line": 25,
+                "detail": "uses: Swatinem/rust-cache@v2"
+              },
+              {
+                "path": ".github/workflows/CI.yml",
+                "line": 38,
+                "detail": "uses: dtolnay/rust-toolchain@stable"
+              },
+              {
+                "path": ".github/workflows/CI.yml",
+                "line": 39,
+                "detail": "uses: Swatinem/rust-cache@v2"
+              },
+              {
+                "path": ".github/workflows/CI.yml",
+                "line": 58,
+                "detail": "uses: dtolnay/rust-toolchain@stable"
+              },
+              {
+                "path": ".github/workflows/CI.yml",
+                "line": 59,
+                "detail": "uses: Swatinem/rust-cache@v2"
+              },
+              {
+                "path": ".github/workflows/CI.yml",
+                "line": 62,
+                "detail": "uses: taiki-e/install-action@cargo-hack"
+              },
+              {
+                "path": ".github/workflows/CI.yml",
+                "line": 70,
+                "detail": "uses: dtolnay/rust-toolchain@master"
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/tokio-rs/axum/blob/main/CONTRIBUTING.md"
+      },
+      "scorecard": {
+        "date": "2026-10-19",
+        "commit": "86aa6153e47b7862737acdcfe3a0eb3a162b939a",
+        "checks": {
+          "Code-Review": {
+            "score": 10,
+            "reason": "all changesets reviewed"
+          },
+          "Maintained": {
+            "score": 10,
+            "reason": "30 commit(s) and 13 issue activity found in the last 90 days -- score normalized to 10"
+          },
+          "Packaging": {
+            "score": -1,
+            "reason": "packaging workflow not detected"
+          },
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "Token-Permissions": {
+            "score": 0,
+            "reason": "detected GitHub workflow tokens with excessive permissions"
+          },
+          "Pinned-Dependencies": {
+            "score": 1,
+            "reason": "dependency not pinned by hash detected -- score normalized to 1"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Security-Policy": {
+            "score": 0,
+            "reason": "security policy file not detected"
+          },
+          "Fuzzing": {
+            "score": 0,
+            "reason": "project is not fuzzed"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Signed-Releases": {
+            "score": -1,
+            "reason": "no releases found"
+          },
+          "Branch-Protection": {
+            "score": -1,
+            "reason": "internal error: error during branchesHandler.setup: internal error: some github tokens can't read classic branch protection rules: https://github.com/ossf/scorecard-action/blob/main/docs/authentication/fine-grained-auth-token.md"
+          },
+          "SAST": {
+            "score": 0,
+            "reason": "SAST tool is not run on all commits -- score normalized to 0"
+          }
+        }
+      }
+    },
+    {
+      "repo": "jhy/jsoup",
+      "repopilot": {
+        "id": "jhy/jsoup@bcf979840fdc",
+        "engineVersion": "0.3.1",
+        "commitSha": "bcf979840fdc986893cce9eb54b88cabe74b18ff",
+        "score": 97.5,
+        "band": "A",
+        "primaryLanguage": "Java",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "1 manifest found (Java (Maven))."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "pass",
+            "summary": "5/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE (MIT)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at .github/CONTRIBUTING.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "111 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: JUnit."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/build.yml:7."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "not_applicable",
+            "summary": "No ecosystem with a linter check (JS/TS, Python, Ruby, PHP)."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "not_applicable",
+            "summary": "Formatter check applies to JS/TS and Python."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (3 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "not_applicable",
+            "summary": "No npm/Pipenv/Poetry dependencies declared at the root."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "not_applicable",
+            "summary": "No JavaScript lockfiles at the root."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "not_applicable",
+            "summary": "No package.json files."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "pass",
+            "summary": "Configured via .github/dependabot.yml."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "not_applicable",
+            "summary": "No parsed package.json files."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "85 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "warn",
+            "summary": "3 key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "pass",
+            "summary": "Security policy at SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "3 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "3 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "warn",
+            "summary": "2 third-party action references not pinned to a SHA."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "pass",
+            "summary": "No source file exceeds 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "SEC003",
+            "severity": "low",
+            "confidence": "low",
+            "title": "Key or certificate files committed",
+            "evidence": [
+              {
+                "path": "src/test/resources/local-cert/server.key",
+                "detail": "In a test/fixture/example path."
+              },
+              {
+                "path": "src/test/resources/local-cert/server.p12",
+                "detail": "In a test/fixture/example path."
+              },
+              {
+                "path": "src/test/resources/local-cert/server.pfx",
+                "detail": "In a test/fixture/example path."
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC007",
+            "severity": "low",
+            "confidence": "high",
+            "title": "Third-party actions referenced by mutable tags",
+            "evidence": [
+              {
+                "path": ".github/workflows/cifuzz.yml",
+                "line": 9,
+                "detail": "uses: google/oss-fuzz/infra/cifuzz/actions/build_fuzzers@master"
+              },
+              {
+                "path": ".github/workflows/cifuzz.yml",
+                "line": 15,
+                "detail": "uses: google/oss-fuzz/infra/cifuzz/actions/run_fuzzers@master"
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/jhy/jsoup/blob/master/.github/CONTRIBUTING.md"
+      },
+      "scorecard": {
+        "date": "2026-10-19",
+        "commit": "4cf664cdb2e9d2cc2d40fdf3bb9c0be0be22f865",
+        "checks": {
+          "Maintained": {
+            "score": 10,
+            "reason": "30 commit(s) and 25 issue activity found in the last 90 days -- score normalized to 10"
+          },
+          "Packaging": {
+            "score": -1,
+            "reason": "packaging workflow not detected"
+          },
+          "Security-Policy": {
+            "score": 10,
+            "reason": "security policy file detected"
+          },
+          "Code-Review": {
+            "score": 0,
+            "reason": "Found 1/19 approved changesets -- score normalized to 0"
+          },
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Token-Permissions": {
+            "score": 0,
+            "reason": "detected GitHub workflow tokens with excessive permissions"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "Pinned-Dependencies": {
+            "score": 0,
+            "reason": "dependency not pinned by hash detected -- score normalized to 0"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Fuzzing": {
+            "score": 10,
+            "reason": "project is fuzzed"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Branch-Protection": {
+            "score": -1,
+            "reason": "internal error: error during branchesHandler.setup: internal error: some github tokens can't read classic branch protection rules: https://github.com/ossf/scorecard-action/blob/main/docs/authentication/fine-grained-auth-token.md"
+          },
+          "Signed-Releases": {
+            "score": -1,
+            "reason": "no releases found"
+          },
+          "SAST": {
+            "score": 10,
+            "reason": "SAST tool is run on all commits"
+          }
+        }
+      }
+    },
+    {
+      "repo": "jekyll/jekyll",
+      "repopilot": {
+        "id": "jekyll/jekyll@97c3bdc822df",
+        "engineVersion": "0.3.1",
+        "commitSha": "97c3bdc822df9d5bea4c269b29a28de5a5e29d70",
+        "score": 97.5,
+        "band": "A",
+        "primaryLanguage": "Ruby",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "8 manifests found (Ruby)."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.markdown."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "pass",
+            "summary": "4/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE (MIT)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at .github/CONTRIBUTING.markdown."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "58 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: RSpec, Minitest."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/ci.yml:19."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "pass",
+            "summary": "Linter configuration: .rubocop.yml."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "not_applicable",
+            "summary": "Formatter check applies to JS/TS and Python."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (8 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "not_applicable",
+            "summary": "No npm/Pipenv/Poetry dependencies declared at the root."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "not_applicable",
+            "summary": "No JavaScript lockfiles at the root."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "not_applicable",
+            "summary": "No package.json files."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "pass",
+            "summary": "Configured via .github/dependabot.yml."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "not_applicable",
+            "summary": "No parsed package.json files."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "91 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "warn",
+            "summary": "1 key-like file committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "pass",
+            "summary": "Security policy at .github/SECURITY.markdown."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "pull_request_target is used without checking out pull-request code."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "8 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "warn",
+            "summary": "10 third-party action references not pinned to a SHA."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "pass",
+            "summary": "No source file exceeds 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "SEC003",
+            "severity": "low",
+            "confidence": "low",
+            "title": "Key or certificate files committed",
+            "evidence": [
+              {
+                "path": "test/source/pgp.key",
+                "detail": "In a test/fixture/example path."
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC007",
+            "severity": "low",
+            "confidence": "high",
+            "title": "Third-party actions referenced by mutable tags",
+            "evidence": [
+              {
+                "path": ".github/workflows/benchmark.yml",
+                "line": 25,
+                "detail": "uses: ruby/setup-ruby@v1"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "line": 36,
+                "detail": "uses: ruby/setup-ruby@v1"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "line": 78,
+                "detail": "uses: ruby/setup-ruby@v1"
+              },
+              {
+                "path": ".github/workflows/conventional-commits.yml",
+                "line": 24,
+                "detail": "uses: amannn/action-semantic-pull-request@v5.5.3"
+              },
+              {
+                "path": ".github/workflows/docs.yml",
+                "line": 23,
+                "detail": "uses: ruby/setup-ruby@v1"
+              },
+              {
+                "path": ".github/workflows/release-please.yml",
+                "line": 22,
+                "detail": "uses: googleapis/release-please-action@v4"
+              },
+              {
+                "path": ".github/workflows/release-please.yml",
+                "line": 39,
+                "detail": "uses: ruby/setup-ruby@v1"
+              },
+              {
+                "path": ".github/workflows/release-please.yml",
+                "line": 44,
+                "detail": "uses: rubygems/release-gem@v1"
+              }
+            ]
+          },
+          {
+            "ruleId": "DOC002",
+            "severity": "info",
+            "confidence": "medium",
+            "title": "README is missing common sections",
+            "evidence": [
+              {
+                "path": "README.markdown",
+                "detail": "Missing: code block"
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC005",
+            "severity": "info",
+            "confidence": "low",
+            "title": "Workflow uses pull_request_target",
+            "evidence": [
+              {
+                "path": ".github/workflows/conventional-commits.yml",
+                "detail": "Workflow is triggered by pull_request_target."
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/jekyll/jekyll/blob/master/.github/CONTRIBUTING.markdown"
+      },
+      "scorecard": {
+        "date": "2026-10-19",
+        "commit": "97c3bdc822df9d5bea4c269b29a28de5a5e29d70",
+        "checks": {
+          "Security-Policy": {
+            "score": 10,
+            "reason": "security policy file detected"
+          },
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Maintained": {
+            "score": 10,
+            "reason": "8 commit(s) and 5 issue activity found in the last 90 days -- score normalized to 10"
+          },
+          "Code-Review": {
+            "score": 6,
+            "reason": "Found 19/30 approved changesets -- score normalized to 6"
+          },
+          "Packaging": {
+            "score": -1,
+            "reason": "packaging workflow not detected"
+          },
+          "Token-Permissions": {
+            "score": 0,
+            "reason": "detected GitHub workflow tokens with excessive permissions"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Pinned-Dependencies": {
+            "score": 0,
+            "reason": "dependency not pinned by hash detected -- score normalized to 0"
+          },
+          "Fuzzing": {
+            "score": 0,
+            "reason": "project is not fuzzed"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Signed-Releases": {
+            "score": -1,
+            "reason": "no releases found"
+          },
+          "Branch-Protection": {
+            "score": -1,
+            "reason": "internal error: error during branchesHandler.setup: internal error: some github tokens can't read classic branch protection rules: https://github.com/ossf/scorecard-action/blob/main/docs/authentication/fine-grained-auth-token.md"
+          },
+          "SAST": {
+            "score": 7,
+            "reason": "SAST tool detected but not run on all commits"
+          }
+        }
+      }
+    },
+    {
+      "repo": "composer/composer",
+      "repopilot": {
+        "id": "composer/composer@e7417e73ffee",
+        "engineVersion": "0.3.1",
+        "commitSha": "e7417e73ffee8af998b42860d0e0dc2a78a0cb85",
+        "score": 98.3,
+        "band": "A",
+        "primaryLanguage": "PHP",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "1 manifest found (PHP)."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "pass",
+            "summary": "5/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE (MIT)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at .github/CONTRIBUTING.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "294 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "pass",
+            "summary": "Detected: PHPUnit."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/autoloader.yml:19."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "pass",
+            "summary": "Linter configuration: .php-cs-fixer.php."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "not_applicable",
+            "summary": "Formatter check applies to JS/TS and Python."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (11 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "not_applicable",
+            "summary": "No npm/Pipenv/Poetry dependencies declared at the root."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "not_applicable",
+            "summary": "No JavaScript lockfiles at the root."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "not_applicable",
+            "summary": "No package.json files."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "pass",
+            "summary": "Configured via .github/dependabot.yml."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "not_applicable",
+            "summary": "No parsed package.json files."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "93 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "warn",
+            "summary": "1 key-like file committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "pass",
+            "summary": "Inherited from organization defaults: composer/.github/SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "11 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "11 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "pass",
+            "summary": "All third-party actions are pinned to commit SHAs (or none are used)."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "pass",
+            "summary": "No source file exceeds 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "SEC003",
+            "severity": "low",
+            "confidence": "low",
+            "title": "Key or certificate files committed",
+            "evidence": [
+              {
+                "path": "tests/Composer/Test/Util/Fixtures/distrusted/em-ev-tls-ca-g3b.pem",
+                "detail": "In a test/fixture/example path."
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/composer/composer/blob/main/.github/CONTRIBUTING.md"
+      },
+      "scorecard": {
+        "date": "2026-10-19",
+        "commit": "515bd9bbe01ce7c697e0688053400ceb3839cc97",
+        "checks": {
+          "Packaging": {
+            "score": -1,
+            "reason": "packaging workflow not detected"
+          },
+          "Maintained": {
+            "score": 10,
+            "reason": "30 commit(s) and 12 issue activity found in the last 90 days -- score normalized to 10"
+          },
+          "Token-Permissions": {
+            "score": -1,
+            "reason": "No tokens found"
+          },
+          "Code-Review": {
+            "score": 6,
+            "reason": "Found 18/30 approved changesets -- score normalized to 6"
+          },
+          "Dangerous-Workflow": {
+            "score": -1,
+            "reason": "no workflows found"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "Pinned-Dependencies": {
+            "score": -1,
+            "reason": "no dependencies found"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Fuzzing": {
+            "score": 0,
+            "reason": "project is not fuzzed"
+          },
+          "Signed-Releases": {
+            "score": 8,
+            "reason": "5 out of the last 5 releases have a total of 5 signed artifacts."
+          },
+          "Branch-Protection": {
+            "score": 3,
+            "reason": "branch protection is not maximal on development and all release branches"
+          },
+          "Security-Policy": {
+            "score": 9,
+            "reason": "security policy file detected"
+          },
+          "SAST": {
+            "score": 0,
+            "reason": "SAST tool is not run on all commits -- score normalized to 0"
+          }
+        }
+      }
+    },
+    {
+      "repo": "jqlang/jq",
+      "repopilot": {
+        "id": "jqlang/jq@94b00aa807a5",
+        "engineVersion": "0.3.1",
+        "commitSha": "94b00aa807a51a8f97bc9345c03e32982e344678",
+        "score": 87.1,
+        "band": "B",
+        "primaryLanguage": "C",
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "pass",
+            "summary": "Root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "pass",
+            "summary": "1 manifest found (Python)."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "pass",
+            "summary": "5/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file COPYING (NOASSERTION)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "warn",
+            "summary": "No contribution guide."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "pass",
+            "summary": "7 test files detected (not executed)."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "warn",
+            "summary": "Test files exist but no framework configuration was detected."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "pass",
+            "summary": "Test command found in .github/workflows/bsd.yml:20."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "not_applicable",
+            "summary": "No ecosystem with a linter check (JS/TS, Python, Ruby, PHP)."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "not_applicable",
+            "summary": "Formatter check applies to JS/TS and Python."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "pass",
+            "summary": "GitHub Actions (8 config files)."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "not_applicable",
+            "summary": "No npm/Pipenv/Poetry dependencies declared at the root."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "not_applicable",
+            "summary": "No JavaScript lockfiles at the root."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "not_applicable",
+            "summary": "No package.json files."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "pass",
+            "summary": "Configured via .github/dependabot.yml."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "not_applicable",
+            "summary": "No parsed package.json files."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "91 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "fail",
+            "summary": "2 key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "pass",
+            "summary": "Security policy at SECURITY.md."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "8 workflows checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "8 workflows checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "warn",
+            "summary": "9 third-party action references not pinned to a SHA."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "warn",
+            "summary": "1 source file larger than 100.0 KB."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "SEC003",
+            "severity": "high",
+            "confidence": "medium",
+            "title": "Key or certificate files committed",
+            "evidence": [
+              {
+                "path": "sig/jq-release-new.key",
+                "detail": "Key-like file name or extension."
+              },
+              {
+                "path": "sig/jq-release-old.key",
+                "detail": "Key-like file name or extension."
+              }
+            ]
+          },
+          {
+            "ruleId": "DOC004",
+            "severity": "low",
+            "confidence": "high",
+            "title": "No contribution guide",
+            "evidence": [
+              {
+                "detail": "Searched CONTRIBUTING(.md|.rst|.txt) in root, .github/ and docs/."
+              }
+            ]
+          },
+          {
+            "ruleId": "MNT001",
+            "severity": "low",
+            "confidence": "medium",
+            "title": "Oversized source files",
+            "evidence": [
+              {
+                "path": "src/parser.c",
+                "detail": "137.3 KB"
+              }
+            ]
+          },
+          {
+            "ruleId": "SEC007",
+            "severity": "low",
+            "confidence": "high",
+            "title": "Third-party actions referenced by mutable tags",
+            "evidence": [
+              {
+                "path": ".github/workflows/bsd.yml",
+                "line": 21,
+                "detail": "uses: vmactions/freebsd-vm@v1"
+              },
+              {
+                "path": ".github/workflows/bsd.yml",
+                "line": 57,
+                "detail": "uses: vmactions/netbsd-vm@v1"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "line": 219,
+                "detail": "uses: msys2/setup-msys2@v2"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "line": 334,
+                "detail": "uses: docker/metadata-action@v6"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "line": 343,
+                "detail": "uses: docker/setup-qemu-action@v4"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "line": 345,
+                "detail": "uses: docker/setup-buildx-action@v4"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "line": 347,
+                "detail": "uses: docker/login-action@v4"
+              },
+              {
+                "path": ".github/workflows/ci.yml",
+                "line": 353,
+                "detail": "uses: docker/build-push-action@v7"
+              }
+            ]
+          },
+          {
+            "ruleId": "TST002",
+            "severity": "low",
+            "confidence": "medium",
+            "title": "Test framework not identifiable",
+            "evidence": [
+              {
+                "detail": "Checked manifests and config files for Jest, Vitest, Mocha, Playwright, Cypress, pytest, JUnit, RSpec, PHPUnit and others."
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": null
+      },
+      "scorecard": {
+        "error": 404
+      }
+    },
+    {
+      "repo": "github/gitignore",
+      "repopilot": {
+        "id": "github/gitignore@0e5d690153ca",
+        "engineVersion": "0.3.1",
+        "commitSha": "0e5d690153ca3da8a4a1aef2d053406f408f531c",
+        "score": 85.3,
+        "band": "B",
+        "primaryLanguage": null,
+        "checks": [
+          {
+            "ruleId": "STR001",
+            "status": "fail",
+            "summary": "No root .gitignore found."
+          },
+          {
+            "ruleId": "STR002",
+            "status": "not_applicable",
+            "summary": "No source code detected."
+          },
+          {
+            "ruleId": "DOC001",
+            "status": "pass",
+            "summary": "README found at README.md."
+          },
+          {
+            "ruleId": "DOC002",
+            "status": "pass",
+            "summary": "5/5 completeness signals present."
+          },
+          {
+            "ruleId": "DOC003",
+            "status": "pass",
+            "summary": "License file LICENSE (CC0-1.0)."
+          },
+          {
+            "ruleId": "DOC004",
+            "status": "pass",
+            "summary": "Contribution guide at CONTRIBUTING.md."
+          },
+          {
+            "ruleId": "TST001",
+            "status": "not_applicable",
+            "summary": "No source code detected."
+          },
+          {
+            "ruleId": "TST002",
+            "status": "not_applicable",
+            "summary": "No source code detected."
+          },
+          {
+            "ruleId": "TST003",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "TST004",
+            "status": "warn",
+            "summary": "CI exists but no recognizable test command was found."
+          },
+          {
+            "ruleId": "DX001",
+            "status": "not_applicable",
+            "summary": "No ecosystem with a linter check (JS/TS, Python, Ruby, PHP)."
+          },
+          {
+            "ruleId": "DX002",
+            "status": "not_applicable",
+            "summary": "Formatter check applies to JS/TS and Python."
+          },
+          {
+            "ruleId": "DX003",
+            "status": "not_applicable",
+            "summary": "No source code detected."
+          },
+          {
+            "ruleId": "DX004",
+            "status": "not_applicable",
+            "summary": "No root package.json."
+          },
+          {
+            "ruleId": "DEP001",
+            "status": "not_applicable",
+            "summary": "No npm/Pipenv/Poetry dependencies declared at the root."
+          },
+          {
+            "ruleId": "DEP002",
+            "status": "not_applicable",
+            "summary": "No JavaScript lockfiles at the root."
+          },
+          {
+            "ruleId": "DEP003",
+            "status": "not_applicable",
+            "summary": "No package.json files."
+          },
+          {
+            "ruleId": "DEP004",
+            "status": "not_applicable",
+            "summary": "No dependency manifests."
+          },
+          {
+            "ruleId": "DEP005",
+            "status": "not_applicable",
+            "summary": "No parsed package.json files."
+          },
+          {
+            "ruleId": "SEC001",
+            "status": "pass",
+            "summary": "5 files scanned; no credential patterns matched."
+          },
+          {
+            "ruleId": "SEC002",
+            "status": "pass",
+            "summary": "No .env files committed."
+          },
+          {
+            "ruleId": "SEC003",
+            "status": "pass",
+            "summary": "No private-key-like files committed."
+          },
+          {
+            "ruleId": "SEC004",
+            "status": "not_applicable",
+            "summary": "No source code detected."
+          },
+          {
+            "ruleId": "SEC005",
+            "status": "pass",
+            "summary": "1 workflow checked; no pull_request_target usage."
+          },
+          {
+            "ruleId": "SEC006",
+            "status": "pass",
+            "summary": "1 workflow checked; no untrusted interpolation in scripts."
+          },
+          {
+            "ruleId": "SEC007",
+            "status": "pass",
+            "summary": "All third-party actions are pinned to commit SHAs (or none are used)."
+          },
+          {
+            "ruleId": "MNT001",
+            "status": "not_applicable",
+            "summary": "No source files."
+          },
+          {
+            "ruleId": "MNT002",
+            "status": "pass",
+            "summary": "No dependency, virtualenv or cache directories committed."
+          },
+          {
+            "ruleId": "MNT003",
+            "status": "pass",
+            "summary": "No committed file exceeds 5.0 MB."
+          },
+          {
+            "ruleId": "REPO001",
+            "status": "pass",
+            "summary": "Repository is not archived."
+          }
+        ],
+        "findings": [
+          {
+            "ruleId": "TST004",
+            "severity": "medium",
+            "confidence": "medium",
+            "title": "CI does not appear to run tests",
+            "evidence": [
+              {
+                "path": ".github/workflows/stale.yml",
+                "detail": "No test command matched (e.g. npm test, pytest, go test, cargo test)."
+              }
+            ]
+          },
+          {
+            "ruleId": "STR001",
+            "severity": "low",
+            "confidence": "high",
+            "title": "No .gitignore at the repository root",
+            "evidence": [
+              {
+                "detail": "No `.gitignore` entry exists at the root of the default branch."
+              }
+            ]
+          }
+        ]
+      },
+      "community": {
+        "readme": true,
+        "license": true,
+        "contributing": "https://github.com/github/gitignore/blob/main/CONTRIBUTING.md"
+      },
+      "scorecard": {
+        "date": "2026-10-19",
+        "commit": "0e5d690153ca3da8a4a1aef2d053406f408f531c",
+        "checks": {
+          "Code-Review": {
+            "score": 10,
+            "reason": "all changesets reviewed"
+          },
+          "Dangerous-Workflow": {
+            "score": 10,
+            "reason": "no dangerous workflow patterns detected"
+          },
+          "Maintained": {
+            "score": 10,
+            "reason": "30 commit(s) and 0 issue activity found in the last 90 days -- score normalized to 10"
+          },
+          "Packaging": {
+            "score": -1,
+            "reason": "packaging workflow not detected"
+          },
+          "Token-Permissions": {
+            "score": 0,
+            "reason": "detected GitHub workflow tokens with excessive permissions"
+          },
+          "Binary-Artifacts": {
+            "score": 10,
+            "reason": "no binaries found in the repo"
+          },
+          "Pinned-Dependencies": {
+            "score": 10,
+            "reason": "all dependencies are pinned"
+          },
+          "CII-Best-Practices": {
+            "score": 0,
+            "reason": "no effort to earn an OpenSSF best practices badge detected"
+          },
+          "Fuzzing": {
+            "score": 0,
+            "reason": "project is not fuzzed"
+          },
+          "License": {
+            "score": 10,
+            "reason": "license file detected"
+          },
+          "Signed-Releases": {
+            "score": -1,
+            "reason": "no releases found"
+          },
+          "Security-Policy": {
+            "score": 10,
+            "reason": "security policy file detected"
+          },
+          "Branch-Protection": {
+            "score": 5,
+            "reason": "branch protection is not maximal on development and all release branches"
+          },
+          "SAST": {
+            "score": 0,
+            "reason": "SAST tool is not run on all commits -- score normalized to 0"
+          }
+        }
+      }
+    }
+  ]
+}

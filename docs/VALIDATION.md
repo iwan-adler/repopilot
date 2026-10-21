@@ -10,7 +10,7 @@ node scripts/validation/fill-community.mjs     # optional: refetch community pro
 node scripts/validation/analyze.mjs docs/validation/results-v0.3.1.json
 ```
 
-Raw data: [`results-v0.2.0.json`](validation/results-v0.2.0.json), [`results-v0.3.0.json`](validation/results-v0.3.0.json), [`results-v0.3.1.json`](validation/results-v0.3.1.json).
+Raw data: [`results-v0.2.0.json`](validation/results-v0.2.0.json), [`results-v0.3.0.json`](validation/results-v0.3.0.json), [`results-v0.3.1.json`](validation/results-v0.3.1.json); hold-out: [`holdout-v0.3.1.json`](validation/holdout-v0.3.1.json).
 
 ## Method
 
@@ -58,6 +58,29 @@ v0.3.1 was measured in a third full run. Compared with v0.3.0, exactly the 7 kno
 
 **How to read the 100%.** It means no known false positives remain _on the same 26 repositories that were used to find and fix them_. That is a training-set result, not a general accuracy claim. The honest estimate for unseen repositories is somewhere below it. The v0.2.0 → v0.3.0 jump shows how much a new sample can reveal, and an evaluation on a fresh set of repositories is the next step.
 
+## Hold-out evaluation (unseen repositories)
+
+To test whether the fixes generalize, 15 more repositories were chosen on 2026-10-21 **before any scan** and never used to tune rules: date-fns, zod, zustand, click, httpx, rich, bubbletea, urfave/cli, clap, axum, jsoup, jekyll, composer, jq and github/gitignore (`node scripts/validation/collect.mjs --set holdout`). Engine v0.3.1 was measured as-is; the numbers below were recorded before any further code change.
+
+| Set                                      | Engine     | Findings | Correct | False positives | Debatable | Precision |
+| ---------------------------------------- | ---------- | -------: | ------: | --------------: | --------: | --------: |
+| Study set (26 repos, used to find fixes) | v0.3.1     |       81 |      73 |               0 |         8 |      100% |
+| **Hold-out (15 unseen repos)**           | **v0.3.1** |   **44** |  **27** |           **6** |    **11** | **81.8%** |
+
+Agreement with GitHub's community profile and OpenSSF Scorecard on the hold-out set was **100%** for every overlapping check (README, license, contribution guide, security policy, dangerous workflows), so the organization-default and workflow fixes did generalize.
+
+**81.8% is RepoPilot's best estimate of precision on repositories it hasn't seen.** The six hold-out false positives:
+
+| Repo                          | Rule                       | Cause                                                                              |
+| ----------------------------- | -------------------------- | ---------------------------------------------------------------------------------- |
+| colinhacks/zod, tokio-rs/axum | DOC002 README completeness | The root README is a **symlink**; RepoPilot read the link text instead of the file |
+| jqlang/jq                     | SEC003 key files           | `sig/*.key` are **public** PGP release-signing keys, flagged at high severity      |
+| pmndrs/zustand                | DX004 npm scripts          | Lint scripts named `test:lint` / `fix:lint` were not recognized                    |
+| Textualize/rich               | DX001 linter               | Static analysis is configured in **pre-commit hooks** and mypy, which weren't read |
+| github/gitignore              | TST004 CI runs tests       | A repository with **no source code** was told its CI doesn't run tests             |
+
+These were fixed afterwards in v0.3.2 (see below). Because the hold-out set has now influenced the code, it can't measure v0.3.2; a new hold-out set would be needed.
+
 ## False positives found and fixed
 
 | Rule                            |                            v0.2.0 false positives | Root cause                                                                                                                                           | Fix                                                                                                                                                                          |
@@ -71,6 +94,8 @@ v0.3.1 was measured in a third full run. Compared with v0.3.0, exactly the 7 kno
 | TST003 / DX004 npm scripts      |                                       2 (laravel) | A PHP app's frontend `package.json` was judged as a JS project                                                                                       | Not applicable when another ecosystem's manifest is at the root and JS isn't the primary language (v0.3.0)                                                                   |
 
 Smaller adjustments: `"latest"` versions only in `examples/` or test manifests are now low severity (axios, swr), and generated single-header files such as `single_include/json.hpp` are excluded from the size check.
+
+**v0.3.2 (from the hold-out set):** symlinked READMEs are resolved to their target file; key-like files up to 64 KB are inspected so public PGP keys and certificates aren't flagged; script names are matched by segment (`test:lint`, `fix:lint`); Python static analysis configured via pre-commit hooks, mypy or pyright counts; and "CI runs tests" doesn't apply to repositories without source code.
 
 Every fix has a regression test reproducing the real-world pattern: [`tests/validation-regressions.test.ts`](../tests/validation-regressions.test.ts).
 

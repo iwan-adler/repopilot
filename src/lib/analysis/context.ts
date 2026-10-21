@@ -1,7 +1,8 @@
 import type { RepositoryInfo, Stack } from "@/lib/reports/schema";
 import { basename } from "./paths";
 
-export type RepoFile = { path: string; size: number };
+/** A blob in the tree. `symlink` is set for symbolic links (Git mode 120000), whose content is the target path. */
+export type RepoFile = { path: string; size: number; symlink?: boolean };
 
 export type AnalysisOptions = {
   /** Source files larger than this (bytes) are reported as oversized. */

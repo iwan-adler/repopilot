@@ -122,10 +122,10 @@ describe("testing rules", () => {
 
   it("TST004 CI runs tests", () => {
     expect(evaluate("TST004", SRC).status).toBe("not_applicable");
-    expect(evaluate("TST004", { ".github/workflows/ci.yml": 100 }).status).toBe("unavailable");
-    expect(evaluate("TST004", { ".github/workflows/ci.yml": "steps:\n  - run: pytest -q" }).status).toBe("pass");
-    expect(evaluate("TST004", { ".gitlab-ci.yml": "test:\n  script: go test ./..." }).status).toBe("pass");
-    expect(evaluate("TST004", { ".github/workflows/ci.yml": "steps:\n  - run: npm run build" }).status).toBe("warn");
+    expect(evaluate("TST004", { ...SRC, ".github/workflows/ci.yml": 100 }).status).toBe("unavailable");
+    expect(evaluate("TST004", { ...SRC, ".github/workflows/ci.yml": "steps:\n  - run: pytest -q" }).status).toBe("pass");
+    expect(evaluate("TST004", { ...SRC, ".gitlab-ci.yml": "test:\n  script: go test ./..." }).status).toBe("pass");
+    expect(evaluate("TST004", { ...SRC, ".github/workflows/ci.yml": "steps:\n  - run: npm run build" }).status).toBe("warn");
   });
 });
 

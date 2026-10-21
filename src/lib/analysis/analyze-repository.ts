@@ -27,7 +27,7 @@ import { RULES, type Rule } from "./rules";
 import { computePlan, computeScore } from "./scoring";
 import { ciSystemFor } from "./workflows";
 
-export const ENGINE_VERSION = "0.3.1";
+export const ENGINE_VERSION = "0.3.2";
 
 export type ScanLimits = {
   maxTreeEntries: number;
@@ -79,7 +79,7 @@ export class AnalysisError extends Error {
 // ---------- file selection ----------
 
 const KEY_ROOT_FILE_RE =
-  /^(readme(\.(md|markdown|rst|txt|adoc|org))?|package\.json|pyproject\.toml|requirements(-dev|-test|_dev|_test)?\.txt|setup\.py|setup\.cfg|tox\.ini|pipfile|cargo\.toml|go\.mod|gemfile|composer\.json|pom\.xml|build\.gradle(\.kts)?|pubspec\.yaml|deno\.jsonc?|cmakelists\.txt)$/i;
+  /^(readme(\.(md|markdown|rst|txt|adoc|org))?|package\.json|pyproject\.toml|requirements(-dev|-test|_dev|_test)?\.txt|setup\.py|setup\.cfg|tox\.ini|pipfile|cargo\.toml|go\.mod|gemfile|composer\.json|pom\.xml|build\.gradle(\.kts)?|pubspec\.yaml|deno\.jsonc?|cmakelists\.txt|\.pre-commit-config\.ya?ml|mypy\.ini)$/i;
 
 const CONFIG_EXT = new Set([
   "env",
@@ -111,6 +111,11 @@ export function selectFiles(files: RepoFile[], limits: ScanLimits): { key: strin
   for (const p of [".github/README.md", "docs/README.md"]) if (candidates.some((f) => f.path === p)) add(p);
   // 3. CI configuration (workflows first).
   for (const f of candidates) if (ciSystemFor(f.path) && f.size <= limits.maxKeyFileBytes) add(f.path);
+  // Small key/certificate files, so SEC003 can tell public keys and certificates from private keys.
+  candidates
+    .filter((f) => f.size <= 64 * 1024 && (/\.(pem|key|crt|cer|asc)$/i.test(f.path) || /(^|\/)id_(rsa|dsa|ecdsa|ed25519)$/.test(f.path)))
+    .slice(0, 10)
+    .forEach((f) => add(f.path));
   // 4. Nested package.json files (monorepos), shallow first.
   candidates
     .filter((f) => basename(f.path) === "package.json" && !isRootFile(f.path) && depth(f.path) <= 2)
@@ -283,6 +288,23 @@ export function analyzeContext(input: AnalyzeContextInput): Report {
 
 // ---------- orchestration (I/O) ----------
 
+/**
+ * Resolves a symlink's target relative to the link's directory. Returns null for absolute
+ * targets, targets escaping the repository, or malformed values.
+ */
+export function resolveSymlinkTarget(linkPath: string, target: string): string | null {
+  if (!target || target.length > 1024 || target.startsWith("/") || /[\r\n\0]/.test(target)) return null;
+  const parts = linkPath.split("/").slice(0, -1);
+  for (const seg of target.split("/")) {
+    if (seg === "" || seg === ".") continue;
+    if (seg === "..") {
+      if (parts.length === 0) return null;
+      parts.pop();
+    } else parts.push(seg);
+  }
+  return parts.length ? parts.join("/") : null;
+}
+
 export async function findOrgCommunityFiles(
   client: GitHubClient,
   owner: string,
@@ -391,7 +413,7 @@ export async function analyzeRepository(owner: string, repo: string, options: An
     }
     const files: RepoFile[] = treeEntries
       .filter((e) => e.type === "blob" && e.path.length <= 1024)
-      .map((e) => ({ path: e.path, size: e.size ?? 0 }));
+      .map((e) => ({ path: e.path, size: e.size ?? 0, ...(e.mode === "120000" ? { symlink: true } : {}) }));
     const directories = treeEntries.filter((e) => e.type === "tree").map((e) => e.path);
     if (files.length === 0) {
       throw new AnalysisError("empty_repository", "This repository has no files on its default branch.");
@@ -433,6 +455,26 @@ export async function analyzeRepository(owner: string, repo: string, options: An
         onProgress?.({ stage: "files", message: "Inspecting selected files", done, total: queue.length });
       }
     });
+
+    // A symlink's raw content is its target path (e.g. README.md -> packages/zod/README.md).
+    // Replace it with the target file's content, or drop it if the target can't be resolved.
+    const byPath = new Map(files.map((f) => [f.path, f]));
+    for (const f of files) {
+      const linkText = f.symlink ? contents.get(f.path) : undefined;
+      if (linkText === undefined) continue;
+      contents.delete(f.path);
+      const targetPath = resolveSymlinkTarget(f.path, linkText.trim());
+      const target = targetPath ? byPath.get(targetPath) : undefined;
+      if (!target || target.symlink || target.size > limits.maxKeyFileBytes || signal.aborted) continue;
+      try {
+        const text =
+          contents.get(target.path) ??
+          (await client.getRawFile(meta.owner.login, meta.name, sha, target.path, limits.maxKeyFileBytes, signal));
+        if (text !== null) contents.set(f.path, text);
+      } catch {
+        // Unresolvable link: treated as unavailable content.
+      }
+    }
 
     const scannableTotal = files.filter((f) => isScannableTextFile(f.path) && !isNonAuthoredPath(f.path)).length;
     if (deadlineHit) limitations.push({ code: "deadline", message: "The scan time budget was reached; some files were not inspected." });

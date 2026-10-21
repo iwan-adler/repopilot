@@ -472,6 +472,7 @@ export const RULES: Rule[] = [
     rationale: "Tests only protect the main branch if they run automatically on every change.",
     evaluate(ctx) {
       const ciFiles = ctx.files.filter((f) => ciSystemFor(f.path));
+      if (!hasSourceCode(ctx)) return { status: "not_applicable", summary: "No source code detected." };
       if (ciFiles.length === 0) return { status: "not_applicable", summary: "No CI configuration (covered by DX003)." };
       const fetched = ciFiles.filter((f) => ctx.contents.has(f.path));
       if (fetched.length === 0) return { status: "unavailable", summary: "CI configuration could not be retrieved." };
@@ -530,12 +531,27 @@ export const RULES: Rule[] = [
         const file = anyFile(ctx, /(^|\/)(ruff\.toml|\.ruff\.toml|\.flake8|\.pylintrc|pylintrc)$/);
         const pyproject = textOf(ctx, findPath(ctx, ["pyproject.toml"]));
         const setupCfg = textOf(ctx, findPath(ctx, ["setup.cfg", "tox.ini"]));
-        const inPyproject = pyproject && /^\s*\[tool\.(ruff|pylint|flake8)/m.test(pyproject);
-        const inSetup = setupCfg && /^\s*\[flake8\]/m.test(setupCfg);
+        // Static analysis also counts when configured via type checkers or pre-commit hooks (e.g. Textualize/rich).
+        const inPyproject = pyproject && /^\s*\[tool\.(ruff|pylint|flake8|mypy|pyright)/m.test(pyproject);
+        const inSetup = setupCfg && /^\s*\[(flake8|mypy)\]/m.test(setupCfg);
+        const preCommit = textOf(ctx, findPath(ctx, [".pre-commit-config.yaml", ".pre-commit-config.yml"])) ?? "";
+        const inPreCommit = /\b(id:\s*(flake8|ruff|ruff-check|pylint|mypy|pyright|pyflakes|bandit)\b|pre-commit\/pygrep-hooks)/.test(
+          preCommit,
+        );
+        const mypyIni = findPath(ctx, ["mypy.ini", ".mypy.ini"]);
         checks.push({
           applies: true,
           ecosystem: "Python",
-          found: file?.path ?? (inPyproject ? "pyproject.toml [tool.*] lint section" : inSetup ? "[flake8] section" : null),
+          found:
+            file?.path ??
+            mypyIni ??
+            (inPyproject
+              ? "pyproject.toml [tool.*] lint section"
+              : inSetup
+                ? "setup.cfg/tox.ini lint section"
+                : inPreCommit
+                  ? "linter hooks in .pre-commit-config.yaml"
+                  : null),
         });
       }
       if (hasEcosystem(ctx, "Ruby") || usesLanguage(ctx, ["Ruby"])) {
@@ -678,8 +694,9 @@ export const RULES: Rule[] = [
         return { status: "not_applicable", summary: "package.json only supports a non-JavaScript project's frontend tooling." };
       if (root.state !== "ok") return { status: "unavailable", summary: "package.json not available for parsing." };
       const keys = Object.keys(root.pkg.scripts ?? {});
-      const hasRun = keys.some((k) => /^(build|dev|start|serve|compile|watch)([:-]|$)/.test(k));
-      const hasLint = keys.some((k) => /^(lint|eslint|stylelint|biome|check|format|prettier|typecheck|tsc)([:-]|$)/.test(k));
+      // Match script-name segments anywhere, e.g. "test:lint", "fix:lint", "lint-staged" (pmndrs/zustand).
+      const hasRun = keys.some((k) => /(^|[:-])(build|dev|start|serve|compile|watch)([:-]|$)/.test(k));
+      const hasLint = keys.some((k) => /(^|[:-])(lint|eslint|stylelint|biome|check|format|prettier|typecheck|tsc|types)([:-]|$)/.test(k));
       if (hasRun && hasLint) return { status: "pass", summary: `Scripts: ${keys.slice(0, 8).join(", ")}${keys.length > 8 ? "…" : ""}.` };
       const missing = [!hasRun && "build/dev/start", !hasLint && "lint/check"].filter(Boolean) as string[];
       return {
@@ -1010,12 +1027,31 @@ export const RULES: Rule[] = [
     kind: "heuristic",
     rationale: "Private keys and keystores grant access to servers, signing identities, or TLS endpoints.",
     evaluate(ctx) {
-      const keyFiles = ctx.files.filter((f) => {
+      const candidates = ctx.files.filter((f) => {
         if (isNonAuthoredPath(f.path)) return false;
         const base = basename(f.path).toLowerCase();
         return /^id_(rsa|dsa|ecdsa|ed25519)$/.test(base) || ["pem", "key", "p12", "pfx", "jks", "keystore"].includes(extname(f.path));
       });
-      if (keyFiles.length === 0) return { status: "pass", summary: "No private-key-like files committed." };
+      // When the content was inspected, public material (PGP public keys, X.509 certificates) is not a secret,
+      // e.g. jq's sig/jq-release-*.key release-signing keys.
+      const isPublicMaterial = (path: string) => {
+        const text = ctx.contents.get(path);
+        return (
+          text !== undefined &&
+          /-----BEGIN (PGP PUBLIC KEY BLOCK|CERTIFICATE|PUBLIC KEY|RSA PUBLIC KEY)-----/.test(text) &&
+          !/PRIVATE KEY/.test(text)
+        );
+      };
+      const publicFiles = candidates.filter((f) => isPublicMaterial(f.path));
+      const keyFiles = candidates.filter((f) => !isPublicMaterial(f.path));
+      if (keyFiles.length === 0) {
+        return {
+          status: "pass",
+          summary: publicFiles.length
+            ? `${pluralize(publicFiles.length, "public key or certificate file")} committed; no private-key-like files.`
+            : "No private-key-like files committed.",
+        };
+      }
       const real = keyFiles.filter((f) => !isLowRiskPath(f.path));
       return {
         status: real.length > 0 ? "fail" : "warn",

@@ -7,15 +7,22 @@
  *   2. GitHub's community profile (independent: README / LICENSE / CONTRIBUTING detection),
  *   3. OpenSSF Scorecard results (independent: License, Security-Policy, Dangerous-Workflow, ...).
  *
- * Usage:  node scripts/validation/collect.mjs [baseUrl]
+ * Usage:  node scripts/validation/collect.mjs [baseUrl] [--set holdout] [--out file]
  * Requests are spaced to respect RepoPilot's per-IP rate limit. No tokens are required.
  */
 import { mkdir, writeFile } from "node:fs/promises";
 
-const BASE = process.argv[2] ?? "https://repopilot-rho.vercel.app";
+const args = process.argv.slice(2);
+const flag = (name) => {
+  const i = args.indexOf(name);
+  return i === -1 ? undefined : args[i + 1];
+};
+const BASE = args[0] && !args[0].startsWith("--") ? args[0] : "https://repopilot-rho.vercel.app";
+const SET = flag("--set") ?? "main";
+const OUT = flag("--out") ?? "docs/validation/results.json";
 const SPACING_MS = 65_000;
 
-export const REPOS = [
+export const MAIN_REPOS = [
   // JavaScript / TypeScript
   "expressjs/express",
   "sindresorhus/ky",
@@ -52,6 +59,30 @@ export const REPOS = [
   "public-apis/public-apis",
   "jakevdp/PythonDataScienceHandbook",
 ];
+
+/**
+ * Hold-out set: chosen on 2026-10-21 before any scan, never used to tune rules.
+ * Measures how the engine does on repositories it was not fixed against.
+ */
+export const HOLDOUT_REPOS = [
+  "date-fns/date-fns",
+  "colinhacks/zod",
+  "pmndrs/zustand",
+  "pallets/click",
+  "encode/httpx",
+  "Textualize/rich",
+  "charmbracelet/bubbletea",
+  "urfave/cli",
+  "clap-rs/clap",
+  "tokio-rs/axum",
+  "jhy/jsoup",
+  "jekyll/jekyll",
+  "composer/composer",
+  "jqlang/jq",
+  "github/gitignore",
+];
+
+const REPOS = SET === "holdout" ? HOLDOUT_REPOS : MAIN_REPOS;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -136,8 +167,5 @@ for (const [i, repo] of REPOS.entries()) {
 }
 
 await mkdir("docs/validation", { recursive: true });
-await writeFile(
-  "docs/validation/results.json",
-  JSON.stringify({ collectedAt: new Date().toISOString(), base: BASE, results }, null, 2) + "\n",
-);
-console.log("Wrote docs/validation/results.json");
+await writeFile(OUT, JSON.stringify({ collectedAt: new Date().toISOString(), base: BASE, results }, null, 2) + "\n");
+console.log(`Wrote ${OUT}`);

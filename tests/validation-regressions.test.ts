@@ -3,7 +3,7 @@
  * Each case reproduces the pattern seen in a real repository.
  */
 import { describe, expect, it } from "vitest";
-import { analyzeRepository } from "@/lib/analysis/analyze-repository";
+import { analyzeRepository, resolveSymlinkTarget } from "@/lib/analysis/analyze-repository";
 import { RULES } from "@/lib/analysis/rules";
 import { findTestCommand } from "@/lib/analysis/workflows";
 import { GitHubClient } from "@/lib/github/client";
@@ -177,5 +177,78 @@ describe("DX001 / DX002: nested helper manifests (redis, nlohmann/json, laravel;
 
   it("still checks a root-level Python project", () => {
     expect(evaluate("DX001", { "pyproject.toml": "[project]", "src/app.py": "x" }, { languages: { Python: 100 } }).status).toBe("fail");
+  });
+});
+
+describe("hold-out false positives (engine 0.3.1, fixed in 0.3.2)", () => {
+  it("TST004 is not applicable to repositories without source code (github/gitignore)", () => {
+    const spec = {
+      "Python.gitignore": "__pycache__/",
+      ".github/workflows/stale.yml": "on: schedule\njobs:\n  s:\n    steps:\n      - uses: actions/stale@v9\n",
+    };
+    expect(evaluate("TST004", spec).status).toBe("not_applicable");
+  });
+
+  it("DX004 recognizes test:lint / fix:lint script names (pmndrs/zustand)", () => {
+    const pkg = JSON.stringify({ scripts: { build: "rollup -c", "test:lint": "eslint .", "fix:lint": "eslint --fix ." } });
+    expect(evaluate("DX004", { "package.json": pkg, "src/a.ts": "x" }).status).toBe("pass");
+  });
+
+  it("DX001 counts pre-commit linter hooks and mypy (Textualize/rich)", () => {
+    const precommit = "repos:\n  - repo: https://github.com/pre-commit/pygrep-hooks\n    hooks:\n      - id: python-no-log-warn\n";
+    expect(evaluate("DX001", { "rich/a.py": "x", ".pre-commit-config.yaml": precommit }, { languages: { Python: 100 } }).status).toBe(
+      "pass",
+    );
+    expect(
+      evaluate("DX001", { "rich/a.py": "x", "pyproject.toml": "[tool.mypy]\nstrict = true\n" }, { languages: { Python: 100 } }).status,
+    ).toBe("pass");
+    expect(
+      evaluate(
+        "DX001",
+        { "rich/a.py": "x", ".pre-commit-config.yaml": "repos:\n  - repo: x\n    hooks:\n      - id: trailing-whitespace\n" },
+        { languages: { Python: 100 } },
+      ).status,
+    ).toBe("fail");
+  });
+
+  it("SEC003 ignores public PGP keys and certificates but not private keys (jqlang/jq)", () => {
+    const pub = "-----BEGIN PGP PUBLIC KEY BLOCK-----\nmQINBF...\n-----END PGP PUBLIC KEY BLOCK-----\n";
+    expect(evaluate("SEC003", { "sig/jq-release.key": pub, "src/a.c": "x" }).status).toBe("pass");
+    expect(evaluate("SEC003", { "certs/ca.pem": "-----BEGIN CERTIFICATE-----\nMIIB\n", "src/a.c": "x" }).status).toBe("pass");
+    const priv = "-----BEGIN " + "RSA PRIVATE KEY-----\nMIIE\n";
+    expect(evaluate("SEC003", { "deploy/server.key": priv, "src/a.c": "x" }).status).toBe("fail");
+    // Not fetched: still flagged by name, as before.
+    expect(evaluate("SEC003", { "deploy/server.key": 2000, "src/a.c": "x" }).status).toBe("fail");
+  });
+});
+
+describe("README symlinks (colinhacks/zod, tokio-rs/axum)", () => {
+  it("resolves symlink targets safely", () => {
+    expect(resolveSymlinkTarget("README.md", "packages/zod/README.md")).toBe("packages/zod/README.md");
+    expect(resolveSymlinkTarget("docs/README.md", "../axum/README.md")).toBe("axum/README.md");
+    expect(resolveSymlinkTarget("README.md", "../../etc/passwd")).toBeNull();
+    expect(resolveSymlinkTarget("README.md", "/etc/passwd")).toBeNull();
+    expect(resolveSymlinkTarget("README.md", "")).toBeNull();
+  });
+
+  it("analyzes the symlink target's content instead of the link text", async () => {
+    const long =
+      "# Axum\n\nErgonomic web framework. " +
+      "x".repeat(300) +
+      "\n\n## Installation\n\n```\ncargo add axum\n```\n\n## Usage\n\nExample below.\n";
+    const gh = fakeGitHub({
+      files: { "README.md": "axum/README.md", "axum/README.md": long, "axum/src/lib.rs": "pub fn a() {}" },
+      overrides: {},
+    });
+    // Mark README.md as a symlink in the tree response.
+    const fetchWithMode: typeof gh.fetch = async (url, init) => {
+      const res = await gh.fetch(url, init);
+      if (!url.includes("/git/trees/")) return res;
+      const body = await res.json();
+      for (const e of body.tree) if (e.path === "README.md") e.mode = "120000";
+      return new Response(JSON.stringify(body), { status: 200, headers: { "content-type": "application/json" } });
+    };
+    const r = await analyzeRepository("acme", "widget", { client: new GitHubClient({ fetch: fetchWithMode }) });
+    expect(r.checks.find((c) => c.ruleId === "DOC002")).toMatchObject({ status: "pass", summary: "5/5 completeness signals present." });
   });
 });
