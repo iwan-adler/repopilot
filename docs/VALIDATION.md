@@ -7,10 +7,10 @@ Everything here is reproducible:
 ```bash
 node scripts/validation/collect.mjs            # scans the 26 repos via the live API (≈28 min, paced)
 node scripts/validation/fill-community.mjs     # optional: refetch community profiles via `gh`
-node scripts/validation/analyze.mjs docs/validation/results-v0.3.0.json
+node scripts/validation/analyze.mjs docs/validation/results-v0.3.1.json
 ```
 
-Raw data: [`results-v0.2.0.json`](validation/results-v0.2.0.json), [`results-v0.3.0.json`](validation/results-v0.3.0.json).
+Raw data: [`results-v0.2.0.json`](validation/results-v0.2.0.json), [`results-v0.3.0.json`](validation/results-v0.3.0.json), [`results-v0.3.1.json`](validation/results-v0.3.1.json).
 
 ## Method
 
@@ -34,26 +34,29 @@ Precision = correct ÷ (correct + false positives).
 
 ### Agreement with independent sources
 
-| Check                               | Source                   | Repos compared |      v0.2.0 |   v0.3.0 |
-| ----------------------------------- | ------------------------ | -------------: | ----------: | -------: |
-| README present (DOC001)             | GitHub community profile |             26 |        100% |     100% |
-| License declared (DOC003)           | GitHub community profile |             26 |        100% |     100% |
-| License declared (DOC003)           | OpenSSF Scorecard        |             23 |        100% |     100% |
-| Contribution guide (DOC004)         | GitHub community profile |             26 | 73% (19/26) | **100%** |
-| Security policy (SEC004)            | OpenSSF Scorecard        |             23 | 70% (16/23) | **100%** |
-| Dangerous workflows (SEC005+SEC006) | OpenSSF Scorecard        |             19 | 84% (16/19) | **100%** |
-| Dependency update tool (DEP004)     | OpenSSF Scorecard        |              3 |        100% |     100% |
+| Check                               | Source                   | Repos compared |      v0.2.0 |   v0.3.0 |   v0.3.1 |
+| ----------------------------------- | ------------------------ | -------------: | ----------: | -------: | -------: |
+| README present (DOC001)             | GitHub community profile |             26 |        100% |     100% |     100% |
+| License declared (DOC003)           | GitHub community profile |             26 |        100% |     100% |     100% |
+| License declared (DOC003)           | OpenSSF Scorecard        |             23 |        100% |     100% |     100% |
+| Contribution guide (DOC004)         | GitHub community profile |             26 | 73% (19/26) | **100%** | **100%** |
+| Security policy (SEC004)            | OpenSSF Scorecard        |             23 | 70% (16/23) | **100%** | **100%** |
+| Dangerous workflows (SEC005+SEC006) | OpenSSF Scorecard        |             19 | 84% (16/19) | **100%** | **100%** |
+| Dependency update tool (DEP004)     | OpenSSF Scorecard        |              3 |        100% |     100% |     100% |
 
 Scorecard had no data for 3 repositories and reported "inconclusive" for some checks; those pairs are excluded.
 
 ### Precision of all findings
 
-| Engine                     | Findings | Correct | False positives | Debatable | Precision |
-| -------------------------- | -------: | ------: | --------------: | --------: | --------: |
-| v0.2.0 (first measurement) |      114 |      69 |              36 |         9 | **65.7%** |
-| v0.3.0 (after fixes)       |       88 |      73 |               7 |         8 | **91.3%** |
+| Engine                     | Findings | Correct | False positives | Debatable |                 Precision |
+| -------------------------- | -------: | ------: | --------------: | --------: | ------------------------: |
+| v0.2.0 (first measurement) |      114 |      69 |              36 |         9 |                 **65.7%** |
+| v0.3.0 (after fixes)       |       88 |      73 |               7 |         8 |                 **91.3%** |
+| v0.3.1                     |       81 |      73 |               0 |         8 | **100%** (on this sample) |
 
-The 7 false positives remaining in v0.3.0 were fixed in v0.3.1 (see below). That version is deployed but has **not yet been re-measured**, so no number is claimed for it here.
+v0.3.1 was measured in a third full run. Compared with v0.3.0, exactly the 7 known false positives disappeared and **no new findings appeared**; scores changed only for swr, laravel, redis and nlohmann/json.
+
+**How to read the 100%.** It means no known false positives remain _on the same 26 repositories that were used to find and fix them_. That is a training-set result, not a general accuracy claim. The honest estimate for unseen repositories is somewhere below it. The v0.2.0 → v0.3.0 jump shows how much a new sample can reveal, and an evaluation on a fresh set of repositories is the next step.
 
 ## False positives found and fixed
 

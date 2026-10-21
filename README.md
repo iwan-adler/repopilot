@@ -8,7 +8,7 @@
 
 RepoPilot analyzes any public GitHub repository with deterministic, documented rules — testing, security signals, documentation, dependency hygiene and maintainability — and produces a transparent 0–100 health score, evidence-backed findings, and Markdown/JSON reports.
 
-It is **not** an AI chatbot: every finding comes from a rule with a stable ID, a rationale and unit tests. The same commit always produces the same report.
+It is **not** an AI chatbot: every finding comes from a rule with a stable ID, a rationale and unit tests. The same commit always produces the same report. Its accuracy is [measured, not assumed](docs/VALIDATION.md): on 26 well-known repositories, precision rose from 65.7% to 91.3% after fixing the false positives the study uncovered, and agreement with GitHub and OpenSSF Scorecard is 100% on the overlapping checks.
 
 > Built for the Galuxium Nexus V2 hackathon by a solo developer on a ₹0 budget.
 
@@ -141,6 +141,7 @@ See [docs/SUBMISSION_CHECKLIST.md](docs/SUBMISSION_CHECKLIST.md) for verificatio
 ## Documentation
 
 - [Architecture](docs/ARCHITECTURE.md)
+- [Accuracy study](docs/VALIDATION.md): measured on 26 repositories against GitHub and OpenSSF Scorecard
 - [Scoring algorithm](docs/SCORING.md)
 - [Security & privacy](docs/SECURITY.md)
 - [Business model](docs/BUSINESS_MODEL.md)
