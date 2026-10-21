@@ -81,6 +81,12 @@ Agreement with GitHub's community profile and OpenSSF Scorecard on the hold-out 
 
 These were fixed afterwards in v0.3.2 (see below). Because the hold-out set has now influenced the code, it can't measure v0.3.2; a new hold-out set would be needed.
 
+### Regression check on the study set
+
+After the hold-out fixes, the 26-repository study set was re-run to make sure nothing got worse. The first run on v0.3.2 caught a regression: once key files were fetched (to tell public keys from private ones), test-fixture private keys were reported by both SEC001 and SEC003. v0.3.3 assesses key and certificate files only in SEC003. A clean run on v0.3.3 ([`results-v0.3.3.json`](validation/results-v0.3.3.json)) produced **no new findings** compared with v0.3.1, and 100% agreement with both independent sources. The only difference was nlohmann/json's 57.9 MB file, which upstream had removed between the runs.
+
+(Process note: the first v0.3.2 run was discarded because an accidental parallel collection run from the same IP caused rate-limit failures for one repository.)
+
 ## False positives found and fixed
 
 | Rule                            |                            v0.2.0 false positives | Root cause                                                                                                                                           | Fix                                                                                                                                                                          |
