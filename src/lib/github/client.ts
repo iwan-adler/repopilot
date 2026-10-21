@@ -284,4 +284,20 @@ export class GitHubClient {
     if (head.includes(0)) return null;
     return new TextDecoder("utf-8", { fatal: false }).decode(bytes);
   }
+
+  /**
+   * Best-effort check that a file exists on a repository's default branch (raw `HEAD` ref).
+   * Used for organization-wide community health defaults in `{owner}/.github`.
+   * Never throws: any error (404, timeout, rate limit) is reported as `false`.
+   */
+  async rawFileExists(owner: string, repo: string, path: string, signal?: AbortSignal): Promise<boolean> {
+    try {
+      const url = `${RAW_ORIGIN}/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/HEAD/${encodeRepoPath(path)}`;
+      const response = await this.request(url, { accept: "text/plain, */*", useToken: false, signal });
+      await response.body?.cancel().catch(() => {});
+      return response.ok;
+    } catch {
+      return false;
+    }
+  }
 }

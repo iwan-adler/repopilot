@@ -239,6 +239,10 @@ const TEST_CONFIG_FILES: [RegExp, string][] = [
 ];
 
 const TEXT_TEST_FRAMEWORKS: [string, RegExp, string][] = [
+  ["cmakelists.txt", /\b(enable_testing|add_test)\s*\(/i, "CTest (CMake)"],
+  ["cmakelists.txt", /\bdoctest\b/i, "doctest"],
+  ["cmakelists.txt", /\bCatch2\b/, "Catch2"],
+  ["cmakelists.txt", /\b(GTest|gtest|googletest)\b/, "GoogleTest"],
   ["pyproject.toml", /^\s*\[tool\.pytest/m, "pytest"],
   ["pyproject.toml", /["'\s]pytest\b/, "pytest"],
   ["requirements.txt", /^\s*pytest\b/im, "pytest"],

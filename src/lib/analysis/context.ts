@@ -27,6 +27,26 @@ export type BaseContext = {
   /** Text contents of the files that were fetched (path -> content). */
   contents: Map<string, string>;
   options: AnalysisOptions;
+  /**
+   * Community health files inherited from the owner's `.github` repository
+   * (e.g. "expressjs/.github/SECURITY.md"); GitHub applies these to repos without their own.
+   */
+  orgCommunityFiles?: { contributing: string | null; security: string | null };
+};
+
+/**
+ * GitHub community health files may live in the root, docs/ or .github/, with any common
+ * documentation extension (e.g. docs/contributing.rst). Matching is case-insensitive.
+ */
+export function findCommunityFile(files: RepoFile[], name: "contributing" | "security"): string | null {
+  const re = new RegExp(`^(\\.github/|docs/)?${name}(\\.(md|markdown|rst|txt|adoc|org))?$`, "i");
+  return files.find((f) => re.test(f.path))?.path ?? null;
+}
+
+/** Locations GitHub checks for organization-wide defaults in `{owner}/.github` (case-sensitive on raw URLs). */
+export const ORG_COMMUNITY_CANDIDATES: Record<"contributing" | "security", string[]> = {
+  contributing: ["CONTRIBUTING.md", ".github/CONTRIBUTING.md", "docs/CONTRIBUTING.md", "contributing.md", ".github/contributing.md"],
+  security: ["SECURITY.md", ".github/SECURITY.md", "docs/SECURITY.md", "security.md"],
 };
 
 export type AnalysisContext = BaseContext & {

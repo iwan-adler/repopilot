@@ -1,5 +1,5 @@
 import type { CheckStatus, Confidence, Evidence, FindingCategory, FindingKind, ScoreCategoryId, Severity } from "@/lib/reports/schema";
-import { findPath, type AnalysisContext, type RepoFile } from "./context";
+import { findCommunityFile, findPath, type AnalysisContext, type RepoFile } from "./context";
 import { fetchedPackageJsons } from "./detect-stack";
 import { allDependencies, parsePackageJson, type PackageJson } from "./manifests";
 import { basename, extname, formatBytes, isBinaryExtension, isNonAuthoredPath, isRootFile, isSourceFile, isTestFile } from "./paths";
@@ -55,8 +55,15 @@ function hasEcosystem(ctx: AnalysisContext, prefix: string): boolean {
   return ctx.stack.ecosystems.some((e) => e.startsWith(prefix));
 }
 
+/**
+ * Share of the codebase at which a language without its own manifest gets tool checks.
+ * Below it, helper scripts (e.g. Python utilities in a C project) don't trigger linter or
+ * formatter findings. Raised from 5% after the accuracy study (docs/VALIDATION.md).
+ */
+const SIGNIFICANT_LANGUAGE_SHARE = 20;
+
 function usesLanguage(ctx: AnalysisContext, names: string[]): boolean {
-  return ctx.stack.languages.some((l) => names.includes(l.name) && l.percent >= 5);
+  return ctx.stack.languages.some((l) => names.includes(l.name) && l.percent >= SIGNIFICANT_LANGUAGE_SHARE);
 }
 
 function isJsProject(ctx: AnalysisContext): boolean {
@@ -65,6 +72,30 @@ function isJsProject(ctx: AnalysisContext): boolean {
 
 function isPythonProject(ctx: AnalysisContext): boolean {
   return hasEcosystem(ctx, "Python") || usesLanguage(ctx, ["Python"]);
+}
+
+const NON_JS_ROOT_MANIFESTS = [
+  "composer.json",
+  "pyproject.toml",
+  "requirements.txt",
+  "gemfile",
+  "go.mod",
+  "cargo.toml",
+  "pom.xml",
+  "build.gradle",
+  "build.gradle.kts",
+  "mix.exs",
+];
+const JS_LANGUAGES = ["JavaScript", "TypeScript", "Vue", "Svelte", "Astro"];
+
+/**
+ * True when package.json only serves a non-JS project (e.g. Laravel's or Rails' frontend assets):
+ * another ecosystem's manifest is at the root and the primary language isn't JS/TS.
+ */
+function jsIsSecondary(ctx: AnalysisContext): boolean {
+  const otherManifest = NON_JS_ROOT_MANIFESTS.some((m) => ctx.pathIndex.has(m));
+  const primary = ctx.stack.primaryLanguage;
+  return otherManifest && primary !== null && !JS_LANGUAGES.includes(primary);
 }
 
 type RootPackage = { state: "absent" } | { state: "unfetched" } | { state: "invalid"; error: string } | { state: "ok"; pkg: PackageJson };
@@ -274,16 +305,10 @@ export const RULES: Rule[] = [
     kind: "observation",
     rationale: "A contribution guide tells potential contributors how to set up, test, and submit changes.",
     evaluate(ctx) {
-      const path = findPath(ctx, [
-        "CONTRIBUTING.md",
-        "CONTRIBUTING",
-        "CONTRIBUTING.rst",
-        "CONTRIBUTING.txt",
-        ".github/CONTRIBUTING.md",
-        "docs/CONTRIBUTING.md",
-        "docs/contributing.md",
-      ]);
+      const path = findCommunityFile(ctx.files, "contributing");
       if (path) return { status: "pass", summary: `Contribution guide at ${path}.` };
+      const inherited = ctx.orgCommunityFiles?.contributing;
+      if (inherited) return { status: "pass", summary: `Inherited from organization defaults: ${inherited}.` };
       return {
         status: "warn",
         summary: "No contribution guide.",
@@ -294,7 +319,7 @@ export const RULES: Rule[] = [
             description: "No CONTRIBUTING file was found in the root, .github/, or docs/.",
             evidence: [{ detail: "Searched CONTRIBUTING(.md|.rst|.txt) in root, .github/ and docs/." }],
             recommendation:
-              "If you accept contributions, add CONTRIBUTING.md covering local setup, how to run tests, and the pull-request process. Solo or private-use projects can skip this. Organization-wide defaults from a separate .github repository are not checked, so this may not apply if your organization provides one.",
+              "If you accept contributions, add CONTRIBUTING.md covering local setup, how to run tests, and the pull-request process. Solo or private-use projects can skip this. RepoPilot also checked the owner's .github repository for organization-wide defaults and found none.",
             confidence: "high",
           },
         ],
@@ -394,6 +419,8 @@ export const RULES: Rule[] = [
     evaluate(ctx) {
       const root = rootPackage(ctx);
       if (root.state === "absent") return { status: "not_applicable", summary: "No root package.json." };
+      if (jsIsSecondary(ctx))
+        return { status: "not_applicable", summary: "package.json only supports a non-JavaScript project's frontend tooling." };
       if (root.state === "unfetched") return { status: "unavailable", summary: "package.json could not be retrieved." };
       if (root.state === "invalid") return { status: "unavailable", summary: "package.json could not be parsed (see DEP003)." };
       const scripts = root.pkg.scripts ?? {};
@@ -494,15 +521,14 @@ export const RULES: Rule[] = [
           found: file?.path ?? (inPyproject ? "pyproject.toml [tool.*] lint section" : inSetup ? "[flake8] section" : null),
         });
       }
-      if (usesLanguage(ctx, ["Ruby"])) {
+      if (hasEcosystem(ctx, "Ruby") || usesLanguage(ctx, ["Ruby"])) {
         checks.push({ applies: true, ecosystem: "Ruby", found: anyFile(ctx, /(^|\/)\.(rubocop|standard)\.ya?ml$/)?.path ?? null });
       }
-      if (usesLanguage(ctx, ["PHP"])) {
-        checks.push({
-          applies: true,
-          ecosystem: "PHP",
-          found: anyFile(ctx, /(^|\/)(phpcs\.xml(\.dist)?|phpstan\.neon(\.dist)?|psalm\.xml)$/)?.path ?? null,
-        });
+      if (hasEcosystem(ctx, "PHP") || usesLanguage(ctx, ["PHP"])) {
+        const file = anyFile(ctx, /(^|\/)(phpcs\.xml(\.dist)?|phpstan\.neon(\.dist)?|psalm\.xml|pint\.json|\.php-cs-fixer(\.dist)?\.php)$/);
+        const composer = textOf(ctx, findPath(ctx, ["composer.json"])) ?? "";
+        const dep = /"(laravel\/pint|friendsofphp\/php-cs-fixer|squizlabs\/php_codesniffer|phpstan\/phpstan|vimeo\/psalm)"/.exec(composer);
+        checks.push({ applies: true, ecosystem: "PHP", found: file?.path ?? (dep ? `${dep[1]} in composer.json` : null) });
       }
       if (checks.length === 0) return { status: "not_applicable", summary: "No ecosystem with a linter check (JS/TS, Python, Ruby, PHP)." };
       const missing = checks.filter((c) => !c.found);
@@ -545,7 +571,8 @@ export const RULES: Rule[] = [
         );
         const dep = pkgs.find(({ pkg }) => {
           const d = allDependencies(pkg);
-          return d.prettier || d["@biomejs/biome"] || d.dprint || pkg.prettier;
+          // xo and standard enforce code style with --fix, so they count as formatters here.
+          return d.prettier || d["@biomejs/biome"] || d.dprint || d.xo || d.standard || pkg.prettier;
         });
         if (file || dep) found.push(file?.path ?? `formatter dependency in ${dep!.path}`);
         else missing.push("JavaScript/TypeScript");
@@ -620,6 +647,8 @@ export const RULES: Rule[] = [
     evaluate(ctx) {
       const root = rootPackage(ctx);
       if (root.state === "absent") return { status: "not_applicable", summary: "No root package.json." };
+      if (jsIsSecondary(ctx))
+        return { status: "not_applicable", summary: "package.json only supports a non-JavaScript project's frontend tooling." };
       if (root.state !== "ok") return { status: "unavailable", summary: "package.json not available for parsing." };
       const keys = Object.keys(root.pkg.scripts ?? {});
       const hasRun = keys.some((k) => /^(build|dev|start|serve|compile|watch)([:-]|$)/.test(k));
@@ -840,14 +869,18 @@ export const RULES: Rule[] = [
         }
       }
       if (evidence.length === 0) return { status: "pass", summary: "All declared npm versions are bounded." };
+      // Examples and test fixtures often track "latest" on purpose; only shipped manifests are a real risk.
+      const onlyLowRisk = evidence.every((e) => e.path && isLowRiskPath(e.path));
       return {
-        status: "fail",
-        summary: `${pluralize(evidence.length, "unbounded version specifier")}.`,
+        status: onlyLowRisk ? "warn" : "fail",
+        summary: `${pluralize(evidence.length, "unbounded version specifier")}${onlyLowRisk ? " (examples/tests only)" : ""}.`,
         findings: [
           {
-            severity: "medium",
+            severity: onlyLowRisk ? "low" : "medium",
             title: "Unbounded dependency versions",
-            description: `${pluralize(evidence.length, "dependency", "dependencies")} accept any version.`,
+            description:
+              `${pluralize(evidence.length, "dependency", "dependencies")} accept any version.` +
+              (onlyLowRisk ? " All are in example or test manifests, which is lower risk." : ""),
             evidence: evidence.slice(0, MAX_EVIDENCE),
             recommendation:
               'Replace "*" / "latest" with a semver range (e.g. "^4.2.0") and rely on the lockfile plus Dependabot for updates.',
@@ -989,8 +1022,10 @@ export const RULES: Rule[] = [
     rationale: "A SECURITY.md tells researchers how to report vulnerabilities privately instead of opening public issues.",
     evaluate(ctx) {
       if (!hasSourceCode(ctx)) return { status: "not_applicable", summary: "No source code detected." };
-      const path = findPath(ctx, ["SECURITY.md", ".github/SECURITY.md", "docs/SECURITY.md", "SECURITY", "SECURITY.rst"]);
+      const path = findCommunityFile(ctx.files, "security");
       if (path) return { status: "pass", summary: `Security policy at ${path}.` };
+      const inherited = ctx.orgCommunityFiles?.security;
+      if (inherited) return { status: "pass", summary: `Inherited from organization defaults: ${inherited}.` };
       return {
         status: "warn",
         summary: "No SECURITY.md.",
@@ -1001,7 +1036,7 @@ export const RULES: Rule[] = [
             description: "No SECURITY.md was found in the root, .github/ or docs/.",
             evidence: [{ detail: "Searched SECURITY.md in root, .github/ and docs/." }],
             recommendation:
-              "Add SECURITY.md describing supported versions and how to report vulnerabilities (GitHub private vulnerability reporting is free). Organization-wide defaults from a separate .github repository are not checked, so this may not apply if your organization provides one.",
+              "Add SECURITY.md describing supported versions and how to report vulnerabilities (GitHub private vulnerability reporting is free). RepoPilot also checked the owner's .github repository for organization-wide defaults and found none.",
             confidence: "high",
           },
         ],
@@ -1051,13 +1086,16 @@ export const RULES: Rule[] = [
         };
       }
       return {
-        status: "warn",
-        summary: "pull_request_target is used; review its steps.",
+        // Common, safe uses (labelers, triage bots) never check out PR code. Matching OpenSSF
+        // Scorecard and GitHub's guidance, only an explicit head checkout is scored as a problem.
+        status: "pass",
+        summary: "pull_request_target is used without checking out pull-request code.",
         findings: [
           {
-            severity: "medium",
+            severity: "info",
             title: "Workflow uses pull_request_target",
-            description: "pull_request_target is used. No explicit checkout of the PR head was found, but the workflow should be reviewed.",
+            description:
+              "pull_request_target is used, but no explicit checkout of the pull request's code was found. This is the usual safe pattern for labelers and triage bots.",
             evidence: prt,
             recommendation: "Confirm the workflow never runs code from the pull request and declares minimal `permissions:`.",
             confidence: "low",
@@ -1156,7 +1194,10 @@ export const RULES: Rule[] = [
     rationale:
       "Very large source files are harder to review, test and change safely. Size is measured in bytes from the Git tree; generated, vendored, minified and test files are excluded.",
     evaluate(ctx) {
-      const sources = ctx.files.filter((f) => isSourceFile(f.path) && !isTestFile(f.path));
+      // Single-header / amalgamated builds (e.g. single_include/json.hpp, sqlite3.c amalgamation) are generated.
+      const sources = ctx.files.filter(
+        (f) => isSourceFile(f.path) && !isTestFile(f.path) && !/(^|\/)(single_include|amalgamation)(\/|$)|amalgamat/i.test(f.path),
+      );
       if (sources.length === 0) return { status: "not_applicable", summary: "No source files." };
       const limit = ctx.options.oversizedFileBytes;
       const big = sources.filter((f) => f.size > limit).sort((a, b) => b.size - a.size);

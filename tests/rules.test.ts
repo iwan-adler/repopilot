@@ -250,7 +250,7 @@ describe("security rules", () => {
     expect(evaluate("SEC005", SRC).status).toBe("not_applicable");
     expect(evaluate("SEC005", { ".github/workflows/a.yml": 10 }).status).toBe("unavailable");
     expect(evaluate("SEC005", { ".github/workflows/a.yml": "on: [push]\n" }).status).toBe("pass");
-    expect(evaluate("SEC005", { ".github/workflows/a.yml": "on:\n  pull_request_target:\njobs: {}\n" }).status).toBe("warn");
+    expect(evaluate("SEC005", { ".github/workflows/a.yml": "on:\n  pull_request_target:\njobs: {}\n" }).status).toBe("pass");
     const risky = `on: pull_request_target
 jobs:
   build:
@@ -359,5 +359,21 @@ describe("rule regressions from scanning microsoft/vscode", () => {
 
   it("DX002 accepts tsfmt.json", () => {
     expect(evaluate("DX002", { "src/a.ts": "x", "package.json": "{}", "tsfmt.json": "{}" }).status).toBe("pass");
+  });
+});
+
+describe("community file detection (found in the accuracy study)", () => {
+  it("DOC004 accepts any doc extension in root, docs/ or .github/", () => {
+    for (const p of ["docs/contributing.rst", "CONTRIBUTING.adoc", ".github/contributing.md", "contributing.txt"]) {
+      expect([p, evaluate("DOC004", { ...SRC, [p]: "x" }).status]).toEqual([p, "pass"]);
+    }
+    expect(evaluate("DOC004", { ...SRC, "src/contributing.md": "x" }).status).toBe("warn");
+  });
+
+  it("SEC004 accepts any doc extension in root, docs/ or .github/", () => {
+    for (const p of ["SECURITY.rst", "docs/security.md", ".github/SECURITY.txt"]) {
+      expect([p, evaluate("SEC004", { ...SRC, [p]: "x" }).status]).toEqual([p, "pass"]);
+    }
+    expect(evaluate("SEC004", { ...SRC, "docs/security-notes.md": "x" }).status).toBe("warn");
   });
 });

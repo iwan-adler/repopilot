@@ -99,13 +99,27 @@ export function findUnpinnedActions(text: string): { line: number; ref: string }
 }
 
 const TEST_COMMAND_RE =
-  /\b(npm (run )?test|npm run test:|npm t\b|yarn (run )?test|pnpm (run )?test|bun (run )?test|npx (vitest|jest|playwright test)|vitest|jest\b|pytest|python -m (pytest|unittest)|tox\b|nox\b|go test|cargo (test|nextest)|mvn\b.*\b(test|verify)|gradlew?\b.*\b(test|check)\b|bundle exec (rspec|rake)|rspec\b|rake test|phpunit|dotnet test|mix test|flutter test|deno test|swift test|ctest\b|make (test|check)\b)/i;
+  /\b(npm (run )?test|npm run test:|npm t\b|yarn (run )?test|pnpm (run )?test|bun (run )?test|npx (vitest|jest|playwright test)|vitest|jest\b|pytest|python -m (pytest|unittest)|tox\b|nox\b|go test|cargo (test|nextest)|cross test|mvn\b.*\b(test|verify)|gradlew?\b.*\b(test|check)\b|bundle exec (rspec|rake)|rspec\b|rake test|phpunit|pest\b|artisan test|composer (run )?test|dotnet test|mix test|flutter test|deno test|swift test|ctest\b|make (test|tests|check|ci)\b)/i;
 
+/** Custom runners and toolchains invoked through variables, e.g. `./runtest`, `${{ env.CARGO }} test`. */
+const CUSTOM_TEST_RE = /(^|[\s/])\.?\/?run[-_]?tests?(\.sh)?\b|\}\}\s+test\b|\btest\.sh\b/i;
+
+/** A step or job explicitly named as a test step: `- name: Run tests`, `name: test`, a `tests:` job. */
+const TEST_NAME_RE = /^\s*(-\s+)?name:\s*["']?[^"'#]*\btests?\b/i;
+const TEST_JOB_RE = /^ {2}tests?(-[\w-]+)?:\s*$/i;
+/** Steps or jobs about publishing are not test runs even if they contain the word ("test-pypi"). */
+const NOT_TESTS_RE = /pypi|publish|release|deploy|upload/i;
+
+/**
+ * Returns the 1-based line of the first evidence that a CI file runs tests: a known test
+ * command, a custom test runner, or a step/job named as tests. Heuristic (medium confidence).
+ */
 export function findTestCommand(text: string): number | null {
   const lines = text.split(/\r?\n/);
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].replace(/#.*$/, "");
-    if (TEST_COMMAND_RE.test(line)) return i + 1;
+    const line = lines[i].replace(/\s#.*$/, "").replace(/^\s*#.*$/, "");
+    if (!line.trim() || NOT_TESTS_RE.test(line)) continue;
+    if (TEST_COMMAND_RE.test(line) || CUSTOM_TEST_RE.test(line) || TEST_NAME_RE.test(line) || TEST_JOB_RE.test(line)) return i + 1;
   }
   return null;
 }

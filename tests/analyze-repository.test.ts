@@ -90,7 +90,8 @@ describe("analyzeRepository (end to end with a fake GitHub)", () => {
     expect(r.budget.filesFetched).toBeLessThanOrEqual(11);
     expect(r.budget.bytesFetched).toBeLessThan(3000 + 600);
     expect(r.limitations.map((l) => l.code)).toContain("byte_budget");
-    const raw = gh.calls.filter((c) => c.url.startsWith("https://raw.githubusercontent.com"));
+    // Only the repository's own files count toward the budget (org-default lookups are separate).
+    const raw = gh.calls.filter((c) => c.url.startsWith("https://raw.githubusercontent.com/acme/widget/"));
     expect(raw.length).toBeLessThanOrEqual(11);
   });
 

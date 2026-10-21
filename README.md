@@ -134,7 +134,7 @@ See [docs/SUBMISSION_CHECKLIST.md](docs/SUBMISSION_CHECKLIST.md) for verificatio
 - Content checks read a bounded sample (≤ 120 files, ≤ 3 MB, ≤ 25 s per scan). Very large trees may be truncated; the report says so.
 - Credential detection is heuristic — not a security audit. No vulnerability databases are consulted.
 - Only the default branch of public repositories is analyzed; Git history is not.
-- Organization-wide community health files (from an org's `.github` repository) are not checked.
+- Organization-wide community health files (CONTRIBUTING, SECURITY) are checked in the owner's `.github` repository; other inherited settings are not.
 - Rate limiting and caching are in-memory **per server instance**, not global.
 - A high score is not a certification of security, quality or production readiness.
 

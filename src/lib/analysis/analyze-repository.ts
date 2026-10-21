@@ -13,6 +13,8 @@ import {
 import {
   buildPathIndex,
   DEFAULT_ANALYSIS_OPTIONS,
+  findCommunityFile,
+  ORG_COMMUNITY_CANDIDATES,
   type AnalysisContext,
   type AnalysisOptions,
   type BaseContext,
@@ -25,7 +27,7 @@ import { RULES, type Rule } from "./rules";
 import { computePlan, computeScore } from "./scoring";
 import { ciSystemFor } from "./workflows";
 
-export const ENGINE_VERSION = "0.2.0";
+export const ENGINE_VERSION = "0.3.0";
 
 export type ScanLimits = {
   maxTreeEntries: number;
@@ -77,7 +79,7 @@ export class AnalysisError extends Error {
 // ---------- file selection ----------
 
 const KEY_ROOT_FILE_RE =
-  /^(readme(\.(md|markdown|rst|txt|adoc|org))?|package\.json|pyproject\.toml|requirements(-dev|-test|_dev|_test)?\.txt|setup\.py|setup\.cfg|tox\.ini|pipfile|cargo\.toml|go\.mod|gemfile|composer\.json|pom\.xml|build\.gradle(\.kts)?|pubspec\.yaml|deno\.jsonc?)$/i;
+  /^(readme(\.(md|markdown|rst|txt|adoc|org))?|package\.json|pyproject\.toml|requirements(-dev|-test|_dev|_test)?\.txt|setup\.py|setup\.cfg|tox\.ini|pipfile|cargo\.toml|go\.mod|gemfile|composer\.json|pom\.xml|build\.gradle(\.kts)?|pubspec\.yaml|deno\.jsonc?|cmakelists\.txt)$/i;
 
 const CONFIG_EXT = new Set([
   "env",
@@ -281,6 +283,25 @@ export function analyzeContext(input: AnalyzeContextInput): Report {
 
 // ---------- orchestration (I/O) ----------
 
+export async function findOrgCommunityFiles(
+  client: GitHubClient,
+  owner: string,
+  repo: string,
+  files: RepoFile[],
+  signal?: AbortSignal,
+): Promise<{ contributing: string | null; security: string | null }> {
+  const lookup = async (name: "contributing" | "security"): Promise<string | null> => {
+    if (repo.toLowerCase() === ".github" || findCommunityFile(files, name)) return null;
+    for (const path of ORG_COMMUNITY_CANDIDATES[name]) {
+      if (signal?.aborted) return null;
+      if (await client.rawFileExists(owner, ".github", path, signal)) return `${owner}/.github/${path}`;
+    }
+    return null;
+  };
+  const [contributing, security] = await Promise.all([lookup("contributing"), lookup("security")]);
+  return { contributing, security };
+}
+
 function toRepositoryInfo(meta: RepoMetadata, sha: string): RepositoryInfo {
   return {
     owner: meta.owner.login,
@@ -432,8 +453,13 @@ export async function analyzeRepository(owner: string, repo: string, options: An
       message: `File contents were inspected for ${contents.size} of ${files.length} files (manifests, CI configuration, README and a sample of up to ${limits.maxSampleFiles} text files for credential patterns, ${scannableTotal} candidate text files in total). Other checks use file names and sizes only.`,
     });
 
+    // GitHub applies community health files from {owner}/.github to repos without their own.
+    // Checked via raw.githubusercontent.com (no API quota), best-effort, only when missing locally.
+    const orgCommunityFiles = await findOrgCommunityFiles(client, meta.owner.login, meta.name, files, signal);
+
     onProgress?.({ stage: "analysis", message: "Running checks and scoring" });
     return analyzeContext({
+      orgCommunityFiles,
       repository: toRepositoryInfo(meta, sha),
       files,
       directories,
