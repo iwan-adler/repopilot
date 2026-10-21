@@ -66,12 +66,29 @@ function usesLanguage(ctx: AnalysisContext, names: string[]): boolean {
   return ctx.stack.languages.some((l) => names.includes(l.name) && l.percent >= SIGNIFICANT_LANGUAGE_SHARE);
 }
 
+/**
+ * Ecosystem declared by a manifest at the repository root. Nested manifests (e.g.
+ * tools/x/requirements.txt in a C project) describe helpers, not the project itself.
+ */
+function hasRootEcosystem(ctx: AnalysisContext, prefix: string): boolean {
+  return ctx.stack.manifests.some((m) => !m.path.includes("/") && m.ecosystem.startsWith(prefix));
+}
+
+/** Tool checks (linter/formatter) apply to the project's main ecosystems only. */
 function isJsProject(ctx: AnalysisContext): boolean {
-  return hasEcosystem(ctx, "JavaScript") || usesLanguage(ctx, ["JavaScript", "TypeScript"]);
+  return (hasRootEcosystem(ctx, "JavaScript") && !jsIsSecondary(ctx)) || usesLanguage(ctx, ["JavaScript", "TypeScript"]);
 }
 
 function isPythonProject(ctx: AnalysisContext): boolean {
-  return hasEcosystem(ctx, "Python") || usesLanguage(ctx, ["Python"]);
+  return hasRootEcosystem(ctx, "Python") || usesLanguage(ctx, ["Python"]);
+}
+
+/** Formatters / linters invoked from package.json scripts (start of a command or after && ; |). */
+const FORMATTER_CMD_RE = /(^|[;&|]\s*|npx\s+|pnpm\s+(exec\s+)?|bunx\s+)(prettier|oxfmt|dprint\s+fmt|biome\s+(format|check)|xo|standard)\b/;
+const LINTER_CMD_RE = /(^|[;&|]\s*|npx\s+|pnpm\s+(exec\s+)?|bunx\s+)(eslint|oxlint|biome\s+(lint|check)|xo|standard)\b/;
+
+function scriptsUse(pkg: PackageJson, re: RegExp): boolean {
+  return Object.values(pkg.scripts ?? {}).some((cmd) => re.test(cmd.trim()));
 }
 
 const NON_JS_ROOT_MANIFESTS = [
@@ -501,7 +518,7 @@ export const RULES: Rule[] = [
         );
         const dep = pkgs.find(({ pkg }) => {
           const d = allDependencies(pkg);
-          return d.eslint || d["@biomejs/biome"] || d.oxlint || d.xo || d.standard || pkg.eslintConfig;
+          return d.eslint || d["@biomejs/biome"] || d.oxlint || d.xo || d.standard || pkg.eslintConfig || scriptsUse(pkg, LINTER_CMD_RE);
         });
         checks.push({
           applies: true,
@@ -572,7 +589,17 @@ export const RULES: Rule[] = [
         const dep = pkgs.find(({ pkg }) => {
           const d = allDependencies(pkg);
           // xo and standard enforce code style with --fix, so they count as formatters here.
-          return d.prettier || d["@biomejs/biome"] || d.dprint || d.xo || d.standard || pkg.prettier;
+          // Tools can also be run from scripts without a direct dependency (e.g. oxfmt in vercel/swr).
+          return (
+            d.prettier ||
+            d["@biomejs/biome"] ||
+            d.dprint ||
+            d.xo ||
+            d.standard ||
+            d.oxfmt ||
+            pkg.prettier ||
+            scriptsUse(pkg, FORMATTER_CMD_RE)
+          );
         });
         if (file || dep) found.push(file?.path ?? `formatter dependency in ${dep!.path}`);
         else missing.push("JavaScript/TypeScript");

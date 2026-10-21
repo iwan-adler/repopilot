@@ -145,3 +145,37 @@ describe("TST002: CMake/CTest projects (nlohmann/json)", () => {
 it("every rule still has a unique ID after the study changes", () => {
   expect(new Set(RULES.map((r) => r.id)).size).toBe(RULES.length);
 });
+
+describe("DX001 / DX002: tools run from package.json scripts (vercel/swr, found after the 0.3.0 run)", () => {
+  it("detects oxfmt and oxlint invoked from scripts without a direct dependency", () => {
+    const pkg = JSON.stringify({ scripts: { format: "oxfmt '**/*.ts'", lint: "oxlint ." } });
+    expect(evaluate("DX002", { "package.json": pkg, "src/a.ts": "x" }).status).toBe("pass");
+    expect(evaluate("DX001", { "package.json": pkg, "src/a.ts": "x" }).status).toBe("pass");
+  });
+
+  it("detects tools after && and via npx, but not unrelated words", () => {
+    const ok = JSON.stringify({ scripts: { check: "tsc --noEmit && npx prettier --check ." } });
+    expect(evaluate("DX002", { "package.json": ok, "src/a.ts": "x" }).status).toBe("pass");
+    const no = JSON.stringify({ scripts: { build: "node build-prettier-docs.js" } });
+    expect(evaluate("DX002", { "package.json": no, "src/a.ts": "x" }).status).toBe("warn");
+  });
+});
+
+describe("DX001 / DX002: nested helper manifests (redis, nlohmann/json, laravel; found in the 0.3.0 run)", () => {
+  it("ignores Python helper requirements in a C/C++ project", () => {
+    const spec = { ...C_PROJECT, "tools/gen/requirements.txt": "jinja2\n", "tools/gen/gen.py": "x" };
+    const languages = { C: 9_000, Python: 500 };
+    expect(evaluate("DX001", spec, { languages }).status).toBe("not_applicable");
+    expect(evaluate("DX002", spec, { languages }).status).toBe("not_applicable");
+  });
+
+  it("ignores a frontend-only package.json in a PHP app", () => {
+    const spec = { "composer.json": "{}", "package.json": "{}", "app/Kernel.php": "<?php", "resources/js/app.js": "x" };
+    const languages = { Blade: 5_000, PHP: 4_000, JavaScript: 200 };
+    expect(evaluate("DX002", spec, { languages }).status).toBe("not_applicable");
+  });
+
+  it("still checks a root-level Python project", () => {
+    expect(evaluate("DX001", { "pyproject.toml": "[project]", "src/app.py": "x" }, { languages: { Python: 100 } }).status).toBe("fail");
+  });
+});
