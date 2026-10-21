@@ -27,7 +27,7 @@ import { RULES, type Rule } from "./rules";
 import { computePlan, computeScore } from "./scoring";
 import { ciSystemFor } from "./workflows";
 
-export const ENGINE_VERSION = "0.3.2";
+export const ENGINE_VERSION = "0.3.3";
 
 export type ScanLimits = {
   maxTreeEntries: number;

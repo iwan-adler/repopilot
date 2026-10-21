@@ -83,6 +83,9 @@ function isPythonProject(ctx: AnalysisContext): boolean {
   return hasRootEcosystem(ctx, "Python") || usesLanguage(ctx, ["Python"]);
 }
 
+/** Files whose purpose is to hold key/certificate material (assessed by SEC003, not SEC001). */
+const KEY_MATERIAL_RE = /(\.(pem|key|crt|cer|asc|p12|pfx|jks|keystore)$)|(^|\/)id_(rsa|dsa|ecdsa|ed25519)$/i;
+
 /** Formatters / linters invoked from package.json scripts (start of a command or after && ; |). */
 const FORMATTER_CMD_RE = /(^|[;&|]\s*|npx\s+|pnpm\s+(exec\s+)?|bunx\s+)(prettier|oxfmt|dprint\s+fmt|biome\s+(format|check)|xo|standard)\b/;
 const LINTER_CMD_RE = /(^|[;&|]\s*|npx\s+|pnpm\s+(exec\s+)?|bunx\s+)(eslint|oxlint|biome\s+(lint|check)|xo|standard)\b/;
@@ -948,7 +951,12 @@ export const RULES: Rule[] = [
     evaluate(ctx) {
       if (ctx.contents.size === 0) return { status: "unavailable", summary: "No file contents were available to scan." };
       const matches: SecretMatch[] = [];
-      for (const [path, text] of ctx.contents) matches.push(...scanTextForSecrets(path, text));
+      for (const [path, text] of ctx.contents) {
+        // Key and certificate files are assessed by SEC003 (which also tells public from private
+        // material); scanning them here too would report the same file twice.
+        if (KEY_MATERIAL_RE.test(path)) continue;
+        matches.push(...scanTextForSecrets(path, text));
+      }
       const scanned = `${pluralize(ctx.contents.size, "file")} scanned`;
       if (matches.length === 0) return { status: "pass", summary: `${scanned}; no credential patterns matched.` };
 

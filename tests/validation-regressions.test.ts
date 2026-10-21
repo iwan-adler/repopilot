@@ -252,3 +252,17 @@ describe("README symlinks (colinhacks/zod, tokio-rs/axum)", () => {
     expect(r.checks.find((c) => c.ruleId === "DOC002")).toMatchObject({ status: "pass", summary: "5/5 completeness signals present." });
   });
 });
+
+describe("no double counting of key files (regression found by the 0.3.2 study-set run)", () => {
+  const PRIV = "-----BEGIN " + "RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA\n-----END RSA PRIVATE KEY-----\n";
+
+  it("a private key file is reported by SEC003 only, not also by SEC001 (axios, requests, httpie, gin)", () => {
+    const spec = { "tests/certs/server.key": PRIV, "src/a.py": "x" };
+    expect(evaluate("SEC003", spec).status).toBe("warn");
+    expect(evaluate("SEC001", spec).status).toBe("pass");
+  });
+
+  it("SEC001 still finds a private key pasted into source or config files", () => {
+    expect(evaluate("SEC001", { "src/config.ts": `export const key = \`${PRIV}\`;`, "src/a.py": "x" }).status).toBe("fail");
+  });
+});
