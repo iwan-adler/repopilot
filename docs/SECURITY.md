@@ -25,6 +25,8 @@ Every repository URL and every repository file is **untrusted input**. An attack
 
 RepoPilot never clones repositories, installs dependencies, runs scripts, builds projects or evaluates file contents. Workflow YAML is examined with line-based text heuristics only.
 
+Fix-it kits are generated in the browser from the report. Repository-derived values (paths, names, branch) are restricted to a safe character set before being placed into templates or shell commands, and the commands are only displayed for the user to review and run themselves.
+
 ### Secrets
 
 - **GitHub token**: optional `GITHUB_TOKEN` is read only on the server and only sent to `api.github.com` (tested). Use a fine-grained token with public-repository read-only access and no extra permissions.

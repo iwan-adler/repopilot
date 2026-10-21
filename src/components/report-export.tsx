@@ -4,18 +4,7 @@ import { useState } from "react";
 import { reportFileName, reportToJson } from "@/lib/reports/export-json";
 import { reportToMarkdown } from "@/lib/reports/export-markdown";
 import type { Report } from "@/lib/reports/schema";
-
-function download(content: string, filename: string, type: string) {
-  const blob = new Blob([content], { type });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
+import { downloadText as download } from "@/lib/download";
 
 export function ReportExport({ report }: { report: Report }) {
   const [status, setStatus] = useState<string>("");

@@ -1,10 +1,20 @@
 "use client";
 
 import { useId, useState } from "react";
+import type { FixKit } from "@/lib/fixes/fix-kits";
 import type { Finding } from "@/lib/reports/schema";
+import { FixKitPanel } from "./fix-kit-panel";
 import { CATEGORY_LABELS, SeverityBadge } from "./ui";
 
-export function FindingDetail({ finding, defaultOpen = false }: { finding: Finding; defaultOpen?: boolean }) {
+export function FindingDetail({
+  finding,
+  defaultOpen = false,
+  kit = null,
+}: {
+  finding: Finding;
+  defaultOpen?: boolean;
+  kit?: FixKit | null;
+}) {
   const [open, setOpen] = useState(defaultOpen);
   const panelId = useId();
   return (
@@ -21,7 +31,14 @@ export function FindingDetail({ finding, defaultOpen = false }: { finding: Findi
             <SeverityBadge severity={finding.severity} />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block font-medium text-fg">{finding.title}</span>
+            <span className="block font-medium text-fg">
+              {finding.title}
+              {kit && (
+                <span className="ml-2 rounded border border-accent/40 px-1.5 py-0.5 align-middle text-[10px] font-normal text-accent">
+                  Fix-it kit
+                </span>
+              )}
+            </span>
             <span className="mt-0.5 block text-xs text-fg-subtle">
               <span className="font-mono">{finding.ruleId}</span> · {CATEGORY_LABELS[finding.category]} ·{" "}
               {finding.kind === "heuristic" ? "Heuristic" : "Verified observation"} · {finding.confidence} confidence
@@ -66,6 +83,14 @@ export function FindingDetail({ finding, defaultOpen = false }: { finding: Findi
             <dt className="font-medium text-fg-muted">Recommendation</dt>
             <dd className="mt-0.5 text-fg">{finding.recommendation}</dd>
           </div>
+          {kit && (
+            <div>
+              <dt className="sr-only">Fix-it kit</dt>
+              <dd>
+                <FixKitPanel kit={kit} />
+              </dd>
+            </div>
+          )}
         </dl>
       </div>
     </article>

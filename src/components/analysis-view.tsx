@@ -11,6 +11,7 @@ import { AnalysisProgress } from "./analysis-progress";
 import { ChecksTable } from "./checks-table";
 import { FindingsList } from "./findings-list";
 import { FixNext } from "./fix-next";
+import { fixKitFor } from "@/lib/fixes/fix-kits";
 import { HealthOverview } from "./health-overview";
 import { LimitationsPanel } from "./limitations-panel";
 import { ReportExport } from "./report-export";
@@ -143,11 +144,12 @@ export function AnalysisView() {
             plan={report.plan}
             findings={report.findings}
             overall={report.score.overall}
+            kitRuleIds={new Set(report.plan.map((p) => p.ruleId).filter((id) => fixKitFor(id, report) !== null))}
             onSelect={(id) => setFocus((f) => ({ id, nonce: (f?.nonce ?? 0) + 1 }))}
           />
           <ScoreBreakdown report={report} />
         </div>
-        <FindingsList key={focus?.nonce ?? 0} findings={report.findings} focusId={focus?.id} />
+        <FindingsList key={focus?.nonce ?? 0} report={report} focusId={focus?.id} />
         <StackSummary report={report} />
         <ChecksTable report={report} />
         <LimitationsPanel report={report} />

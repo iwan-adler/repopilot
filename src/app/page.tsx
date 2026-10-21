@@ -25,7 +25,7 @@ const STEPS = [
   },
   {
     title: "Fix what matters first",
-    body: "Findings are ranked by severity, each with evidence, rationale and a concrete recommendation. Export as Markdown or JSON.",
+    body: "Findings come with evidence, a score-gain ranking and, for common gaps, a ready-to-commit fix-it kit tailored to your stack.",
   },
 ];
 

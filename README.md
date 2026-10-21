@@ -34,6 +34,7 @@ It is **not** an AI chatbot: every finding comes from a rule with a stable ID, a
 - **GitHub Actions checks**: `pull_request_target` misuse, script injection from untrusted event fields, unpinned third-party actions.
 - **Transparent scoring** — not-applicable checks are excluded, not penalized ([docs/SCORING.md](docs/SCORING.md)).
 - **"Fix next" plan** — failing checks ranked by the exact score gain from fixing each one, computed with the same formula as the score (e.g. "Add tests: +15.0, 57.3 → 72.3").
+- **Fix-it kits** — ready-to-commit files tailored to the detected stack for 17 rules: a CI workflow, `dependabot.yml`, `SECURITY.md`, `CONTRIBUTING.md`, `.gitignore`, test/linter/formatter starters, and `git` commands to untrack committed `.env` or dependency files. Tests prove that applying the generated files makes the targeted checks pass.
 - **Live progress** streamed from the server (NDJSON), not a fake animation.
 - **Export** reports as Markdown or JSON (schema-validated).
 - **Graceful failures**: invalid URLs, private/missing repos, empty repos, GitHub rate limits, timeouts, truncated trees.

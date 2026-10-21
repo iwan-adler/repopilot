@@ -9,11 +9,14 @@ export function FixNext({
   plan,
   findings,
   overall,
+  kitRuleIds,
   onSelect,
 }: {
   plan: PlanItem[];
   findings: Finding[];
   overall: number | null;
+  /** Rule IDs that have a fix-it kit for this report. */
+  kitRuleIds: ReadonlySet<string>;
   onSelect: (findingId: string) => void;
 }) {
   if (overall === null) return null;
@@ -42,7 +45,14 @@ export function FixNext({
                   {i + 1}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block font-medium text-fg">{finding?.title ?? item.title}</span>
+                  <span className="block font-medium text-fg">
+                    {finding?.title ?? item.title}
+                    {kitRuleIds.has(item.ruleId) && (
+                      <span className="ml-2 rounded border border-accent/40 px-1.5 py-0.5 align-middle text-[10px] font-normal text-accent">
+                        Fix-it kit
+                      </span>
+                    )}
+                  </span>
                   <span className="block text-xs text-fg-subtle">
                     <span className="font-mono">{item.ruleId}</span> · {item.scoreCategory} · currently {item.status}
                   </span>

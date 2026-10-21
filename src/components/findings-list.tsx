@@ -1,13 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Finding, FindingCategory, Severity } from "@/lib/reports/schema";
+import { fixKitFor } from "@/lib/fixes/fix-kits";
+import type { FindingCategory, Report, Severity } from "@/lib/reports/schema";
 import { FindingDetail } from "./finding-detail";
 import { Card, CATEGORY_LABELS, SEVERITY_STYLES } from "./ui";
 
 const SEVERITIES: Severity[] = ["critical", "high", "medium", "low", "info"];
 
-export function FindingsList({ findings, focusId }: { findings: Finding[]; focusId?: string }) {
+export function FindingsList({ report, focusId }: { report: Report; focusId?: string }) {
+  const findings = report.findings;
+  const kits = useMemo(() => new Map(findings.map((f) => [f.id, fixKitFor(f.ruleId, report)])), [findings, report]);
   const [severities, setSeverities] = useState<Set<Severity>>(new Set());
   const [category, setCategory] = useState<FindingCategory | "all">("all");
 
@@ -91,6 +94,7 @@ export function FindingsList({ findings, focusId }: { findings: Finding[]; focus
           <FindingDetail
             key={f.id}
             finding={f}
+            kit={kits.get(f.id) ?? null}
             defaultOpen={focusId ? f.id === focusId : i === 0 && (f.severity === "critical" || f.severity === "high")}
           />
         ))}
