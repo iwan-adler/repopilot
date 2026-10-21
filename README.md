@@ -2,6 +2,8 @@
 
 **Understand your repository's health in minutes, and know exactly what to fix next.**
 
+[![RepoPilot score](https://repopilot-rho.vercel.app/api/badge/iwan-adler/repopilot)](https://repopilot-rho.vercel.app/analyze/iwan-adler/repopilot)
+
 **Live demo:** https://repopilot-rho.vercel.app — no sign-up; paste any public GitHub repository URL.
 
 RepoPilot analyzes any public GitHub repository with deterministic, documented rules — testing, security signals, documentation, dependency hygiene and maintainability — and produces a transparent 0–100 health score, evidence-backed findings, and Markdown/JSON reports.
@@ -35,6 +37,7 @@ It is **not** an AI chatbot: every finding comes from a rule with a stable ID, a
 - **Transparent scoring** — not-applicable checks are excluded, not penalized ([docs/SCORING.md](docs/SCORING.md)).
 - **"Fix next" plan** — failing checks ranked by the exact score gain from fixing each one, computed with the same formula as the score (e.g. "Add tests: +15.0, 57.3 → 72.3").
 - **Fix-it kits** — ready-to-commit files tailored to the detected stack for 17 rules: a CI workflow, `dependabot.yml`, `SECURITY.md`, `CONTRIBUTING.md`, `.gitignore`, test/linter/formatter starters, and `git` commands to untrack committed `.env` or dependency files. Tests prove that applying the generated files makes the targeted checks pass.
+- **README badge and link previews** — `/api/badge/{owner}/{repo}` serves an SVG score badge (CDN-cached for hours, so README traffic doesn't trigger scans), and shared report links get a preview image showing the real score and top fix.
 - **Live progress** streamed from the server (NDJSON), not a fake animation.
 - **Export** reports as Markdown or JSON (schema-validated).
 - **Graceful failures**: invalid URLs, private/missing repos, empty repos, GitHub rate limits, timeouts, truncated trees.
@@ -74,6 +77,8 @@ Without a token RepoPilot still works but is limited to roughly 15 scans per hou
 | `npm test`          | Vitest unit + integration tests (no network required)        |
 
 ## API
+
+`GET /api/badge/{owner}/{repo}` returns an SVG badge (always status 200 with a readable message, even on errors, so READMEs never show a broken image).
 
 `POST /api/analyze` with `Content-Type: application/json`:
 

@@ -42,7 +42,7 @@ Revenue model: recurring subscriptions, with the free tier as the acquisition fu
 
 ## Acquisition approach (planned)
 
-1. **Shareable reports.** A "Scanned with RepoPilot" badge or Markdown report in READMEs and PRs.
+1. **Shareable reports (implemented).** A README score badge linking back to the report, and link previews that show the score when a report is shared. Every embedded badge is a backlink. Markdown reports for PRs.
 2. **Developer communities.** Show HN, r/programming, dev.to and Indian student/hackathon communities, with transparent methodology posts rather than ads.
 3. **Education.** Free use by student teams and bootcamps, where repository hygiene is graded.
 4. **Content.** Publishing the open rule catalog and explaining each rule (SEO for "how to add SECURITY.md", "pin GitHub Actions to SHA", and similar).

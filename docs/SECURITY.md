@@ -47,6 +47,13 @@ Server logs contain only the repository name, outcome code, duration and cache f
 
 Only public repositories are analyzed. If a token could see a private repository, RepoPilot still refuses it (`private_repository`).
 
+### Badges and preview images
+
+- `/api/badge/{owner}/{repo}` and per-repository Open Graph images reuse the same strict URL parser, cache and concurrency gate as the analyze API.
+- Responses carry long CDN cache headers (`s-maxage` 6 hours), so embedding a badge in a popular README does not translate into GitHub API traffic.
+- Image proxies (GitHub camo) and social crawlers share IPs, so these routes use a separate per-IP limit (60 per 10 minutes per instance) and degrade to a "rate limited" badge or a generic preview instead of failing.
+- Badge text is XML-escaped and the SVG is served with `Content-Security-Policy: default-src 'none'`; errors never include internal details.
+
 ### Response headers
 
 `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `X-Frame-Options: DENY`, `Permissions-Policy`, and a CSP with `frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'`. A full script-src CSP would require nonces with Next.js and is a planned hardening step.

@@ -235,3 +235,29 @@ export async function handleAnalyzeRequest(request: Request, deps: HandlerDeps):
     },
   });
 }
+
+export class BusyError extends Error {
+  constructor() {
+    super("Too many analyses in progress.");
+    this.name = "BusyError";
+  }
+}
+
+/**
+ * Returns a report from the shared cache, or runs one analysis under the concurrency gate.
+ * Used by the badge and link-preview routes so they reuse the same scans as the UI.
+ */
+export async function getCachedReport(owner: string, repo: string, deps: HandlerDeps, signal?: AbortSignal): Promise<Report> {
+  const key = `${owner}/${repo}`.toLowerCase();
+  const hit = deps.cache.get(key);
+  if (hit) return hit;
+  const release = deps.gate.tryAcquire();
+  if (!release) throw new BusyError();
+  try {
+    const report = await (deps.analyze ?? analyzeRepository)(owner, repo, { client: deps.createClient(), signal });
+    deps.cache.set(key, report);
+    return report;
+  } finally {
+    release();
+  }
+}

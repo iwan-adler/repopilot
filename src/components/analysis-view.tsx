@@ -17,6 +17,7 @@ import { LimitationsPanel } from "./limitations-panel";
 import { ReportExport } from "./report-export";
 import { RepositoryForm } from "./repository-form";
 import { ScoreBreakdown } from "./score-breakdown";
+import { ShareBadge } from "./share-badge";
 import { StackSummary } from "./stack-summary";
 import { Card } from "./ui";
 
@@ -150,6 +151,7 @@ export function AnalysisView() {
           <ScoreBreakdown report={report} />
         </div>
         <FindingsList key={focus?.nonce ?? 0} report={report} focusId={focus?.id} />
+        <ShareBadge owner={report.repository.owner} repo={report.repository.name} />
         <StackSummary report={report} />
         <ChecksTable report={report} />
         <LimitationsPanel report={report} />
