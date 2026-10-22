@@ -6,8 +6,7 @@ import { DEFAULT_LIMITS } from "@/lib/analysis/analyze-repository";
 import { RULES } from "@/lib/analysis/rules";
 import { DEFAULT_CATEGORY_WEIGHTS } from "@/lib/analysis/scoring";
 import { RULES_WITH_FIX_KITS } from "@/lib/fixes";
-
-const REPO_URL = "https://github.com/iwan-adler/repopilot";
+import { REPO_URL } from "@/lib/site";
 
 const CATEGORY_ORDER = [
   "testing",

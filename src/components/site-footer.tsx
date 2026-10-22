@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { feedbackUrl } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -15,6 +16,9 @@ export function SiteFooter() {
           <Link href="/#privacy" className="hover:text-fg">
             Privacy &amp; limits
           </Link>
+          <a href={feedbackUrl()} className="hover:text-fg">
+            Feedback
+          </a>
         </nav>
       </div>
     </footer>

@@ -42,12 +42,12 @@
 
 **Show:** `docs/VALIDATION.md` on GitHub, the precision table.
 **Say:** "A deterministic tool can still be wrong, so we measured it. We scanned 26 well-known repositories and compared RepoPilot with GitHub's own data and OpenSSF Scorecard. The first version was only 66% precise. A third of its findings were wrong, mostly because it couldn't see organization-wide policy files and custom test runners. We fixed the root causes, added a regression test for each, and re-measured: 91%, and 100% agreement with both independent sources. The study is reproducible from the repo."
-_(If the hold-out evaluation is in the doc, add one sentence with its number.)_
+**Then say:** "And on 15 repositories it had never seen, it was 82% precise, with 100% agreement with both sources. That's the number we stand behind."
 
 ### 2:55–3:20 · How it's built
 
 **Show:** the GitHub repo (tests folder, green CI check).
-**Say:** "Next.js and strict TypeScript, Zod-validated data, and 250 tests that run against a fake GitHub, so they never touch the network. Only two fixed GitHub addresses are ever contacted, potential secrets are redacted inside the scanner, and there's no paid AI anywhere. It runs at zero cost."
+**Say:** "Next.js and strict TypeScript, Zod-validated data, and more than 250 tests that run against a fake GitHub, so they never touch the network. Only two fixed GitHub addresses are ever contacted, potential secrets are redacted inside the scanner, and there's no paid AI anywhere. It runs at zero cost."
 
 ### 3:20–3:45 · Business and close
 

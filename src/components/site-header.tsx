@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { REPO_URL } from "@/lib/site";
 import { Logo } from "./logo";
 
 const NAV = [
@@ -27,7 +28,7 @@ export function SiteHeader() {
             ))}
             <li>
               <a
-                href="https://github.com/iwan-adler/repopilot"
+                href={REPO_URL}
                 className="rounded px-2 py-1.5 transition-colors hover:text-fg"
                 aria-label="RepoPilot source code on GitHub"
               >

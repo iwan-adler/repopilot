@@ -1,0 +1,56 @@
+name: Scan feedback
+description: Tell us whether a RepoPilot report about your repository was right.
+title: "Scan feedback: "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for trying RepoPilot. This takes about a minute and directly improves the rules.
+        Please don't paste secrets or private code here; issues are public.
+  - type: input
+    id: repository
+    attributes:
+      label: Repository you scanned
+      placeholder: https://github.com/owner/repo
+    validations:
+      required: true
+  - type: dropdown
+    id: accuracy
+    attributes:
+      label: How accurate were the findings?
+      options:
+        - All correct
+        - Mostly correct, one or two wrong
+        - Several were wrong
+        - Mostly wrong
+    validations:
+      required: true
+  - type: textarea
+    id: wrong-findings
+    attributes:
+      label: Which findings were wrong, and why?
+      description: Rule IDs (e.g. TST004) and a sentence on what RepoPilot missed.
+  - type: dropdown
+    id: kits
+    attributes:
+      label: Would you commit any of the fix-it kits?
+      options:
+        - Yes, as-is
+        - Yes, after edits
+        - No
+        - I didn't look at them
+  - type: dropdown
+    id: pay
+    attributes:
+      label: Would you pay for scan history, comparisons or private repositories?
+      description: Honest answers help more than polite ones.
+      options:
+        - Yes, around the proposed $9/month
+        - Yes, but for less
+        - Only with a team plan
+        - No
+  - type: textarea
+    id: other
+    attributes:
+      label: Anything else?
