@@ -7,10 +7,10 @@ Ticked items were verified on 22 October 2026; the method is noted after each. U
 - [x] Public GitHub repository created and pushed (`gh repo view`: public, default branch `main`, homepage set to the live URL)
 - [x] No secrets tracked; only `.env.example` among `.env*` files (`git ls-files`, pattern search of the tree and full history; the only history match is AWS's documented placeholder key `AKIAIOSFODNN7EXAMPLE` in a test)
 - [x] GitHub Actions CI on `main` is green: lint, format check, typecheck, tests, build
-- [ ] Private vulnerability reporting enabled (Settings → Code security). **Currently off.**
+- [x] Private vulnerability reporting enabled (via the GitHub API on 22 October)
 - [x] README links work; LICENSE present
 - [x] RepoPilot's own repository scanned with RepoPilot (100, band A)
-- [ ] Create a `feedback` label so scan-feedback issues are labelled (Issues → Labels → New label)
+- [x] `feedback` label exists, so scan-feedback issues are labelled
 
 ## Deployment
 
