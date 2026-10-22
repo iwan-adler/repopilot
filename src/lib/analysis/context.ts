@@ -30,7 +30,7 @@ export type BaseContext = {
   options: AnalysisOptions;
   /**
    * Community health files inherited from the owner's `.github` repository
-   * (e.g. "expressjs/.github/SECURITY.md"); GitHub applies these to repos without their own.
+   * (e.g. "acme/.github/SECURITY.md"); GitHub applies these to repos without their own.
    */
   orgCommunityFiles?: { contributing: string | null; security: string | null };
 };

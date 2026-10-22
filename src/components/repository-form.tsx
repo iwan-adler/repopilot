@@ -58,14 +58,14 @@ export function RepositoryForm({ initialValue = "", compact = false }: { initial
           }}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}
-          className={`min-w-0 flex-1 rounded-lg border bg-ink-900 px-4 font-mono text-[15px] text-fg placeholder:text-fg-subtle focus:border-accent focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-accent/40 ${
+          className={`min-w-0 flex-1 rounded-md border bg-ink-900 px-4 font-mono text-[15px] text-fg placeholder:text-fg-subtle focus:border-accent focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-accent/40 ${
             compact ? "h-11" : "h-12"
           } ${error ? "border-bad" : "border-line-strong"}`}
         />
         <button
           type="submit"
           disabled={pending}
-          className={`inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-5 font-medium text-white transition-colors hover:bg-accent-strong disabled:cursor-wait disabled:opacity-70 ${
+          className={`inline-flex items-center justify-center gap-2 rounded-md bg-accent px-5 font-medium text-white transition-colors hover:bg-accent-strong disabled:cursor-wait disabled:opacity-70 ${
             compact ? "h-11" : "h-12"
           }`}
         >
@@ -76,8 +76,8 @@ export function RepositoryForm({ initialValue = "", compact = false }: { initial
         {error}
       </p>
       {!compact && (
-        <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-fg-subtle">
-          <span>Try a public repo:</span>
+        <p className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm text-fg-subtle">
+          <span>Try</span>
           {SUGGESTIONS.map((s) => (
             <button
               key={s}
@@ -86,12 +86,12 @@ export function RepositoryForm({ initialValue = "", compact = false }: { initial
                 setValue(`https://github.com/${s}`);
                 go(s);
               }}
-              className="rounded-md border border-line bg-ink-900 px-2 py-1 font-mono text-xs text-fg-muted transition-colors hover:border-line-strong hover:text-fg"
+              className="font-mono text-xs text-fg-muted underline decoration-line-strong underline-offset-4 transition-colors hover:text-fg hover:decoration-fg-muted"
             >
               {s}
             </button>
           ))}
-        </div>
+        </p>
       )}
     </div>
   );

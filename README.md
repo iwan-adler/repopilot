@@ -4,9 +4,9 @@
 
 [![RepoPilot score](https://repopilot-rho.vercel.app/api/badge/iwan-adler/repopilot)](https://repopilot-rho.vercel.app/analyze/iwan-adler/repopilot)
 
-**Live demo:** https://repopilot-rho.vercel.app — no sign-up; paste any public GitHub repository URL.
+**Live demo:** https://repopilot-rho.vercel.app (no sign-up; paste any public GitHub repository URL).
 
-RepoPilot analyzes any public GitHub repository with deterministic, documented rules — testing, security signals, documentation, dependency hygiene and maintainability — and produces a transparent 0–100 health score, evidence-backed findings, and Markdown/JSON reports.
+RepoPilot analyzes any public GitHub repository with deterministic, documented rules covering testing, security signals, documentation, dependency hygiene and maintainability, and produces a transparent 0–100 health score, evidence-backed findings, and Markdown/JSON reports.
 
 It is **not** an AI chatbot: every finding comes from a rule with a stable ID, a rationale and unit tests. The same commit always produces the same report. Its accuracy is [measured, not assumed](docs/VALIDATION.md): on 26 well-known repositories, precision rose from 65.7% to 91.3% after fixing the false positives the study uncovered, and agreement with GitHub and OpenSSF Scorecard is 100% on the overlapping checks.
 
@@ -20,7 +20,7 @@ It is **not** an AI chatbot: every finding comes from a rule with a stable ID, a
     <td><img src="docs/images/progress.png" alt="Live analysis progress streamed from the server" /></td>
   </tr>
   <tr>
-    <td align="center">Paste any public GitHub URL — no sign-up</td>
+    <td align="center">Paste any public GitHub URL, no sign-up</td>
     <td align="center">Real progress events streamed from the server</td>
   </tr>
 </table>
@@ -29,15 +29,15 @@ It is **not** an AI chatbot: every finding comes from a rule with a stable ID, a
 
 ## Features
 
-- **Real scans of real repositories** through GitHub's official REST API — no cloning, no code execution.
+- **Real scans of real repositories** through GitHub's official REST API, with no cloning and no code execution.
 - **30 rules** (29 scored + 1 informational) across 7 categories: structure, testing, documentation, developer experience, dependencies, security signals, maintainability. See [`/methodology`](src/app/methodology/page.tsx) in the app.
 - **Stack detection**: languages (GitHub linguist), frameworks, test frameworks, manifests, package managers.
-- **Credential-pattern detection** with redaction by construction — full secret values never leave the analyzer.
+- **Credential-pattern detection** with redaction by construction: full secret values never leave the analyzer.
 - **GitHub Actions checks**: `pull_request_target` misuse, script injection from untrusted event fields, unpinned third-party actions.
-- **Transparent scoring** — not-applicable checks are excluded, not penalized ([docs/SCORING.md](docs/SCORING.md)).
-- **"Fix next" plan** — failing checks ranked by the exact score gain from fixing each one, computed with the same formula as the score (e.g. "Add tests: +15.0, 57.3 → 72.3").
-- **Fix-it kits** — ready-to-commit files tailored to the detected stack for 17 rules: a CI workflow, `dependabot.yml`, `SECURITY.md`, `CONTRIBUTING.md`, `.gitignore`, test/linter/formatter starters, and `git` commands to untrack committed `.env` or dependency files. Tests prove that applying the generated files makes the targeted checks pass.
-- **README badge and link previews** — `/api/badge/{owner}/{repo}` serves an SVG score badge (CDN-cached for hours, so README traffic doesn't trigger scans), and shared report links get a preview image showing the real score and top fix.
+- **Transparent scoring**: not-applicable checks are excluded, not penalized ([docs/SCORING.md](docs/SCORING.md)).
+- **"Fix next" plan**: failing checks ranked by the exact score gain from fixing each one, computed with the same formula as the score (e.g. "Add tests: +15.0, 57.3 → 72.3").
+- **Fix-it kits**: ready-to-commit files tailored to the detected stack for 17 rules: a CI workflow, `dependabot.yml`, `SECURITY.md`, `CONTRIBUTING.md`, `.gitignore`, test/linter/formatter starters, and `git` commands to untrack committed `.env` or dependency files. Tests prove that applying the generated files makes the targeted checks pass.
+- **README badge and link previews**: `/api/badge/{owner}/{repo}` serves an SVG score badge (CDN-cached for hours, so README traffic doesn't trigger scans), and shared report links get a preview image showing the real score and top fix.
 - **Live progress** streamed from the server (NDJSON), not a fake animation.
 - **Export** reports as Markdown or JSON (schema-validated).
 - **Graceful failures**: invalid URLs, private/missing repos, empty repos, GitHub rate limits, timeouts, truncated trees.
@@ -132,7 +132,7 @@ See [docs/SUBMISSION_CHECKLIST.md](docs/SUBMISSION_CHECKLIST.md) for verificatio
 
 - Static analysis only: no code execution, dependency installation or test runs. Detected tests are **not** executed.
 - Content checks read a bounded sample (≤ 120 files, ≤ 3 MB, ≤ 25 s per scan). Very large trees may be truncated; the report says so.
-- Credential detection is heuristic — not a security audit. No vulnerability databases are consulted.
+- Credential detection is heuristic and is not a security audit. No vulnerability databases are consulted.
 - Only the default branch of public repositories is analyzed; Git history is not.
 - Organization-wide community health files (CONTRIBUTING, SECURITY) are checked in the owner's `.github` repository; other inherited settings are not.
 - Rate limiting and caching are in-memory **per server instance**, not global.

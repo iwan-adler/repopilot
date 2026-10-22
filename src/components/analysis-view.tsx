@@ -11,7 +11,7 @@ import { AnalysisProgress } from "./analysis-progress";
 import { ChecksTable } from "./checks-table";
 import { FindingsList } from "./findings-list";
 import { FixNext } from "./fix-next";
-import { fixKitFor } from "@/lib/fixes/fix-kits";
+import { fixKitFor } from "@/lib/fixes";
 import { HealthOverview } from "./health-overview";
 import { LimitationsPanel } from "./limitations-panel";
 import { ReportExport } from "./report-export";
@@ -20,6 +20,7 @@ import { ScoreBreakdown } from "./score-breakdown";
 import { ShareBadge } from "./share-badge";
 import { StackSummary } from "./stack-summary";
 import { Card } from "./ui";
+import { plural } from "@/lib/text";
 
 type State =
   | { status: "loading"; key: string; progress: ProgressEvent[] }
@@ -170,7 +171,9 @@ function ErrorPanel({ title, error, onRetry }: { title: string; error: ApiError;
           <h1 className="mt-1 text-xl font-semibold">{title}</h1>
           <p className="mt-2 text-fg-muted">{error.message}</p>
           {error.retryAfterSeconds ? (
-            <p className="mt-1 text-sm text-fg-subtle">Suggested wait: about {Math.ceil(error.retryAfterSeconds / 60)} minute(s).</p>
+            <p className="mt-1 text-sm text-fg-subtle">
+              Suggested wait: about {plural(Math.ceil(error.retryAfterSeconds / 60), "minute")}.
+            </p>
           ) : null}
         </div>
         <div className="mt-5 flex flex-wrap gap-3">

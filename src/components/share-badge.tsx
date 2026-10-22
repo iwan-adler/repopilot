@@ -15,7 +15,7 @@ export function ShareBadge({ owner, repo }: { owner: string; repo: string }) {
   const [status, setStatus] = useState("");
 
   async function copy(text: string, what: string) {
-    setStatus((await copyText(text)) ? `${what} copied.` : "Copy failed — select the text and copy it manually.");
+    setStatus((await copyText(text)) ? `${what} copied.` : "Copy failed. Select the text and copy it manually.");
   }
 
   const btn =

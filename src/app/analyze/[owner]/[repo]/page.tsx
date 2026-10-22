@@ -14,8 +14,8 @@ export async function generateMetadata({ params }: PageProps<"/analyze/[owner]/[
   return {
     title: `${name} health report`,
     description,
-    openGraph: { title: `${name} — RepoPilot health report`, description },
-    twitter: { card: "summary_large_image", title: `${name} — RepoPilot health report`, description },
+    openGraph: { title: `${name} health report · RepoPilot`, description },
+    twitter: { card: "summary_large_image", title: `${name} health report · RepoPilot`, description },
     robots: { index: false },
   };
 }

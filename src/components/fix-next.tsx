@@ -2,6 +2,7 @@
 
 import type { Finding, PlanItem } from "@/lib/reports/schema";
 import { Card } from "./ui";
+import { plural } from "@/lib/text";
 
 const MAX_ITEMS = 5;
 
@@ -36,14 +37,12 @@ export function FixNext({
           Nothing to fix: every applicable scored check passed.
         </p>
       ) : (
-        <ol className="mt-4 space-y-2">
+        <ol className="mt-4 divide-y divide-line border-y border-line">
           {items.map((item, i) => {
             const finding = findings.find((f) => f.ruleId === item.ruleId);
             const content = (
               <>
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-line-strong text-xs tabular-nums text-fg-muted">
-                  {i + 1}
-                </span>
+                <span className="w-4 shrink-0 font-mono text-xs tabular-nums text-fg-subtle">{i + 1}</span>
                 <span className="min-w-0 flex-1">
                   <span className="block font-medium text-fg">
                     {finding?.title ?? item.title}
@@ -65,14 +64,14 @@ export function FixNext({
                 </span>
               </>
             );
-            const className = "flex w-full items-center gap-3 rounded-lg border border-line bg-ink-850/60 px-3 py-2.5 text-left";
+            const className = "flex w-full items-center gap-3 px-1 py-3 text-left";
             return (
               <li key={item.ruleId}>
                 {finding ? (
                   <button
                     type="button"
                     onClick={() => onSelect(finding.id)}
-                    className={`${className} transition-colors hover:border-line-strong hover:bg-ink-800/60`}
+                    className={`${className} rounded transition-colors hover:bg-ink-850`}
                     aria-label={`${finding.title}: plus ${item.gain.toFixed(1)} points. Show finding details.`}
                   >
                     {content}
@@ -88,7 +87,7 @@ export function FixNext({
       {plan.length > 1 && (
         <p className="mt-3 text-xs text-fg-subtle">
           Gains are calculated one fix at a time with the same formula as the score, so they don&apos;t simply add up.
-          {plan.length > MAX_ITEMS && ` ${plan.length - MAX_ITEMS} more item(s) in the exported report.`}
+          {plan.length > MAX_ITEMS && ` ${plural(plan.length - MAX_ITEMS, "more item", "more items")} in the exported report.`}
         </p>
       )}
     </Card>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { fixKitFor } from "@/lib/fixes/fix-kits";
+import { fixKitFor } from "@/lib/fixes";
 import type { FindingCategory, Report, Severity } from "@/lib/reports/schema";
 import { FindingDetail } from "./finding-detail";
 import { Card, CATEGORY_LABELS, SEVERITY_STYLES } from "./ui";
@@ -84,7 +84,7 @@ export function FindingsList({ report, focusId }: { report: Report; focusId?: st
       <div className="mt-4 space-y-2" aria-live="polite">
         {findings.length === 0 && (
           <p className="rounded-lg border border-line bg-ink-850 px-4 py-6 text-center text-fg-muted">
-            No findings — every applicable check passed. Review the checks table and limitations below for what was and wasn&apos;t covered.
+            No findings. Every applicable check passed. Review the checks table and limitations below for what was and wasn&apos;t covered.
           </p>
         )}
         {findings.length > 0 && filtered.length === 0 && (

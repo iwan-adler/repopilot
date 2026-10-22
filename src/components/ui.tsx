@@ -54,7 +54,7 @@ export function Card({
   "aria-labelledby"?: string;
 }) {
   return (
-    <Tag className={`rounded-xl border border-line bg-ink-900/70 ${className}`} {...rest}>
+    <Tag className={`rounded-lg border border-line bg-ink-900/50 ${className}`} {...rest}>
       {children}
     </Tag>
   );

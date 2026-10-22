@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { parse as parseYaml } from "yaml";
 import { RULES } from "@/lib/analysis/rules";
-import { fixKitFor, RULES_WITH_FIX_KITS, safePath } from "@/lib/fixes/fix-kits";
+import { fixKitFor, RULES_WITH_FIX_KITS, safePath } from "@/lib/fixes";
 import type { Report } from "@/lib/reports/schema";
 import { repoInfo, report, type FileSpec } from "./helpers";
 

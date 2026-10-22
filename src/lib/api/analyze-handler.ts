@@ -4,6 +4,7 @@ import { parseGitHubRepoUrl } from "@/lib/github/parse-url";
 import type { Report } from "@/lib/reports/schema";
 import { AnalyzeRequestSchema, MAX_REQUEST_BODY_BYTES } from "@/lib/validation/repository";
 import { clientKey, ConcurrencyGate, SlidingWindowLimiter, TtlCache } from "./rate-limit";
+import { plural } from "@/lib/text";
 
 export type ApiErrorCode =
   | "invalid_request"
@@ -43,7 +44,7 @@ export function createDefaultDeps(): HandlerDeps {
     limiter: new SlidingWindowLimiter(Number(process.env.RATE_LIMIT_PER_10_MIN) || 10, 10 * 60 * 1000),
     gate: new ConcurrencyGate(4),
     cache: new TtlCache<Report>(10 * 60 * 1000, 100),
-    // Logs contain only repository names, outcome codes and timings — never file contents.
+    // Logs contain only repository names, outcome codes and timings, never file contents.
     log: (entry) => console.info(JSON.stringify({ scope: "analyze", ...entry })),
   };
 }
@@ -89,7 +90,7 @@ export function mapError(err: unknown): { error: ApiError; status: number } {
           status: 503,
           error: {
             code: "github_rate_limited",
-            message: `RepoPilot has reached GitHub's API rate limit. Please try again in about ${Math.ceil(retry / 60)} minute(s).`,
+            message: `RepoPilot has reached GitHub's API rate limit. Please try again in about ${plural(Math.ceil(retry / 60), "minute")}.`,
             retryAfterSeconds: retry,
           },
         };
@@ -97,7 +98,7 @@ export function mapError(err: unknown): { error: ApiError; status: number } {
       case "timeout":
         return {
           status: 504,
-          error: { code: "timeout", message: "The analysis took too long. GitHub may be slow right now — please try again." },
+          error: { code: "timeout", message: "The analysis took too long. GitHub may be slow right now, so please try again." },
         };
       case "too_large":
         return { status: 413, error: { code: "too_large", message: err.message || "This repository is too large to analyze." } };

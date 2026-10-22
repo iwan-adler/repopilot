@@ -26,6 +26,7 @@ import { basename, depth, extname, isNonAuthoredPath, isRootFile, isScannableTex
 import { RULES, type Rule } from "./rules";
 import { computePlan, computeScore } from "./scoring";
 import { ciSystemFor } from "./workflows";
+import { plural } from "@/lib/text";
 
 export const ENGINE_VERSION = "0.3.3";
 
@@ -488,7 +489,7 @@ export async function analyzeRepository(owner: string, repo: string, options: An
     if (skipped > 0)
       limitations.push({
         code: "files_skipped",
-        message: `${skipped} selected file(s) were skipped (binary, too large, unavailable, or over budget).`,
+        message: `${plural(skipped, "selected file was", "selected files were")} skipped (binary, too large, unavailable, or over budget).`,
       });
     limitations.push({
       code: "sampled_content",

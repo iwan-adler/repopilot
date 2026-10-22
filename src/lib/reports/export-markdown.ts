@@ -20,11 +20,11 @@ function code(text: string): string {
 }
 
 const STATUS_LABEL: Record<CheckStatus, string> = {
-  pass: "✅ Pass",
-  warn: "⚠️ Warn",
-  fail: "❌ Fail",
-  not_applicable: "➖ N/A",
-  unavailable: "❔ Unavailable",
+  pass: "Pass",
+  warn: "Warn",
+  fail: "**Fail**",
+  not_applicable: "N/A",
+  unavailable: "Unavailable",
 };
 
 export function reportToMarkdown(report: Report): string {
@@ -100,7 +100,7 @@ export function reportToMarkdown(report: Report): string {
       lines.push("**Evidence:**");
       lines.push("");
       for (const e of f.evidence) {
-        const loc = e.path ? `${code(e.path + (e.line ? `:${e.line}` : ""))} — ` : "";
+        const loc = e.path ? `${code(e.path + (e.line ? `:${e.line}` : ""))}: ` : "";
         lines.push(`- ${loc}${escapeMarkdown(e.detail)}`);
       }
       lines.push("");

@@ -1,3 +1,4 @@
+import { plural } from "@/lib/text";
 import type { CategoryScore, CheckResult, CheckStatus, PlanItem, Score, ScoreCategoryId } from "@/lib/reports/schema";
 
 /**
@@ -51,7 +52,7 @@ export function bandFor(score: number): "A" | "B" | "C" | "D" | "F" {
 export const SCORING_METHOD =
   "Each check earns full (pass), half (warn) or no (fail) credit, weighted within its category. " +
   "Not-applicable and unavailable checks are excluded. Category scores are combined with configured weights; " +
-  "weights of unavailable categories are redistributed. The score summarizes detected signals only — it is not a certification of security or production readiness.";
+  "weights of unavailable categories are redistributed. The score summarizes detected signals only. It is not a certification of security or production readiness.";
 
 export function computeScore(checks: CheckResult[], config: CategoryConfig[] = DEFAULT_CATEGORY_WEIGHTS): Score {
   const totalConfigured = config.reduce((a, c) => a + c.weight, 0);
@@ -77,10 +78,9 @@ export function computeScore(checks: CheckResult[], config: CategoryConfig[] = D
           ? "No checks are defined for this category."
           : `No applicable checks could be evaluated (${counts.notApplicable} not applicable, ${counts.unavailable} unavailable). Excluded from the overall score.`;
     } else {
-      explanation = `${counts.pass} passed, ${counts.warn} warned, ${counts.fail} failed across ${scored.length} scored checks (weighted ${round1(numer)} of ${denom}).`;
-      if (counts.notApplicable + counts.unavailable > 0) {
-        explanation += ` ${counts.notApplicable + counts.unavailable} check(s) excluded as not applicable or unavailable.`;
-      }
+      const excluded = counts.notApplicable + counts.unavailable;
+      explanation = `${counts.pass} passed, ${counts.warn} warned, ${counts.fail} failed. Weighted ${round1(numer)} of ${denom}.`;
+      if (excluded > 0) explanation += ` ${plural(excluded, "check")} excluded as not applicable or unavailable.`;
     }
     return { cat, score, counts, explanation };
   });

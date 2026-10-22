@@ -6,9 +6,9 @@
 
 Developers inherit, adopt, or ship repositories without a quick, objective view of their engineering health. Existing options are either:
 
-- **Heavy** — enterprise code-quality and security platforms that need setup, CI integration, or a paid plan; or
-- **Narrow** — single-purpose linters and scanners that each answer one question; or
-- **Vague** — AI chat answers that can't show evidence and aren't reproducible.
+- **Heavy:** enterprise code-quality and security platforms that need setup, CI integration, or a paid plan; or
+- **Narrow:** single-purpose linters and scanners that each answer one question; or
+- **Vague:** AI chat answers that can't show evidence and aren't reproducible.
 
 Small teams, students and indie maintainers need a **60-second, no-setup check** that says what's missing and what to fix first.
 
@@ -63,7 +63,7 @@ Revenue model: recurring subscriptions, with the free tier as the acquisition fu
 | Hosting + functions | Vercel Hobby                             | Free |
 | GitHub API          | Fine-grained personal token, 5,000 req/h | Free |
 | CI                  | GitHub Actions (public repo)             | Free |
-| AI inference        | None used                                | —    |
+| AI inference        | None used                                | n/a  |
 
 ### Constraints to know
 

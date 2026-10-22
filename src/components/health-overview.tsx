@@ -63,24 +63,24 @@ export function HealthOverview({ report }: { report: Report }) {
             {r.fork && <Pill>Fork</Pill>}
           </div>
         </div>
-        <dl className="grid shrink-0 grid-cols-5 gap-2 md:w-72 md:grid-cols-1 md:gap-1.5">
+        <dl className="grid shrink-0 grid-cols-5 divide-x divide-line border-y border-line md:w-56 md:grid-cols-1 md:divide-x-0 md:divide-y">
           {counts.map(({ severity, n }) => (
-            <div
-              key={severity}
-              className="flex flex-col items-center rounded-lg border border-line bg-ink-850 px-2 py-2 md:flex-row md:justify-between md:px-3 md:py-1.5"
-            >
-              <dt className={`flex items-center gap-1.5 text-xs ${SEVERITY_STYLES[severity].text}`}>
-                <span className={`h-1.5 w-1.5 rounded-full ${SEVERITY_STYLES[severity].dot}`} aria-hidden="true" />
+            <div key={severity} className="flex flex-col items-center py-2 md:flex-row md:justify-between md:py-1.5">
+              <dt className={`flex items-center gap-1.5 text-xs ${n > 0 ? SEVERITY_STYLES[severity].text : "text-fg-subtle"}`}>
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${n > 0 ? SEVERITY_STYLES[severity].dot : "bg-line-strong"}`}
+                  aria-hidden="true"
+                />
                 {SEVERITY_STYLES[severity].label}
               </dt>
-              <dd className="text-lg font-semibold tabular-nums md:text-sm">{n}</dd>
+              <dd className={`font-mono text-sm tabular-nums ${n > 0 ? "text-fg" : "text-fg-subtle"}`}>{n}</dd>
             </div>
           ))}
         </dl>
       </div>
       <p className="mt-5 border-t border-line pt-4 text-xs text-fg-subtle">
-        Score summarizes {report.checks.filter((c) => c.weight > 0).length} deterministic checks. It reflects detected signals only — not a
-        security audit or a certification of production readiness. Generated {new Date(report.generatedAt).toUTCString()}.
+        Score summarizes {report.checks.filter((c) => c.weight > 0).length} deterministic checks. It reflects detected signals only, and is
+        not a security audit or a certification of production readiness. Generated {new Date(report.generatedAt).toUTCString()}.
       </p>
     </Card>
   );

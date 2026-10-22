@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { copyText, downloadText } from "@/lib/download";
-import type { FixKit } from "@/lib/fixes/fix-kits";
+import type { FixKit } from "@/lib/fixes";
 
 const btn =
   "inline-flex h-7 items-center rounded-md border border-line-strong bg-ink-850 px-2.5 text-xs text-fg transition-colors hover:border-accent hover:text-white";
@@ -64,7 +64,7 @@ export function FixKitPanel({ kit }: { kit: FixKit }) {
               </pre>
               {f.kind === "create" && f.path === "pyproject.toml" && (
                 <p className="border-t border-line px-3 py-1.5 text-xs text-fg-subtle">
-                  Other kits may also add pyproject.toml sections — combine them into one file.
+                  Other kits may also add pyproject.toml sections. Combine them into one file.
                 </p>
               )}
             </div>

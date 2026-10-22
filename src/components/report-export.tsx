@@ -14,7 +14,7 @@ export function ReportExport({ report }: { report: Report }) {
       await navigator.clipboard.writeText(reportToMarkdown(report));
       setStatus("Markdown copied to clipboard.");
     } catch {
-      setStatus("Copy failed — use the download button instead.");
+      setStatus("Copy failed. Use the download button instead.");
     }
   }
 

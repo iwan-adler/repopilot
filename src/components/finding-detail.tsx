@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import type { FixKit } from "@/lib/fixes/fix-kits";
+import type { FixKit } from "@/lib/fixes";
 import type { Finding } from "@/lib/reports/schema";
 import { FixKitPanel } from "./fix-kit-panel";
 import { CATEGORY_LABELS, SeverityBadge } from "./ui";
